@@ -15,7 +15,7 @@
  while($row = mysqli_fetch_array($result))
    {
    	$generalCounter++;
-    $selection['unitId'.$counter] = md5($row['unitId']);
+    $selection['unitId'.$counter] = $row['unitId'];
     $selection['unitSimNumber'.$counter] = $row['unitSimNumber'];
     $selection['unitViewing'.$counter] = $row['unitViewing'];
     $selection['unitRegion'.$counter] = $row['unitRegion'];
