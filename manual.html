@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>RoadFloodPH</title>
+
+<script src="jquery-2.0.0-beta.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        var currentIndexLastRow = 0;
+        var lastIndexLastRow = 0;
+        var currentData = {};
+
+        $(document).ready(function(){
+
+            $("#powerRanger").mouseup(function(){
+                var rangeValue = $("#powerRanger").val();
+                var unitNumberThingy = $("#selectedUnit").val();
+                console.log("rangeValue: " + rangeValue);
+                console.log("unitNumberThingy: " + unitNumberThingy);
+                updateWaterLevel(rangeValue, unitNumberThingy);
+            });
+
+            $("#powerRanger").change(function(){
+                $("#waterLevelHeight").text($("#powerRanger").val());
+            });
+
+            $.post("http://roadfloodph.cloudapp.net/roadfloodph/getUnitNames.php", function (json) {
+                unitNames = json;
+                console.log(json);
+                console.log(json['generalCounter']);
+                
+                for (var i = 1; i <= json['generalCounter']; i++) {
+                    console.log('unitName' + i + ": " + json['unitName' + i]);
+                    $("#selectedUnit").append("<option value=" + i + ">" + json['unitName' + i] + "</option>");
+                }
+            });
+
+        });
+
+
+        function updateWaterLevel(newFloodLevel, unitNumberValue){
+            $.post("http://roadfloodph.cloudapp.net/roadfloodph/updateWaterLevel.php", {roadFloodLevel: newFloodLevel, unitNumber: unitNumberValue});
+        }
+
+
+    </script>
+    <h1>Flood Height Simulation</h1><br />
+    <input type="range" id="powerRanger" min="0" max="52" value="0" /><br />
+    <span><b>Choose Location to Simulate: </b></span>
+    <select id="selectedUnit">
+    </select>
+    <p style="font-size: 80px; color: blue;"><span id="waterLevelHeight">0</span><span>  in</span></p>
+
+
+  </body>
+
+</html>
