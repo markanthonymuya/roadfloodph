@@ -1,6 +1,7 @@
 $(document).ready(function () {
 	
 	var units = {};
+	var parentId = 0;
 
 	var clearRegistrationInput = function(){
 		$("#unitCode").val("");
@@ -48,20 +49,12 @@ $(document).ready(function () {
 						}
 
 						$(".editBtn").click(function(){
-							var parentId = this.parentNode.getAttribute('data-rf');
+							parentId = this.parentNode.getAttribute('data-rf');
 							$("#manageUnit").modal('hide');
 							$("#updateUnit").on('shown.bs.modal', function (e) {
 							  setRegistrationInput(parentId);
 							});
 							$("#updateUnit").modal('show');
-							$("#updateUnitBtn").click(function(){
-								var data = {unitCode: units['unitId'+parentId], unitNumber: $("#unitNumberUpdate").val(), unitViewing: $("#unitViewingUpdate").val(), unitRegion: $("#unitRegionFormUpdate").val(), unitName: $("#unitNameFormUpdate").val()};
-								$.post("http://roadfloodph.cloudapp.net/roadfloodph/updateUnit.php", data, function (result) {
-									alert("You've successfully registered your unit.")
-									$("#updateUnit").modal('hide');
-									clearUpdateInput();
-							    });
-							});
 						});
 					}
 				}
@@ -100,5 +93,12 @@ $(document).ready(function () {
 		$("#loadingImage").show();
 	});
 
-
+	$("#updateUnitBtn").click(function(){
+			var data = {unitCode: units['unitId'+parentId], unitNumber: $("#unitNumberUpdate").val(), unitViewing: $("#unitViewingUpdate").val(), unitRegion: $("#unitRegionFormUpdate").val(), unitName: $("#unitNameFormUpdate").val()};
+			$.post("http://roadfloodph.cloudapp.net/roadfloodph/updateUnit.php", data, function (result) {
+			alert("You've successfully registered your unit.")
+			$("#updateUnit").modal('hide');
+			clearUpdateInput();
+	    });
+	});
 });
