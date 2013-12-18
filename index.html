@@ -13,9 +13,10 @@
     <link href="dist/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="sticky-footer-navbar.css" rel="stylesheet">
+    <link href="custom.css/sticky-footer-navbar.css" rel="stylesheet">
      <link href="custom.css/starter-template.css" rel="stylesheet">
     <link href="custom.css/home.css" rel="stylesheet">
+
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -104,9 +105,11 @@
 
     <script src="assets/js/jquery.js"></script>
     <script src="dist/js/bootstrap.min.js"></script>
+    <script src="../assets/js/Chart.min.js"></script>
     <script src="custom.js/scriptAjax.js"></script>
     <script src="custom.js/scriptAnimations.js"></script>
     <script src="custom.js/scriptRegistration.js"></script>
+
     <script>
         function stringfy(result){
           var result = eval ("({rfData:" + result + "})");
@@ -247,7 +250,7 @@
 
     <!-- Modal for Unit Management-->
     <div id="manageUnit" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog" style=" width: 900px;">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -255,6 +258,8 @@
           </div>
           <div id="manageBody" class="modal-body">
             <center><img id="loadingImage" src="images/loading.gif" /></center>
+            <center><canvas id="myChart" width="800" height="300"></canvas></center>
+            <script src="custom.js/scriptDashboard.js"></script>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -262,6 +267,8 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+
 
   </body>
 </html>

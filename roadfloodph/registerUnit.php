@@ -10,7 +10,7 @@
  $unitStatus = "not activated";
  $ownerId = $_POST['ownerId'];
  $dateAdded = date("Y/m/d");
- $timeAdded = date("H:i:s A");
+ $timeAdded = date("H:i:s");
 
  //check if the unit has the same number
  $result = mysqli_query($con, "INSERT INTO unitregistration VALUES ('$unitCode', '$unitNumber', '$unitViewing', '$unitRegion', '$unitName', '$unitStatus', '$ownerId', '$dateAdded', '$timeAdded', '')");

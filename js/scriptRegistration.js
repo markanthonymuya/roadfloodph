@@ -37,7 +37,7 @@ $(document).ready(function () {
 				$("#loadingImage").hide();
 				if(units['generalCounter']>0){
 					for(var i = 1; i <= units['generalCounter']; i++){
-						$("#manageBody").append('<p class="appendedBodyMsg"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 10px;" class="btn btn-primary pull-right">Dashboard</button><button id="activateBtn'+i+'" style="margin-left: 10px;" class="btn btn-warning pull-right">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn">Edit</button></p></span><br class="appendedBodyMsg">');
+						$("#manageBody").append('<p class="appendedBodyMsg"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 10px;" class="btn btn-primary pull-right">Dashboard</button><button id="activateBtn'+i+'" style="margin-left: 10px;" class="btn btn-warning pull-right activateBtn">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn">Edit</button></p></span><br class="appendedBodyMsg">');
 						
 						var status = units['unitStatus'+i];
 						if(status=='not activated'){
@@ -55,6 +55,10 @@ $(document).ready(function () {
 							  setRegistrationInput(parentId);
 							});
 							$("#updateUnit").modal('show');
+						});
+
+						$(".activateBtn").click(function(){
+							window.location.assign("http://roadfloodph.cloudapp.net/redirect/");
 						});
 					}
 				}
@@ -101,4 +105,5 @@ $(document).ready(function () {
 			clearUpdateInput();
 	    });
 	});
+
 });
