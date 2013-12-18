@@ -70,17 +70,7 @@
     transition: top 2s, height 2s;
  } 
 
-#bodyWaves:hover
- {
- 	top: -20px;
- }
-
 #gaugeWaves
  {
 	 transition: top 2s, height 2s;
- } 
-
-#gaugeWaves:hover
- {
- 	top: -20px;
  } 
