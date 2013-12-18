@@ -1,7 +1,7 @@
 <?php
 
 require ('../globelabsapi/GlobeApi.php');
-echo "muya ";
+
 $appId = "6KLXKFjgxGEu67iaoxTxxzu8oLxoFp4z";
 $appSecret = "b079889f98602660c7f666ad8a593221ce376bad5287f7b2a94ef92952d2526e";
 
