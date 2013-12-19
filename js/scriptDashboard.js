@@ -2,6 +2,8 @@ var smsUpdateLogs;
 
 $(document).ready(function () {
 
+  var timeFrame = "hour";
+
   smsUpdateLogs = function(){
 
     $.post("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: "9275628107"}, function (json) {
@@ -10,6 +12,12 @@ $(document).ready(function () {
     });
 
   };
+
+  $(".timeFrameBtn").click(function(){
+    timeFrame = this.getAttribute('data-rf');
+    $(".timeFrameBtn").attr("class", "btn btn-default timeFrameBtn");
+    $(this).attr("class", "btn btn-primary timeFrameBtn");
+  });
 
 });
 
