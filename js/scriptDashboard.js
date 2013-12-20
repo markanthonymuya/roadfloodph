@@ -10,6 +10,52 @@ $(document).ready(function () {
       smsLogs = json;
       
     });
+<<<<<<< HEAD
+  };
+
+  var hourTimeline = function(){
+    var currentHour = timelineReference.today;
+    var nextHour = currentHour + 3600;
+    var hourDataValues = new Array();
+    var hourLabelValues = new Array();
+    var dataLength = smsLogsJson["generalCounter"];
+
+    console.log("currentHour: " + currentHour);
+    console.log("nextHour: " + nextHour);
+
+    var dataSetQueue = 1;
+
+      for (var j = 0; j < dataLength; j++) {
+        if(smsLogsJson["timestamp"+(j)] >= currentHour && smsLogsJson["timestamp"+(j)] <= nextHour){
+          
+          if(dataSetQueue == 1){
+
+            if(smsLogsJson["reportedFloodLevel"+(j-1)] == undefined){
+              hourDataValues[0] = 0;
+            }
+            else{
+              hourDataValues[0] = smsLogsJson["reportedFloodLevel"+(j-1)];
+            }
+            hourLabelValues[0] = "00:00"
+          }
+
+          hourDataValues[dataSetQueue] = smsLogsJson["reportedFloodLevel"+(j)];
+          hourLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
+          dataSetQueue++;
+          
+          hourDataValues[dataSetQueue] = smsLogsJson["reportedFloodLevel"+(j)];
+          hourLabelValues[dataSetQueue] = "01:00";
+        }
+      }
+sdfsdf
+    data.datasets[0].data = hourDataValues;
+    data.labels = hourLabelValues;
+    console.log(hourDataValues);
+    console.log(hourLabelValues);
+
+    var myNewChart = new Chart(ctx).Line(data,options);
+=======
+>>>>>>> parent of fdd686d... initialized dashboard hour timeline and changes in db values
 
   };
 
