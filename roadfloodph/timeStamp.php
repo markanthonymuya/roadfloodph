@@ -1,7 +1,6 @@
 <?php
 
-	/*$year = $_POST['year'];*/
-	$year = "2013";
+	$year = $_GET['year'];
  	$selection = array();
  	$month = array("","January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 	for ($i=1; $i <= 12; $i++) { 

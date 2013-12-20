@@ -3,14 +3,21 @@ var smsUpdateLogs;
 $(document).ready(function () {
 
   var timeFrame = "hour";
+  var timelineReference = {};
+  var smsLogsJson;
+  $("#timelineNav").hide();
 
   smsUpdateLogs = function(){
-
     $.post("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: "9275628107"}, function (json) {
-      smsLogs = json;
-      
+      smsLogsJson = json;
+      console.log(smsLogsJson);
+      var getCurrentDate = new Date();
+      $.get("http://roadfloodph.cloudapp.net/roadfloodph/timeStamp.php",{year: getCurrentDate.getFullYear()}, function (json) {
+        timelineReference = json;
+        console.log(timelineReference);
+        hourTimeline();
+      });
     });
-<<<<<<< HEAD
   };
 
   var hourTimeline = function(){
@@ -26,7 +33,7 @@ $(document).ready(function () {
     var dataSetQueue = 1;
 
       for (var j = 0; j < dataLength; j++) {
-        if(smsLogsJson["timestamp"+(j)] >= currentHour && smsLogsJson["timestamp"+(j)] <= nextHour){
+        if(smsLogsJson["timestamp"+(j)] >= currentHour || smsLogsJson["timestamp"+(j)] <= nextHour){
           
           if(dataSetQueue == 1){
 
@@ -34,29 +41,26 @@ $(document).ready(function () {
               hourDataValues[0] = 0;
             }
             else{
-              hourDataValues[0] = smsLogsJson["reportedFloodLevel"+(j-1)];
+              hourDataValues[0] = parseFloat(smsLogsJson["reportedFloodLevel"+(j-1)]);
             }
             hourLabelValues[0] = "00:00"
           }
 
-          hourDataValues[dataSetQueue] = smsLogsJson["reportedFloodLevel"+(j)];
+          hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
           hourLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
           dataSetQueue++;
           
-          hourDataValues[dataSetQueue] = smsLogsJson["reportedFloodLevel"+(j)];
+          hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
           hourLabelValues[dataSetQueue] = "01:00";
         }
       }
-sdfsdf
+
     data.datasets[0].data = hourDataValues;
     data.labels = hourLabelValues;
     console.log(hourDataValues);
     console.log(hourLabelValues);
 
     var myNewChart = new Chart(ctx).Line(data,options);
-=======
->>>>>>> parent of fdd686d... initialized dashboard hour timeline and changes in db values
-
   };
 
   $(".timeFrameBtn").click(function(){

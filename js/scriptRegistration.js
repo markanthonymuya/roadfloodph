@@ -88,7 +88,7 @@ $(document).ready(function () {
 						var unitDashboardValue = this.parentNode.getAttribute('data-rf');
 						for(var j = 1; j <= units['generalCounter']; j++){
 							if (j == unitDashboardValue) {
-								//be visible
+								$("#timelineNav").show();
 							}
 							else{
 								$("#appended"+j).hide();
@@ -133,6 +133,7 @@ $(document).ready(function () {
 		$("#loadingImage").show();
 		$("#myChart").hide();
 		$('#manageModal').attr("style", "");
+		$("#timelineNav").hide();		
 	});
 
 	$(".frequencyBtn").click(function(){
