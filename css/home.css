@@ -74,3 +74,8 @@
  {
 	 transition: top 2s, height 2s;
  } 
+
+#manageModal
+ {
+	 transition: width 1s;
+ } 

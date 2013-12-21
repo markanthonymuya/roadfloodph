@@ -2,6 +2,7 @@ $(document).ready(function () {
 	
 	var units = {};
 	var parentId = 0;
+	$("#myChart").hide();
 
 	var clearRegistrationInput = function(){
 		$("#unitCode").val("");
@@ -37,7 +38,7 @@ $(document).ready(function () {
 				$("#loadingImage").hide();
 				if(units['generalCounter']>0){
 					for(var i = 1; i <= units['generalCounter']; i++){
-						$("#manageBody").append('<p class="appendedBodyMsg"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 10px;" class="btn btn-primary pull-right">Dashboard</button><button id="activateBtn'+i+'" style="margin-left: 10px;" class="btn btn-warning pull-right activateBtn">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn">Edit</button></p></span><br class="appendedBodyMsg">');
+						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 10px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button id="activateBtn'+i+'" style="margin-left: 10px;" class="btn btn-warning pull-right activateBtn">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn">Edit</button></p></span><br class="appendedBodyMsg">');
 						
 						var status = units['unitStatus'+i];
 						if(status=='not activated'){
@@ -47,20 +48,34 @@ $(document).ready(function () {
 						else if(status=='activated'){
 							$("#activateBtn"+i).hide();
 						}
-
-						$(".editBtn").click(function(){
-							parentId = this.parentNode.getAttribute('data-rf');
-							$("#manageUnit").modal('hide');
-							$("#updateUnit").on('shown.bs.modal', function (e) {
-							  setRegistrationInput(parentId);
-							});
-							$("#updateUnit").modal('show');
-						});
-
-						$(".activateBtn").click(function(){
-							window.location.assign("http://roadfloodph.cloudapp.net/redirect/");
-						});
 					}
+
+					$(".editBtn").click(function(){
+						parentId = this.parentNode.getAttribute('data-rf');
+						$("#manageUnit").modal('hide');
+						$("#updateUnit").on('shown.bs.modal', function (e) {
+					  		setRegistrationInput(parentId);
+						});					
+						$("#updateUnit").modal('show');
+					});
+
+					$(".activateBtn").click(function(){
+						window.location.assign("http://roadfloodph.cloudapp.net/redirect/");
+					});
+
+					$(".dashboardBtn").click(function(){
+						var unitDashboardValue = this.parentNode.getAttribute('data-rf');
+						for(var j = 1; j <= units['generalCounter']; j++){
+							if (j == unitDashboardValue) {
+								//be visible
+							}
+							else{
+								$("#appended"+j).hide();
+							}
+						}
+						$('#manageModal').attr("style", "width: 900px;");
+						$("#myChart").show("slow");
+					});
 				}
 				else{
 					$("#manageBody").append('<center class="appendedBodyMsg"><p>Getting started?</p><button id="gettingStarted" class="btn btn-warning">Register New Unit</button></center>');
@@ -95,6 +110,8 @@ $(document).ready(function () {
 	$("#manageUnit").on('hidden.bs.modal', function () {
 		$(".appendedBodyMsg").remove();
 		$("#loadingImage").show();
+		$("#myChart").hide();
+		$('#manageModal').attr("style", "");
 	});
 
 	$("#updateUnitBtn").click(function(){

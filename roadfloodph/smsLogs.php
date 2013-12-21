@@ -1,8 +1,9 @@
 <?php
-	echo(strtotime("2013/11/11 23:18:24")."<br>");
-	echo(strtotime("2013/12/15 23:18:24")."<br>");
+	date_default_timezone_set("Asia/Manila");
 	echo(strtotime("now")."<br>");
 	echo("<br>");
-	echo(strtotime("2013/11/11")."<br>");
-	echo(strtotime("21:18:24")."<br>");
+	echo(strtotime('last day of january 2014', "2013/12/01")."<br>");
+	echo(strtotime("2013/12/18", "2013/12/01")."<br>");		// day
+	echo(strtotime("2013/12/15", "2013/12/01")."<br>");
+	echo(strtotime('2014/01/01', "2013/12/01")."<br>");
 ?>

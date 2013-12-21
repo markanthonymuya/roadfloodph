@@ -81,14 +81,14 @@
             <p class="divTitles">Body</p>
             <div style="width: 250px; height: 350px; background: white;">
               <img id="happyBoy" src="assets/gif/happy.gif" />
-              <img id="bodyWaves" src="assets/gif/waves.gif" style="width:250px; height:100px; position: relative; top: -100px;" />
+              <img id="bodyWaves" src="assets/gif/waves.gif" style="height: 0px; width: 250px; top: -20px; position: relative;" />
             </div>
           </div><!-- /.col-lg-4 -->
           <div class="col-lg-4" style="margin-right: 20px; width: 250px; height: 350px; margin-bottom: 50px;">
             <p class="divTitles">MMDA Flood Gauge</p>
             <div style="width: 250px; height: 350px; background: white;">
               <img src="assets/images/MMDAFloodGauge.png" width="250px" height="350px" />
-              <img id="gaugeWaves" src="assets/gif/waves.gif" style="width:250px; height:100px; position: relative; top: -100px;" />
+              <img id="gaugeWaves" src="assets/gif/waves.gif" style="height: 0px; width: 250px; top: -20px; position: relative;" />
             </div>
           </div><!-- /.col-lg-4 -->
         </div><!-- /.row -->
@@ -250,7 +250,7 @@
 
     <!-- Modal for Unit Management-->
     <div id="manageUnit" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog" style=" width: 900px;">
+      <div class="modal-dialog" id="manageModal">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -261,9 +261,9 @@
             <center><canvas id="myChart" width="800" height="300"></canvas></center>
             <script src="custom.js/scriptDashboard.js"></script>
           </div>
-          <div class="modal-footer">
+         <!--  <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
+          </div> -->
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
