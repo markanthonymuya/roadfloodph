@@ -21,6 +21,7 @@
     $selection['unitRegion'.$counter] = $row['unitRegion'];
     $selection['unitName'.$counter] = $row['unitName'];
     $selection['unitStatus'.$counter] = $row['unitStatus'];
+    $selection['unitAT'.$counter] = $row['accessToken'];
     $counter++;
    }
 
