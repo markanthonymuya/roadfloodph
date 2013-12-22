@@ -22,6 +22,7 @@
     $selection['unitName'.$counter] = $row['unitName'];
     $selection['unitStatus'.$counter] = $row['unitStatus'];
     $selection['unitAT'.$counter] = $row['accessToken'];
+    $selection['unitFreq'.$counter] = $row['frequency'];
     $counter++;
    }
 

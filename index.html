@@ -238,23 +238,48 @@
             <p>Unit Name:
               <input id="unitNameFormUpdate" class="form-control" type="text" placeholder="Pureza, Sta. Mesa, Manila" />
             </p>
-            <p>Unit SMS Frequency Update:
-              <select id="unitFrequency" class="form-control">
-                <option value="0.5">0.5 inch</option>
-                <option value="1">1 inch</option>
-                <option value="1.5">1.5 inch</option>
-                <option value="2">2 inches</option>
-                <option value="2.5">2.5 inches</option>
-                <option value="3">3 inches</option>
-              </select>
+            <br>
+            <p>Unit SMS Frequency Update (inches):
+              <div class="btn-group" data-toggle="buttons">
+                <label id="freqId1" class="btn btn-primary frequencyBtn" data-rf="0.5">
+                  <input type="radio"> 0.5
+                </label>
+                <label id="freqId2" class="btn btn-default frequencyBtn" data-rf="1.0">
+                  <input type="radio"> 1.0
+                </label>
+                <label id="freqId3" class="btn btn-default frequencyBtn" data-rf="1.5">
+                  <input type="radio"> 1.5
+                </label>
+                <label id="freqId4" class="btn btn-default frequencyBtn" data-rf="2.0">
+                  <input type="radio"> 2.0
+                </label>
+                <label id="freqId5" class="btn btn-default frequencyBtn" data-rf="2.5">
+                  <input type="radio"> 2.5
+                </label>
+                <label id="freqId6" class="btn btn-default frequencyBtn" data-rf="3.0">
+                  <input type="radio"> 3.0
+                </label>
+                <label id="freqId7" class="btn btn-default frequencyBtn" data-rf="3.5">
+                  <input type="radio"> 3.5
+                </label>
+                <label id="freqId8" class="btn btn-default frequencyBtn" data-rf="4.0">
+                  <input type="radio"> 4.0
+                </label>
+                <label id="freqId9" class="btn btn-default frequencyBtn" data-rf="4.5">
+                  <input type="radio"> 4.5
+                </label>
+                <label id="freqId10" class="btn btn-default frequencyBtn" data-rf="5.0">
+                  <input type="radio"> 5.0
+                </label>
+              </div>
             </p>
             <p>SMS Notification Update:
               <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-primary">
-                  <input type="radio"> On
-                </label>
-                <label class="btn btn-default">
+                <label id="smsNotifOFF" class="btn btn-default smsNotifBtn" data-rf="deactivated">
                   <input type="radio"> Off
+                </label>
+                <label id="smsNotifON" class="btn btn-primary smsNotifBtn" data-rf="activated">
+                  <input type="radio"> On
                 </label>
               </div>
             </p>

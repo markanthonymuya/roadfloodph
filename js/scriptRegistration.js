@@ -2,6 +2,9 @@ $(document).ready(function () {
 	
 	var units = {};
 	var parentId = 0;
+	var frequency = 0.5;
+	var smsNotif = "activated";
+
 	$("#myChart").hide();
 
 	var clearRegistrationInput = function(){
@@ -20,12 +23,30 @@ $(document).ready(function () {
 		$("#unitNameFormUpdate").val("");
 	}
 
-	var setRegistrationInput = function(parentId){
+	var setUpdateInfoInput = function(parentId){
 		$("#unitCodeUpdate").val(units['unitId'+parentId]);
 		$("#unitNumberUpdate").val(units['unitSimNumber'+parentId]);
 		$("#unitViewingUpdate").val(units['unitViewing'+parentId]);
 		$("#unitRegionFormUpdate").val(units['unitRegion'+parentId]);
 		$("#unitNameFormUpdate").val(units['unitName'+parentId]);
+		frequency = units['unitFreq'+parentId];
+		console.log(frequency);
+		for(var k = 1; k <= 10; k++){
+			if(frequency == $("#freqId"+k).attr('data-rf')){
+				$(".frequencyBtn").attr("class", "btn btn-default frequencyBtn");
+				$("#freqId"+k).attr("class", "btn btn-primary frequencyBtn");
+			}
+		}
+		smsNotif = units['unitStatus'+parentId];
+		console.log(smsNotif);
+		if(smsNotif == "activated"){
+			$("#smsNotifON").attr("class", "btn btn-primary smsNotifBtn");
+			$("#smsNotifOFF").attr("class", "btn btn-default smsNotifBtn");
+		}
+		else if(smsNotif == "deactivated"){
+			$("#smsNotifON").attr("class", "btn btn-default smsNotifBtn");
+			$("#smsNotifOFF").attr("class", "btn btn-primary smsNotifBtn");
+		}
 	}
 
 	var getUnits = function(service){
@@ -54,7 +75,7 @@ $(document).ready(function () {
 						parentId = this.parentNode.getAttribute('data-rf');
 						$("#manageUnit").modal('hide');
 						$("#updateUnit").on('shown.bs.modal', function (e) {
-					  		setRegistrationInput(parentId);
+					  		setUpdateInfoInput(parentId);
 						});					
 						$("#updateUnit").modal('show');
 					});
@@ -114,13 +135,30 @@ $(document).ready(function () {
 		$('#manageModal').attr("style", "");
 	});
 
+	$(".frequencyBtn").click(function(){
+		frequency = this.getAttribute('data-rf');
+		$(".frequencyBtn").attr("class", "btn btn-default frequencyBtn");
+		$(this).attr("class", "btn btn-primary frequencyBtn");
+	});
+
+	$(".smsNotifBtn").click(function(){
+		smsNotif = this.getAttribute('data-rf');
+		$(".smsNotifBtn").attr("class", "btn btn-default smsNotifBtn");
+		$(this).attr("class", "btn btn-primary smsNotifBtn");
+	});
+
 	$("#updateUnitBtn").click(function(){
-			var data = {unitCode: units['unitId'+parentId], unitNumber: $("#unitNumberUpdate").val(), unitViewing: $("#unitViewingUpdate").val(), unitRegion: $("#unitRegionFormUpdate").val(), unitName: $("#unitNameFormUpdate").val()};
-			$.post("http://roadfloodph.cloudapp.net/roadfloodph/updateUnit.php", data, function (result) {
-			alert("You've successfully registered your unit.")
-			$("#updateUnit").modal('hide');
-			clearUpdateInput();
-	    });
+		var data = {unitCode: units['unitId'+parentId], unitNumber: $("#unitNumberUpdate").val(), unitViewing: $("#unitViewingUpdate").val(), unitRegion: $("#unitRegionFormUpdate").val(), unitName: $("#unitNameFormUpdate").val(), unitStatus: smsNotif, unitFrequency: frequency};
+		$.post("http://roadfloodph.cloudapp.net/roadfloodph/updateUnit.php", data, function (result, status) {
+			if(status == "success"){
+				alert("You've successfully updated your roadflood unit settings.");
+				$("#updateUnit").modal('hide');
+				clearUpdateInput();
+			}
+			else{
+				alert("There's a problem submitting your info update. It might be a network problem or system maintenance. Please try it again later.");
+			}
+		});
 	});
 
 });
