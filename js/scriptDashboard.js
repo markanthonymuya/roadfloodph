@@ -1,3 +1,9 @@
+$.post("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: "9275628107"}, function (json) {
+  var smsLogs = json;
+  console.log(smsLogs);
+});
+
+
 
 
     //Get the context of the canvas element we want to select

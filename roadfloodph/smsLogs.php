@@ -1,9 +1,28 @@
 <?php
-	date_default_timezone_set("Asia/Manila");
-	echo(strtotime("now")."<br>");
-	echo("<br>");
-	echo(strtotime('last day of january 2014', "2013/12/01")."<br>");
-	echo(strtotime("2013/12/18", "2013/12/01")."<br>");		// day
-	echo(strtotime("2013/12/15", "2013/12/01")."<br>");
-	echo(strtotime('2014/01/01', "2013/12/01")."<br>");
-?>
+require('../key/access.php');
+
+date_default_timezone_set("Asia/Manila");
+
+$unitSimNumber = $_POST['unitSimNumber'];
+
+ $result = mysqli_query($con, "SELECT reportedFloodLevel, receivedDate, receivedTime FROM unitsmsupdatelogs where unitSimNumber='$unitSimNumber'");
+
+ $selection = array();
+ $counter = 1;
+ $generalCounter = 0;
+ while($row = mysqli_fetch_array($result))
+ {
+   	$generalCounter++;
+    $selection['reportedFloodLevel'.$counter] = $row['reportedFloodLevel'];
+    $selection['receivedDate'.$counter] = $row['receivedDate'];
+    $selection['receivedTime'.$counter] = $row['receivedTime'];
+    $selection['timestamp'.$counter] = strtotime($row['receivedDate'].' '.$row['receivedTime'], "2013/01/01 00:00:00");
+    $counter++;
+ }
+
+$selection['generalCounter'] = $generalCounter;
+
+header("Content-type:application/json");
+echo json_encode($selection);
+
+?> 
