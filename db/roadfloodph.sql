@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 22, 2013 at 10:34 AM
+-- Generation Time: Dec 22, 2013 at 04:35 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `unitleveldetection` (
 --
 
 INSERT INTO `unitleveldetection` (`unitLevelId`, `unitId`, `unitWaterLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
-('', 1, '7', '2013/12/17', '12:55:19');
+('', 1, '0', '2013/12/17', '12:55:19');
 
 -- --------------------------------------------------------
 

@@ -1,6 +1,16 @@
-$.post("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: "9275628107"}, function (json) {
-  var smsLogs = json;
-  console.log(smsLogs);
+var smsUpdateLogs;
+
+$(document).ready(function () {
+
+  smsUpdateLogs = function(){
+
+    $.post("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: "9275628107"}, function (json) {
+      smsLogs = json;
+      
+    });
+
+  };
+
 });
 
 

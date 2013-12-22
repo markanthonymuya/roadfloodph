@@ -48,6 +48,7 @@ $(document).ready(function () {
             $("#updateAsOf").text(json["asOf" + currentLocationSelected]);
 
             bodyWaterLevel();
+            gaugeWaterLevel();
         });
     }
 
@@ -62,6 +63,7 @@ $(document).ready(function () {
                 if (currentIndexLastRow != lastIndexLastRow && status == "success" || becomesOffline) {
                     lastIndexLastRow = currentIndexLastRow;
                     getUpdatedData();
+                    smsUpdateLogs();
                     becomesOffline = false;
                 }
                 $("#connectToInternet").hide();

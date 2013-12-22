@@ -43,7 +43,28 @@ var currentImageIndex = 10;
                     $("#bodyWaves").attr("style", "height: 0px; width: 250px; top: -20px; position: relative; left: 0px;");
                     $("#happyBoy").attr("src", "assets/gif/happy.gif");
                 }
-                else if (currentWaterLevel > 0 && currentWaterLevel <=3) {
+                else if (currentWaterLevel > 0 && currentWaterLevel <= 2.5) {
+                    //manual adjustment has been required to this water level graphical display
+                    //due to its inconsistency of direct proportionality between height and top attributes
+                    var floodLevelInPixel = currentWaterLevel*13;
+                    if(currentWaterLevel == 0.5){
+                        $("#bodyWaves").attr("style", "height: " + (floodLevelInPixel-1) + "px; width: 250px; top: -14px; position: relative; left: 0px;");
+                    }
+                    else if(currentWaterLevel == 1){
+                        $("#bodyWaves").attr("style", "height: " + (floodLevelInPixel-2) + "px; width: 250px; top: -17px; position: relative; left: 0px;");
+                    }
+                    else if(currentWaterLevel == 1.5){
+                        $("#bodyWaves").attr("style", "height: " + (floodLevelInPixel-5) + "px; width: 250px; top: -19px; position: relative; left: 0px;");
+                    }
+                    else if(currentWaterLevel == 2){
+                        $("#bodyWaves").attr("style", "height: " + (floodLevelInPixel-4) + "px; width: 250px; top: -22px; position: relative; left: 0px;");
+                    }
+                    else if(currentWaterLevel == 2.5){
+                        $("#bodyWaves").attr("style", "height: " + (floodLevelInPixel-7) + "px; width: 250px; top: -26px; position: relative; left: 0px;");
+                    }
+                    $("#happyBoy").attr("src", "assets/gif/happy.gif");
+                }
+                else if (currentWaterLevel==3) {
                     var floodLevelInPixel = currentWaterLevel * 11;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
                     $("#happyBoy").attr("src", "assets/gif/happy.gif");
@@ -110,18 +131,58 @@ var currentImageIndex = 10;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
                     $("#happyBoy").attr("src", "assets/gif/nervous.gif");
                 }
-                else if (currentWaterLevel > 45 && currentWaterLevel <= 60) {
+                else if (currentWaterLevel > 45 && currentWaterLevel < 52) {
                     var floodLevelInPixel = currentWaterLevel * 5.92;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
                     $("#happyBoy").attr("src", "assets/gif/nervous.gif");
                 }
+                else if (currentWaterLevel > 51) {
+                    var floodLevelInPixel = 51 * 6.8;
+                    $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
+                    $("#happyBoy").attr("src", "assets/gif/nervous.gif");
+                }
+            }
+            else {
+                getUpdatedData();
+            }
+    };
 
-                //for gauge pane
-                var floodLevelInPixel = currentWaterLevel * 6.8;
+    var gaugeWaterLevel = function(){
+         //for gauge pane
+            if (currentWaterLevel != undefined || currentWaterLevel != null || currentWaterLevel != "") {
                 if (currentWaterLevel == 0) {
                     $("#gaugeWaves").attr("style", "height: 0px; width: 250px; top: -20px; position: relative; left: 0px;");
                 }
-                else {
+                else if (currentWaterLevel > 0 && currentWaterLevel <= 2.5) {
+                    //manual adjustment has been required to this water level graphical display
+                    //due to its inconsistency of direct proportionality between height and top attributes
+                    var floodLevelInPixel = currentWaterLevel*10;
+                    if(currentWaterLevel == 0.5){
+                        $("#gaugeWaves").attr("style", "height: " + (floodLevelInPixel-2) + "px; width: 250px; top: -13px; position: relative; left: 0px;");
+                    }
+                    else if(currentWaterLevel == 1){
+                        $("#gaugeWaves").attr("style", "height: " + (floodLevelInPixel-2) + "px; width: 250px; top: -15px; position: relative; left: 0px;");
+                    }
+                    else if(currentWaterLevel == 1.5){
+                        $("#gaugeWaves").attr("style", "height: " + (floodLevelInPixel-4) + "px; width: 250px; top: -17px; position: relative; left: 0px;");
+                    }
+                    else if(currentWaterLevel == 2){
+                        $("#gaugeWaves").attr("style", "height: " + (floodLevelInPixel-6) + "px; width: 250px; top: -18px; position: relative; left: 0px;");
+                    }
+                    else if(currentWaterLevel == 2.5){
+                        $("#gaugeWaves").attr("style", "height: " + (floodLevelInPixel-8) + "px; width: 250px; top: -20px; position: relative; left: 0px;");
+                    }
+                }
+                else if (currentWaterLevel > 2.5 && currentWaterLevel <= 6) {
+                    var floodLevelInPixel = currentWaterLevel * 6.7;
+                    $("#gaugeWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
+                }
+                else if (currentWaterLevel > 6 && currentWaterLevel <= 51) {
+                    var floodLevelInPixel = currentWaterLevel * 6.8;
+                    $("#gaugeWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
+                }
+                else if (currentWaterLevel > 51) {
+                    var floodLevelInPixel = 51 * 6.8;
                     $("#gaugeWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
                 }
 
