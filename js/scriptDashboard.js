@@ -4,11 +4,21 @@ $(document).ready(function () {
 
   var getCurrentDate = new Date();
   var timeFrame = "hour";
-  var timelineReference = {};
   var smsLogsJson;
-  var currentTime = getCurrentDate.getHours() + 1;
+  var dayDifference;
+  var currentDayDisplayed;
+  var nextDate;
+  var timelineReference = {};
+
 
   $("#timelineNav").hide();
+
+  var getNextDate = function(){
+    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getDate.php",{timestamp: timelineReference.tomorrow}, function (json) {
+      nextDate = json['year']+"/"+json['mon']+"/"+json['mday'];
+      dayTimeline(currentDayDisplayed);
+    });
+  }
 
   smsUpdateLogs = function(){
     $.post("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: "9275628107"}, function (json) {
@@ -17,32 +27,27 @@ $(document).ready(function () {
       $.get("http://roadfloodph.cloudapp.net/roadfloodph/timeStamp.php",{year: getCurrentDate.getFullYear()}, function (json) {
         timelineReference = json;
         // console.log(timelineReference);
-        hourTimeline(currentTime);
+        dayDifference = timelineReference.tomorrow - timelineReference.today;
+        currentDayDisplayed = timelineReference.today;
+        getNextDate();
       });
+
     });
   };
 
   $("#driveRight").click(function(){
-    if(currentTime < 24){
-      currentTime++;
-      hourTimeline(currentTime);
-      console.log(currentTime);
-    }
+      currentDayDisplayed = currentDayDisplayed + dayDifference;
+      dayTimeline(currentDayDisplayed);
   });
 
   $("#driveLeft").click(function(){
-    if(currentTime > 0){
-      currentTime--;
-      hourTimeline(currentTime);
-      console.log(currentTime);
-    }
+      currentDayDisplayed = currentDayDisplayed - dayDifference;
+      dayTimeline(currentDayDisplayed);
   });
 
-  var hourTimeline = function(hours){
-    var currentDay = timelineReference.today + (3600*(hours));
-    // var currentDay = timelineReference.today + (3600*(hours - 1));
-    var referenceEndpoint = currentDay + 3600;
-    // var referenceEndpoint = timelineReference.tomorrow;
+  var dayTimeline = function(hours){
+    var currentDay = timelineReference.today;
+    var referenceEndpoint = timelineReference.tomorrow;
     var hourDataValues = new Array();
     var hourLabelValues = new Array();
     var dataLength = smsLogsJson["generalCounter"];
@@ -67,7 +72,7 @@ $(document).ready(function () {
             else{
               hourDataValues[0] = parseFloat(smsLogsJson["reportedFloodLevel"+(j-1)]);
             }
-            hourLabelValues[0] = "00:00"
+            hourLabelValues[0] = smsLogsJson["receivedDate"+j];
           }
 
           hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
@@ -77,24 +82,8 @@ $(document).ready(function () {
           // it is always replaced by a newer value if it still has a next value
           // else, if it is the last value, then it will be preserved as the last value to be displayed
           // with respect to the end of the chosen time.
-          hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
-          hourLabelValues[dataSetQueue] = "01:00";
-        }
-
-        //if there is no results within that timeframe, we'll get the previous value for the first
-        //displayed value and make a constant value up to the last selected end time
-        else if(dataSetQueue == 1){
-            //get previous reading
-            if((smsLogsJson["timestamp"+j] >= currentDay) == false){
-              hourDataValues[0] = parseFloat(smsLogsJson["reportedFloodLevel"+j])-0.0001;
-              hourDataValues[1] = parseFloat(smsLogsJson["reportedFloodLevel"+j]);
-              hourDataValues[2] = hourDataValues[0];
-
-            }
           
-            hourLabelValues[0] = "00:00";
-            hourLabelValues[1] = "01:30";
-            hourLabelValues[2] = "01:00";
+          hourLabelValues[dataSetQueue] = nextDate;
         }
       }
 
@@ -113,8 +102,6 @@ $(document).ready(function () {
   });
 
 });
-
-
 
 
     //Get the context of the canvas element we want to select

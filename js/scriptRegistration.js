@@ -59,8 +59,8 @@ $(document).ready(function () {
 				$("#loadingImage").hide();
 				if(units['generalCounter']>0){
 					for(var i = 1; i <= units['generalCounter']; i++){
-						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 10px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button id="activateBtn'+i+'" style="margin-left: 10px;" class="btn btn-warning pull-right activateBtn">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button></p></span><br class="appendedBodyMsg">');
-						
+						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 5px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button type="button" class="btn btn-default pull-right backButton" style="margin-left: 5px;"><span class="glyphicon glyphicon-backward"></span> Back<button id="activateBtn'+i+'" style="margin-left: 5px;" class="btn btn-warning pull-right activateBtn">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button></p></span><br class="appendedBodyMsg">');
+						$(".backButton").hide();
 						var status = units['unitAT'+i];
 						if(status=='' || status == null){
 							$("#dashboardBtn"+i).hide();
@@ -70,6 +70,16 @@ $(document).ready(function () {
 							$("#activateBtn"+i).hide();
 						}
 					}
+
+					$(".backButton").click(function(){
+					      $(".backButton").hide();
+					      $(".appendedBodyMsg").remove();
+					      $("#loadingImage").show();
+					      $("#myChart").hide("slow");
+					      $('#manageModal').attr("style", "");
+					      $("#timelineNav").hide();
+					      getUnits('manageUnit');
+					  });
 
 					$(".editBtn").click(function(){
 						parentId = this.parentNode.getAttribute('data-rf');
@@ -96,6 +106,8 @@ $(document).ready(function () {
 						}
 						$('#manageModal').attr("style", "width: 900px;");
 						$("#myChart").show("slow");
+      					$(".backButton").show();
+      					$(".dashboardBtn").hide();
 					});
 				}
 				else{
