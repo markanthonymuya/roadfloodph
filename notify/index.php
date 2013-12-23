@@ -34,7 +34,8 @@ if($message) {
 		}
 	
 		//replace tel:+63 of outbound into ''
-		$result = mysqli_query($con,'SELECT * FROM subscriber WHERE subscriberContact = \''.str_replace('tel:+63', '', $item['senderAddress']).'\' LIMIT 1');
+		$senderNumber = str_replace('tel:+63', '', $item['senderAddress']);
+		$result = mysqli_query($con,"SELECT * FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
 		$user = mysqli_fetch_array($result);
 
 		// user
@@ -50,8 +51,8 @@ if($message) {
 			//$message = 'i received your message: '.$item['message']." as of".$asOfVar;
 	    	$roadFloodLevel = $item['message'];
 			mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitNumber'");
-			mysqli_query($con, "INSERT INTO roadfloodlogs (unitId, roadFloodLevel, unitSIMNumber, unitStatus, asOf) VALUES ('$unitNumber', '$roadFloodLevel', 'somethingNumber', 'Active', '$asOfVar')");
-	    	$response = $sms->sendMessage($user['1'], $user['2'], $message);
+			mysqli_query($con, "INSERT INTO unitsmsupdatelogs VALUES ('','$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
+	    	$response = $sms->sendMessage($message);
 		}
 	}
 }	
