@@ -6,6 +6,8 @@ $(document).ready(function () {
 	var smsNotif = "activated";
 
 	$("#myChart").hide();
+	$("#registrationMsg").hide();
+
 
 	var clearRegistrationInput = function(){
 		$("#unitCode").val("");
@@ -122,13 +124,38 @@ $(document).ready(function () {
 	};
 
 	$("#registerUnit").on('shown.bs.modal', function (){
+		$("#unitCode").focus();
 		$("#registerNewUnit").click(function(){
-			var data = {unitCode: $("#unitCode").val(), unitNumber: $("#unitNumber").val(), unitViewing: $("#unitViewing").val(), unitRegion: $("#unitRegionForm").val(), unitName: $("#unitNameForm").val(), ownerId: "1"};
-			$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerUnit.php", data, function (result) {
-				alert("You've successfully registered your unit.")
-				$("#registerUnit").modal('hide');
-				clearRegistrationInput();
-		    });
+			$("#registrationMsg").hide();
+			if($("#unitCode").val() != "" && $("#unitNumber").val() != "" && $("#unitNameForm").val() != ""){
+				var unitNumberForm = $("#unitNumber").val();
+				var searchPosition = unitNumberForm.search(/.+639/);
+
+				if(searchPosition == 0 && unitNumberForm.length == 13){
+					unitNumberForm = unitNumberForm.replace("+63", "");
+					var data = {unitCode: $("#unitCode").val(), unitNumber: unitNumberForm, unitViewing: $("#unitViewing").val(), unitRegion: $("#unitRegionForm").val(), unitName: $("#unitNameForm").val(), ownerId: "1"};
+
+					$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerUnit.php", data, function (response) {
+						if(response == "successful"){
+							alert("You've successfully registered your unit.")
+							$("#registerUnit").modal('hide');
+							clearRegistrationInput();
+						}
+						else if(response == "notAvailable"){
+							$("#registrationMsg").text("Unit code has already been taken or used. Please try another code.");
+							$("#registrationMsg").show();
+						}
+				    });
+				}
+				else{
+					$("#registrationMsg").text("It seems that your unit sim number is not aligned to desired format.");
+					$("#registrationMsg").show();					
+				}
+			}
+			else{
+				$("#registrationMsg").text("Please do not leave empty input boxes.");
+				$("#registrationMsg").show();
+			}
 		});
 	});
 

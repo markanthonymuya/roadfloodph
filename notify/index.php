@@ -1,6 +1,8 @@
 <?php
 
 require ('../globelabsapi/GlobeApi.php');
+require('../key/access.php');
+
 
 $json = file_get_contents('php://input');
 $json = stripslashes($json);
@@ -16,13 +18,6 @@ if($message) {
 		return 'Not Set inboundSMSMessage';
 	}
 
-	$con=mysqli_connect("localhost","markmuya_rfdb","roadfloodJKJK","roadfloodph");
-	
-	// Check connection
-	if (mysqli_connect_errno())
-	{
-		echo "Failed to connect to MySQL: " . mysqli_connect_error();
-	}
 	
 	//parse all items in the received message
 	foreach($message['inboundSMSMessageList']['inboundSMSMessage'] as $item) {
