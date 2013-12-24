@@ -12,9 +12,10 @@ $(document).ready(function () {
 	var clearRegistrationInput = function(){
 		$("#unitCode").val("");
 		$("#unitNumber").val("");
-		$("#unitViewing").val("");
-		$("#unitRegionForm").val("");
+		$("#unitViewing").val("public");
+		$("#unitRegionForm").val("ncr");
 		$("#unitNameForm").val("");
+		$("#smsIdentification").val("");
 	}
 
 	var clearUpdateInput = function(){
@@ -26,11 +27,12 @@ $(document).ready(function () {
 	}
 
 	var setUpdateInfoInput = function(parentId){
-		$("#unitCodeUpdate").val(units['unitId'+parentId]);
-		$("#unitNumberUpdate").val(units['unitSimNumber'+parentId]);
+		$("#unitCodeUpdate").val(units['unitCode'+parentId]);
+		$("#unitNumberUpdate").val("+63"+units['unitSimNumber'+parentId]);
 		$("#unitViewingUpdate").val(units['unitViewing'+parentId]);
 		$("#unitRegionFormUpdate").val(units['unitRegion'+parentId]);
 		$("#unitNameFormUpdate").val(units['unitName'+parentId]);
+		$("#smsIdentificationUpdate").val(units['unitSmsCode'+parentId]);
 		frequency = units['unitFreq'+parentId];
 		console.log(frequency);
 		for(var k = 1; k <= 10; k++){
@@ -127,13 +129,15 @@ $(document).ready(function () {
 		$("#unitCode").focus();
 		$("#registerNewUnit").click(function(){
 			$("#registrationMsg").hide();
-			if($("#unitCode").val() != "" && $("#unitNumber").val() != "" && $("#unitNameForm").val() != ""){
+			
+			if($("#unitCode").val() != "" && $("#unitNumber").val() != "" && $("#unitNameForm").val() != "" && $("#smsIdentification").val() != ""){
+				$("#registerNewUnit").attr("disabled", true);
 				var unitNumberForm = $("#unitNumber").val();
 				var searchPosition = unitNumberForm.search(/.+639/);
 
 				if(searchPosition == 0 && unitNumberForm.length == 13){
 					unitNumberForm = unitNumberForm.replace("+63", "");
-					var data = {unitCode: $("#unitCode").val(), unitNumber: unitNumberForm, unitViewing: $("#unitViewing").val(), unitRegion: $("#unitRegionForm").val(), unitName: $("#unitNameForm").val(), ownerId: "1"};
+					var data = {unitCode: $("#unitCode").val(), unitNumber: unitNumberForm, unitViewing: $("#unitViewing").val(), unitRegion: $("#unitRegionForm").val(), unitName: $("#unitNameForm").val(), ownerId: "1", unitSmsKeyword: $("#smsIdentification").val()};
 
 					$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerUnit.php", data, function (response) {
 						if(response == "successful"){
@@ -141,15 +145,23 @@ $(document).ready(function () {
 							$("#registerUnit").modal('hide');
 							clearRegistrationInput();
 						}
-						else if(response == "notAvailable"){
+						else if(response == "unit code unavailable"){
 							$("#registrationMsg").text("Unit code has already been taken or used. Please try another code.");
 							$("#registrationMsg").show();
+							$("#unitCode").focus();
 						}
+						else if(response == "keyword unavailable"){
+							$("#registrationMsg").text("Your SMS Identification code is already in use. Please try another desired code.");
+							$("#registrationMsg").show();
+							$("#unitNumber").focus();
+						}
+						$("#registerNewUnit").attr("disabled", false);
 				    });
 				}
 				else{
-					$("#registrationMsg").text("It seems that your unit sim number is not aligned to desired format.");
-					$("#registrationMsg").show();					
+					$("#registrationMsg").text("It seems that your unit SIM number is not in desired format or incomplete.");
+					$("#registrationMsg").show();
+					$("#registerNewUnit").attr("disabled", false);					
 				}
 			}
 			else{
@@ -188,7 +200,7 @@ $(document).ready(function () {
 	});
 
 	$("#updateUnitBtn").click(function(){
-		var data = {unitCode: units['unitId'+parentId], unitNumber: $("#unitNumberUpdate").val(), unitViewing: $("#unitViewingUpdate").val(), unitRegion: $("#unitRegionFormUpdate").val(), unitName: $("#unitNameFormUpdate").val(), unitStatus: smsNotif, unitFrequency: frequency};
+		var data = {unitId: units['unitId'+parentId], unitNumber: $("#unitNumberUpdate").val(), unitViewing: $("#unitViewingUpdate").val(), unitRegion: $("#unitRegionFormUpdate").val(), unitName: $("#unitNameFormUpdate").val(), unitStatus: smsNotif, unitFrequency: frequency};
 		$.post("http://roadfloodph.cloudapp.net/roadfloodph/updateUnit.php", data, function (result, status) {
 			if(status == "success"){
 				alert("You've successfully updated your roadflood unit settings.");

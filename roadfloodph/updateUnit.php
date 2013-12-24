@@ -2,7 +2,7 @@
  
 require('../key/access.php');
 
- $unitCode = $_POST['unitCode'];
+ $unitId = $_POST['unitId'];
  $unitNumber = $_POST['unitNumber'];
  $unitViewing = $_POST['unitViewing'];
  $unitRegion = $_POST['unitRegion'];
@@ -12,6 +12,6 @@ require('../key/access.php');
 
 
  //check if the unit has the same number
- $result = mysqli_query($con, "UPDATE unitregistration SET unitSimNumber='$unitNumber', unitViewing='$unitViewing', unitRegion='$unitRegion', unitName='$unitName', unitStatus='$unitStatus', frequency='$frequency' WHERE unitId='$unitCode'");
+ $result = mysqli_query($con, "UPDATE unitregistration SET unitSimNumber='$unitNumber', unitViewing='$unitViewing', unitRegion='$unitRegion', unitName='$unitName', unitStatus='$unitStatus', frequency='$frequency' WHERE unitId='$unitId'");
 
  ?>

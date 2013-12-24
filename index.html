@@ -184,9 +184,11 @@
             </p>
             <p>Unit Name:
               <input id="unitNameForm" class="form-control" type="text" placeholder="Pureza, Sta. Mesa, Manila" />
-              <br />
-              <span id="registrationMsg" style="color: red;">Unit code has already been taken or used. Please try another code.</span>
             </p>
+            <p>Unit SMS Identification Code:
+              <input id="smsIdentification" class="form-control" maxlength="10" type="text" placeholder="maximum of 10-alpha, numeric or alphanumeric code (e.g. PUREZA)" />
+            </p>
+            <p id="registrationMsg" style="color: red;">Unit code has already been taken or used. Please try another code.</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -243,7 +245,7 @@
             <br>
             <p>Unit SMS Frequency Update (inches):
               <div class="btn-group" data-toggle="buttons">
-                <label id="freqId1" class="btn btn-primary frequencyBtn" data-rf="0.5">
+                <label id="freqId1" class="btn btn-default frequencyBtn" data-rf="0.5">
                   <input type="radio"> 0.5
                 </label>
                 <label id="freqId2" class="btn btn-default frequencyBtn" data-rf="1.0">
@@ -284,6 +286,9 @@
                   <input type="radio"> On
                 </label>
               </div>
+            </p>
+            <p>Unit SMS Identification Code:
+              <input id="smsIdentificationUpdate" disabled="disabled" class="form-control" maxlength="10" type="text" />
             </p>
           </div>
           <div class="modal-footer">
