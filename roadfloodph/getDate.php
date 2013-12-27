@@ -1,8 +1,12 @@
 <?php
-	$myTimestamp = $_GET['timestamp'];
+	$currentDate = $_GET['currentDateTs'];
+	$nextDate = $_GET['nextDateTs'];
 
-	$hellow = getDate($myTimestamp);
+	$timeline = Array();
+
+	$timeline['currentDate'] = getDate($currentDate);
+	$timeline['nextDate'] = getDate($nextDate);
 
 	header("Content-type:application/json");
-	echo json_encode($hellow);
+	echo json_encode($timeline);
 ?>

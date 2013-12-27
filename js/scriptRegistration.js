@@ -56,8 +56,6 @@ $(document).ready(function () {
 		//get all units related to the owner
 		$.post("http://roadfloodph.cloudapp.net/roadfloodph/searchUnit.php", {ownerId: "1"}, function (result) {
 			units = result;
-			console.log(units);
-			
 			if(service='manageUnit'){
 				$("#loadingImage").hide();
 				if(units['generalCounter']>0){
@@ -126,10 +124,6 @@ $(document).ready(function () {
 
 	$("#manageUnit").on('show.bs.modal', function () {
 		getUnits('manageUnit');
-	});
-
-	$("#manageUnit").on('shown.bs.modal', function () {
-		
 	});
 
 	$("#manageUnit").on('hidden.bs.modal', function () {

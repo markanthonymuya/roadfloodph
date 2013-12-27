@@ -5,21 +5,27 @@ $(document).ready(function () {
   var getCurrentDate = new Date();
   var timeFrame = "hour";
   var smsLogsJson;
-  var dayDifference;
-  var currentDayDisplayed;
+  var dayDifference = 86400;
+  var currentDateTimestamp;
+  var nextDateTimestamp;
+  var currentDate;
   var nextDate;
   var timelineReference = {};
 
 
   $("#timelineNav").hide();
 
-  var getNextDate = function(){
-    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getDate.php",{timestamp: timelineReference.tomorrow}, function (json) {
-      nextDate = json['year']+"/"+json['mon']+"/"+json['mday'];
-      dayTimeline(currentDayDisplayed);
+    var getNextDate = function(){
+    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getDate.php",{currentDateTs: currentDateTimestamp, nextDateTs: nextDateTimestamp}, function (json) {
+      currentDate = json.currentDate['year']+"/"+json.currentDate['mon']+"/"+json.currentDate['mday'];
+      nextDate = json.nextDate['year']+"/"+json.nextDate['mon']+"/"+json.nextDate['mday'];
+      console.log(currentDate);
+      console.log(nextDate);
+      chartTimeline();
     });
   }
 
+  //triggered upon change in database
   smsUpdateLogs = function(){
     $.post("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: "9275628107"}, function (json) {
       smsLogsJson = json;
@@ -27,8 +33,8 @@ $(document).ready(function () {
       $.get("http://roadfloodph.cloudapp.net/roadfloodph/timeStamp.php",{year: getCurrentDate.getFullYear()}, function (json) {
         timelineReference = json;
         // console.log(timelineReference);
-        dayDifference = timelineReference.tomorrow - timelineReference.today;
-        currentDayDisplayed = timelineReference.today;
+        currentDateTimestamp = timelineReference.today;
+        nextDateTimestamp = timelineReference.tomorrow;
         getNextDate();
       });
 
@@ -36,33 +42,29 @@ $(document).ready(function () {
   };
 
   $("#driveRight").click(function(){
-      currentDayDisplayed = currentDayDisplayed + dayDifference;
-      dayTimeline(currentDayDisplayed);
+      currentDateTimestamp = currentDateTimestamp + dayDifference;
+      nextDateTimestamp = nextDateTimestamp + dayDifference;
+      console.log(currentDateTimestamp);
+      getNextDate();
   });
 
   $("#driveLeft").click(function(){
-      currentDayDisplayed = currentDayDisplayed - dayDifference;
-      dayTimeline(currentDayDisplayed);
+      currentDateTimestamp = currentDateTimestamp - dayDifference;
+      nextDateTimestamp = nextDateTimestamp - dayDifference;
+      console.log(currentDateTimestamp);
+      getNextDate();
   });
 
-  var dayTimeline = function(hours){
-    var currentDay = timelineReference.today;
-    var referenceEndpoint = timelineReference.tomorrow;
+  var chartTimeline = function(){
     var hourDataValues = new Array();
     var hourLabelValues = new Array();
     var dataLength = smsLogsJson["generalCounter"];
-
-    console.log("currentDay: " + currentDay);
-    console.log("referenceEndpoint: " + referenceEndpoint);
 
     var dataSetQueue = 1;
 
       for (var j = 1; j <= dataLength; j++) {
 
-        // console.log(smsLogsJson["timestamp"+j] >= currentDay);
-        // console.log(smsLogsJson["timestamp"+j] <= referenceEndpoint);
-
-        if(smsLogsJson["timestamp"+j] >= currentDay && smsLogsJson["timestamp"+j] <= referenceEndpoint){
+        if(smsLogsJson["timestamp"+j] >= currentDateTimestamp && smsLogsJson["timestamp"+j] <= nextDateTimestamp){
           
           if(dataSetQueue == 1){
             //get previous reading
@@ -72,7 +74,7 @@ $(document).ready(function () {
             else{
               hourDataValues[0] = parseFloat(smsLogsJson["reportedFloodLevel"+(j-1)]);
             }
-            hourLabelValues[0] = smsLogsJson["receivedDate"+j];
+            hourLabelValues[0] = currentDate;
           }
 
           hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
@@ -82,8 +84,18 @@ $(document).ready(function () {
           // it is always replaced by a newer value if it still has a next value
           // else, if it is the last value, then it will be preserved as the last value to be displayed
           // with respect to the end of the chosen time.
-          
+          if(currentDateTimestamp != timelineReference.today){
+            hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+          }
           hourLabelValues[dataSetQueue] = nextDate;
+        }
+        else if(dataSetQueue == 1 && hourDataValues[0] == null){
+          hourDataValues[0] = 0;
+          hourLabelValues[0] = currentDate;
+          hourDataValues[1] = 0;
+          hourLabelValues[1] = "No Data To Display";
+          hourDataValues[2] = 0;
+          hourLabelValues[2] = nextDate;
         }
       }
 
