@@ -1,4 +1,5 @@
 <?php
+	//converter from timestampt to human readable date
 	$currentDate = $_GET['currentDateTs'];
 	$nextDate = $_GET['nextDateTs'];
 
