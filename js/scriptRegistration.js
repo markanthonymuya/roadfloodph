@@ -21,9 +21,10 @@ $(document).ready(function () {
 	var clearUpdateInput = function(){
 		$("#unitCodeUpdate").val("");
 		$("#unitNumberUpdate").val("");
-		$("#unitViewingUpdate").val("");
-		$("#unitRegionFormUpdate").val("");
+		$("#unitViewingUpdate").val("public");
+		$("#unitRegionFormUpdate").val("ncr");
 		$("#unitNameFormUpdate").val("");
+		$("#smsIdentificationUpdate").val("");
 	}
 
 	var setUpdateInfoInput = function(parentId){
@@ -34,15 +35,13 @@ $(document).ready(function () {
 		$("#unitNameFormUpdate").val(units['unitName'+parentId]);
 		$("#smsIdentificationUpdate").val(units['unitSmsCode'+parentId]);
 		frequency = units['unitFreq'+parentId];
-		console.log(frequency);
 		for(var k = 1; k <= 10; k++){
 			if(frequency == $("#freqId"+k).attr('data-rf')){
 				$(".frequencyBtn").attr("class", "btn btn-default frequencyBtn");
 				$("#freqId"+k).attr("class", "btn btn-primary frequencyBtn");
 			}
 		}
-		smsNotif = units['unitStatus'+parentId];
-		console.log(smsNotif);
+		smsNotif = units['unitSmsNotif'+parentId];
 		if(smsNotif == "activated"){
 			$("#smsNotifON").attr("class", "btn btn-primary smsNotifBtn");
 			$("#smsNotifOFF").attr("class", "btn btn-default smsNotifBtn");
@@ -125,52 +124,6 @@ $(document).ready(function () {
 		});
 	};
 
-	$("#registerUnit").on('shown.bs.modal', function (){
-		$("#unitCode").focus();
-		$("#registerNewUnit").click(function(){
-			$("#registrationMsg").hide();
-			
-			if($("#unitCode").val() != "" && $("#unitNumber").val() != "" && $("#unitNameForm").val() != "" && $("#smsIdentification").val() != ""){
-				$("#registerNewUnit").attr("disabled", true);
-				var unitNumberForm = $("#unitNumber").val();
-				var searchPosition = unitNumberForm.search(/.+639/);
-
-				if(searchPosition == 0 && unitNumberForm.length == 13){
-					unitNumberForm = unitNumberForm.replace("+63", "");
-					var data = {unitCode: $("#unitCode").val(), unitNumber: unitNumberForm, unitViewing: $("#unitViewing").val(), unitRegion: $("#unitRegionForm").val(), unitName: $("#unitNameForm").val(), ownerId: "1", unitSmsKeyword: $("#smsIdentification").val()};
-
-					$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerUnit.php", data, function (response) {
-						if(response == "successful"){
-							alert("You've successfully registered your unit.")
-							$("#registerUnit").modal('hide');
-							clearRegistrationInput();
-						}
-						else if(response == "unit code unavailable"){
-							$("#registrationMsg").text("Unit code has already been taken or used. Please try another code.");
-							$("#registrationMsg").show();
-							$("#unitCode").focus();
-						}
-						else if(response == "keyword unavailable"){
-							$("#registrationMsg").text("Your SMS Identification code is already in use. Please try another desired code.");
-							$("#registrationMsg").show();
-							$("#unitNumber").focus();
-						}
-						$("#registerNewUnit").attr("disabled", false);
-				    });
-				}
-				else{
-					$("#registrationMsg").text("It seems that your unit SIM number is not in desired format or incomplete.");
-					$("#registrationMsg").show();
-					$("#registerNewUnit").attr("disabled", false);					
-				}
-			}
-			else{
-				$("#registrationMsg").text("Please do not leave empty input boxes.");
-				$("#registrationMsg").show();
-			}
-		});
-	});
-
 	$("#manageUnit").on('show.bs.modal', function () {
 		getUnits('manageUnit');
 	});
@@ -199,18 +152,89 @@ $(document).ready(function () {
 		$(this).attr("class", "btn btn-primary smsNotifBtn");
 	});
 
-	$("#updateUnitBtn").click(function(){
-		var data = {unitId: units['unitId'+parentId], unitNumber: $("#unitNumberUpdate").val(), unitViewing: $("#unitViewingUpdate").val(), unitRegion: $("#unitRegionFormUpdate").val(), unitName: $("#unitNameFormUpdate").val(), unitStatus: smsNotif, unitFrequency: frequency};
-		$.post("http://roadfloodph.cloudapp.net/roadfloodph/updateUnit.php", data, function (result, status) {
-			if(status == "success"){
-				alert("You've successfully updated your roadflood unit settings.");
-				$("#updateUnit").modal('hide');
-				clearUpdateInput();
+	$("#registerUnit").on('shown.bs.modal', function (){
+		$("#unitCode").focus();
+	});
+
+	$("#registerNewUnit").click(function(){
+		$("#registrationMsg").hide();
+			
+		if($("#unitCode").val() != "" && $("#unitNumber").val() != "" && $("#unitNameForm").val() != "" && $("#smsIdentification").val() != ""){
+			$("#registerNewUnit").attr("disabled", true);
+			var unitNumberForm = $("#unitNumber").val();
+			var searchPosition = unitNumberForm.search(/.+639/);
+
+			if(searchPosition == 0 && unitNumberForm.length == 13){
+				unitNumberForm = unitNumberForm.replace("+63", "");
+				var data = {unitCode: $("#unitCode").val(), unitNumber: unitNumberForm, unitViewing: $("#unitViewing").val(), unitRegion: $("#unitRegionForm").val(), unitName: $("#unitNameForm").val(), ownerId: "1", unitSmsKeyword: $("#smsIdentification").val()};
+
+				$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerUnit.php", data, function (response) {
+					console.log(response);
+					if(response == "successful"){
+						alert("You've successfully registered your unit.")
+						$("#registerUnit").modal('hide');
+						clearRegistrationInput();
+					}
+					else if(response == "unit code unavailable"){
+						$("#registrationMsg").text("Unit code has already been taken or used. Please try another code.");
+						$("#registrationMsg").show();
+						$("#unitCode").focus();
+					}
+					else if(response == "keyword unavailable"){
+						$("#registrationMsg").text("Your SMS Identification code is already in use. Please try another desired code.");
+						$("#registrationMsg").show();
+						$("#unitNumber").focus();
+					}
+					$("#registerNewUnit").attr("disabled", false);
+			    });
 			}
 			else{
-				alert("There's a problem submitting your info update. It might be a network problem or system maintenance. Please try it again later.");
+				$("#registrationMsg").text("It seems that your unit SIM number is not in desired format or incomplete.");
+				$("#registrationMsg").show();
+				$("#registerNewUnit").attr("disabled", false);					
 			}
-		});
+		}
+		else{
+			$("#registrationMsg").text("Please do not leave empty input boxes.");
+			$("#registrationMsg").show();
+		}
+	});
+	
+	$("#updateUnitBtn").click(function(){
+		$("#updateMsg").hide();
+		
+		if($("#unitNumberUpdate").val() != "" && $("#unitNameFormUpdate").val() != ""){
+			$("#updateUnitBtn").attr("disabled", true);
+			var unitNumberUpdate = $("#unitNumberUpdate").val();
+			var searchPosition = unitNumberUpdate.search(/.+639/);
+
+			if(searchPosition == 0 && unitNumberUpdate.length == 13){
+				unitNumberUpdate = unitNumberUpdate.replace("+63", "");
+				var data = {unitCode: $("#unitCodeUpdate").val(), unitNumber: unitNumberUpdate, unitViewing: $("#unitViewingUpdate").val(), unitRegion: $("#unitRegionFormUpdate").val(), unitName: $("#unitNameFormUpdate").val(), unitFrequency: frequency, unitSmsNotif: smsNotif};
+
+				$.post("http://roadfloodph.cloudapp.net/roadfloodph/updateUnit.php", data, function (response) {
+					if(response == "successful"){
+						alert("You've successfully updated your unit profile.")
+						$("#updateUnit").modal('hide');
+						clearUpdateInput();
+					}
+					else{
+						$("#updateMsg").text("Something went wrong during update of your unit profile. Please try again later.");
+						$("#updateMsg").show();
+					}
+					$("#updateUnitBtn").attr("disabled", false);
+			    });
+			}
+			else{
+				$("#updateMsg").text("It seems that your unit SIM number is not in desired format or incomplete.");
+				$("#updateMsg").show();
+				$("#updateUnitBtn").attr("disabled", false);					
+			}
+		}
+		else{
+			$("#updateMsg").text("Please do not leave empty input boxes.");
+			$("#updateMsg").show();
+		}
 	});
 
 });

@@ -2,16 +2,34 @@
  
 require('../key/access.php');
 
- $unitId = $_POST['unitId'];
+ $unitCode = $_POST['unitCode'];
  $unitNumber = $_POST['unitNumber'];
  $unitViewing = $_POST['unitViewing'];
  $unitRegion = $_POST['unitRegion'];
  $unitName = $_POST['unitName'];
- $unitStatus = $_POST['unitStatus'];
- $frequency = $_POST['unitFrequency'];
+ $unitFrequency = $_POST['unitFrequency'];
+ $unitSmsNotif = $_POST['unitSmsNotif'];
+
+ //get unitId from unitlist
+ $resultUnitSearch = mysqli_query($con,"SELECT unitId FROM unitlist WHERE unitCode='$unitCode' LIMIT 1");
+ $unit = mysqli_fetch_array($resultUnitSearch);
+
+if($unit){
+	$unitId = $unit['unitId'];
+	$affectedRow = mysqli_query($con, "UPDATE unitregistration SET unitSimNumber='$unitNumber', unitViewing='$unitViewing', unitRegion='$unitRegion', unitName='$unitName', frequency='$unitFrequency', unitSmsNotif='$unitSmsNotif' WHERE unitId='$unitId'");
+	if($affectedRow){
+		$resultMsg = "successful";
+	}
+	else{
+		$resultMsg = "no affected rows";
+	}
+}
+else{
+	$resultMsg = "error getting unitId";
+}
 
 
- //check if the unit has the same number
- $result = mysqli_query($con, "UPDATE unitregistration SET unitSimNumber='$unitNumber', unitViewing='$unitViewing', unitRegion='$unitRegion', unitName='$unitName', unitStatus='$unitStatus', frequency='$frequency' WHERE unitId='$unitId'");
+header("Content-type:application/json");
+echo json_encode($resultMsg);
 
- ?>
+?>

@@ -10,6 +10,7 @@
  $unitStatus = "not activated";
  $ownerId = $_POST['ownerId'];
  $unitSmsKeyword = $_POST['unitSmsKeyword'];
+ $unitSmsNotif = "activated";
  date_default_timezone_set("Asia/Manila");
  $dateAdded = date("Y/m/d");
  $timeAdded = date("H:i:s");
@@ -23,7 +24,7 @@
 
 if($unit){
 	 if(!$keyword){
-		 mysqli_query($con, "INSERT INTO unitregistration (unitSimNumber, unitViewing, unitRegion, unitName, unitStatus, frequency, ownerId, dateAdded, timeAdded, accessToken, unitSmsCode) VALUES ('$unitNumber', '$unitViewing', '$unitRegion', '$unitName', '$unitStatus', '2.0', $ownerId, '$dateAdded', '$timeAdded', '', '$unitSmsKeyword')");
+		 mysqli_query($con, "INSERT INTO unitregistration (unitSimNumber, unitViewing, unitRegion, unitName, unitStatus, frequency, ownerId, dateAdded, timeAdded, accessToken, unitSmsCode, unitSmsNotif) VALUES ('$unitNumber', '$unitViewing', '$unitRegion', '$unitName', '$unitStatus', '2.0', $ownerId, '$dateAdded', '$timeAdded', '', '$unitSmsKeyword', '$unitSmsNotif')");
 
 		 $getUnitRegId = mysqli_query($con,"SELECT unitId FROM unitregistration WHERE unitSimNumber='$unitNumber' AND unitName='$unitName' AND dateAdded='$dateAdded' AND timeAdded='$timeAdded' AND unitSmsCode='$unitSmsKeyword' LIMIT 1");
 	 	 $registration = mysqli_fetch_array($getUnitRegId);

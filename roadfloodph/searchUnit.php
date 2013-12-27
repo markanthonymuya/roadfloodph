@@ -28,6 +28,7 @@
     $selection['unitAT'.$counter] = $row['accessToken'];
     $selection['unitFreq'.$counter] = $row['frequency'];
     $selection['unitSmsCode'.$counter] = $row['unitSmsCode'];
+    $selection['unitSmsNotif'.$counter] = $row['unitSmsNotif'];
     $counter++;
    }
 
