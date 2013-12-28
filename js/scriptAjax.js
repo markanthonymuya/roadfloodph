@@ -18,9 +18,8 @@ $(document).ready(function () {
             console.log(currentLocationSelected);
             console.log(unitLocationDetails["unitBarangay" + currentLocationSelected]);*/
             if (unitLocationDetails["unitStatus" + currentLocationSelected] != undefined || unitLocationDetails["unitStatus" + currentLocationSelected] != null || unitLocationDetails["unitStatus" + currentLocationSelected] != "") {
-                $("#unitLocation").text(" " + unitLocationDetails["unitName" + currentLocationSelected]);
-                $("#unitRegion").text(" " + unitLocationDetails["unitRegion" + currentLocationSelected]);
-                $("#unitStatus").text(" " + unitLocationDetails["unitStatus" + currentLocationSelected]);
+                $("#unitLocation").text(unitLocationDetails["unitName" + currentLocationSelected]);
+                $("#unitRegion").text(unitLocationDetails["unitRegion" + currentLocationSelected].toUpperCase());
                 checkVehiclePassability();
             }
             else {
@@ -47,7 +46,7 @@ $(document).ready(function () {
             });
 
             currentWaterLevel = json['roadFloodLevel' + currentLocationSelected];
-            $("#updateAsOf").text(json["asOf" + currentLocationSelected]);
+            $("#updateAsOf").text("As of: " + json["asOf" + currentLocationSelected]);
 
             bodyWaterLevel();
             gaugeWaterLevel();

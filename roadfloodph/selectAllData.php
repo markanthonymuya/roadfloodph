@@ -11,7 +11,7 @@ require('../key/access.php');
    	$generalCounter++;
     $selection['unitId'.$counter] = $row['unitId'];
     $selection['roadFloodLevel'.$counter] = $row['unitWaterLevel'];
-    $selection['asOf'.$counter] = $row['unitDateAsOf'].$row['unitTimeAsOf'];
+    $selection['asOf'.$counter] = $row['unitDateAsOf']." ".$row['unitTimeAsOf'];
     $counter++;
    }
 

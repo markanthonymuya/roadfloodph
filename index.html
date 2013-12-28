@@ -98,8 +98,8 @@
     </div>
 
     <div id="footer" style="background-color:#222222;">
-      <div class="container">
-        <b><span id="unitLocation">Pureza, Sta. Mesa, Manila</span></b><span id='unitRegion'></span><br>Status: <span id='unitStatus'></span><br>Update As Of: <span id="updateAsOf"></span><span id="connectToInternet" style="color: yellow">To receive road flood updates, please connect to the internet.</span>
+      <div class="container" style="padding-top: 20px; padding-bottom: 20px;">
+        <b><span id="unitLocation"></span></b><span id='unitRegion' style="margin-left: 20px;"></span><span id="updateAsOf" style="margin-left: 20px;" class="pull-right"></span><span id="connectToInternet" style="color: yellow">To receive road flood updates, please connect to the internet.</span>
       </div>
     </div>
 
@@ -314,6 +314,9 @@
                 </label>
                 <label class="btn btn-default timeFrameBtn" data-rf="month">
                   <input type="radio"> Month
+                </label>
+                <label class="btn btn-default timeFrameBtn" data-rf="quarter">
+                  <input type="radio"> Quarter
                 </label>
                 <label class="btn btn-default timeFrameBtn" data-rf="semiannual">
                   <input type="radio"> Semi-Annual
