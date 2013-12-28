@@ -16,6 +16,8 @@ $(document).ready(function () {
   var getMonth = {};
 
   $("#timelineNav").hide();
+  $(".dashboardNav").hide();
+
 
   //converts the currentDate and nextDate Timestamp into a human readable date
   var getNextDate = function(){
@@ -50,10 +52,15 @@ $(document).ready(function () {
   }
 
   //triggered upon change in database
-  smsUpdateLogs = function(){
-    $.post("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: "9275628107"}, function (json) {
+  smsUpdateLogs = function(manageUnitSimNumber){
+    currentUnitSimNumber = manageUnitSimNumber;
+    $.get("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: currentUnitSimNumber}, function (json) {
       smsLogsJson = json;
-      console.log(smsLogsJson);
+      $(".dashboardNav").show();
+      $("#timelineNav").show();
+      $("#loadingImage").hide();
+      $('#manageModal').attr("style", "width: 1100px;");
+      $("#myChart").show("slow");
       if(timeFrame == "day"){
         getNextDay();
       }
@@ -90,8 +97,7 @@ $(document).ready(function () {
   });
 
   $("#driveRight").click(function(){
-    console.log(currentDateTimestamp);
-    if(currentDateTimestamp <= smsLogsJson["timestamp"+smsLogsJson['generalCounter']]){
+    if(nextDateTimestamp < getDay.tomorrow){
       if(timeFrame == "day"){
         currentDateTimestamp = currentDateTimestamp + dayDifference;
         nextDateTimestamp = nextDateTimestamp + dayDifference;
@@ -103,7 +109,6 @@ $(document).ready(function () {
           currentMonth = 0;
           currentYear++;
         }
-        console.log("currentMonth: " + currentMonth);
         getNextMonth();
       }
       else if(timeFrame == "semiannual"){
@@ -149,7 +154,7 @@ $(document).ready(function () {
             hourLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
           }
           else if(timeFrame == "month"){
-            hourLabelValues[dataSetQueue] = "DAY " + smsLogsJson["receivedDate"+(j)].slice(8,10) + "   " + smsLogsJson["receivedTime"+(j)];
+            hourLabelValues[dataSetQueue] = "D-" + smsLogsJson["receivedDate"+(j)].slice(8,10) + "   " + smsLogsJson["receivedTime"+(j)];
           }
           dataSetQueue++;
           
@@ -179,6 +184,8 @@ $(document).ready(function () {
           hourLabelValues[2] = nextDate;
         }
       }
+    
+    $("#manageTitle").text(hourLabelValues[0]);
 
     data.datasets[0].data = hourDataValues;
     data.labels = hourLabelValues;
@@ -200,7 +207,7 @@ $(document).ready(function () {
       currentYear = getCurrentDate.getFullYear();
       getNextMonth(); 
     }
-    smsUpdateLogs();
+    smsUpdateLogs(currentUnitSimNumber);
   });
 
 });
@@ -277,7 +284,7 @@ $(document).ready(function () {
       pointDot : true,
       
       //Number - Radius of each point dot in pixels
-      pointDotRadius : 3,
+      pointDotRadius : 4,
       
       //Number - Pixel width of point dot stroke
       pointDotStrokeWidth : 1,
@@ -298,7 +305,7 @@ $(document).ready(function () {
       animationSteps : 60,
       
       //String - Animation easing effect
-      animationEasing : "easeOutQuint",
+      animationEasing : "easeOutQuad",
 
       //Function - Fires when the animation is complete
       onAnimationComplete : null

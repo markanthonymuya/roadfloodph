@@ -1,5 +1,7 @@
 var currentWaterLevel = 0;
 var getUnitLocation;
+var currentUnitSimNumber = "";
+
 
 $(document).ready(function () {
     var lastIndexLastRow = 0;
@@ -63,7 +65,9 @@ $(document).ready(function () {
                 if (currentIndexLastRow != lastIndexLastRow && status == "success" || becomesOffline) {
                     lastIndexLastRow = currentIndexLastRow;
                     getUpdatedData();
-                    smsUpdateLogs();
+                    if(currentUnitSimNumber != null && currentUnitSimNumber != "" && currentUnitSimNumber != 0){
+                        smsUpdateLogs(currentUnitSimNumber);
+                    }
                     becomesOffline = false;
                 }
                 $("#connectToInternet").hide();

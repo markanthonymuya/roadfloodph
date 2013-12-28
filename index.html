@@ -307,7 +307,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel"><a id="driveLeft" href="#">&laquo;</a>Manage<a id="driveRight" href="#">&raquo;</a>
+            <h4 class="modal-title" id="myModalLabel"><a class="btn btn-default dashboardNav" style="margin-right: 5px;" id="driveLeft">&laquo;</a><span id="manageTitle">Manage</span><a class="btn btn-default dashboardNav" style="margin-left: 5px;" id="driveRight">&raquo;</a>
               <div id="timelineNav" style="margin-right: 37px;" class="btn-group pull-right" data-toggle="buttons">
                 <label class="btn btn-primary timeFrameBtn active" data-rf="day">
                   <input type="radio"> Day
@@ -326,7 +326,8 @@
           </div>
           <div id="manageBody" class="modal-body">
             <center><img id="loadingImage" src="images/loading.gif" /></center>
-            <center><canvas id="myChart" width="800" height="300"></canvas></center>
+            <center><canvas id="myChart" width="1000" height="400"></canvas></center>
+            <br id="breakInChartUI" />
             <script src="custom.js/scriptDashboard.js"></script>
           </div>
          <!--  <div class="modal-footer">

@@ -3,7 +3,7 @@ require('../key/access.php');
 
 date_default_timezone_set("Asia/Manila");
 
-$unitSimNumber = $_POST['unitSimNumber'];
+$unitSimNumber = $_GET['unitSimNumber'];
 
  $result = mysqli_query($con, "SELECT reportedFloodLevel, receivedDate, receivedTime FROM unitsmsupdatelogs where unitSimNumber='$unitSimNumber'");
 

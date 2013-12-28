@@ -7,6 +7,7 @@ $(document).ready(function () {
 
 	$("#myChart").hide();
 	$("#registrationMsg").hide();
+	$("#breakInChartUI").hide();
 
 
 	var clearRegistrationInput = function(){
@@ -60,7 +61,7 @@ $(document).ready(function () {
 				$("#loadingImage").hide();
 				if(units['generalCounter']>0){
 					for(var i = 1; i <= units['generalCounter']; i++){
-						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 5px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button type="button" class="btn btn-default pull-right backButton" style="margin-left: 5px;"><span class="glyphicon glyphicon-backward"></span> Back<button id="activateBtn'+i+'" style="margin-left: 5px;" class="btn btn-warning pull-right activateBtn">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button></p></span><br class="appendedBodyMsg">');
+						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 5px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button type="button" class="btn btn-default pull-right backButton" style="margin-left: 5px;"><span class="glyphicon glyphicon-backward"></span> Back<button id="activateBtn'+i+'" style="margin-left: 5px;" class="btn btn-warning pull-right activateBtn">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button></p></span><br class="appendedBodyMsg breaks">');
 						$(".backButton").hide();
 						var status = units['unitAT'+i];
 						if(status=='' || status == null){
@@ -74,6 +75,9 @@ $(document).ready(function () {
 
 					$(".backButton").click(function(){
 					      $(".backButton").hide();
+      					  $(".dashboardNav").hide();
+      					  $("#manageTitle").text("Manage");
+					      $("#breakInChartUI").hide("slow");
 					      $(".appendedBodyMsg").remove();
 					      $("#loadingImage").show();
 					      $("#myChart").hide("slow");
@@ -97,16 +101,18 @@ $(document).ready(function () {
 
 					$(".dashboardBtn").click(function(){
 						var unitDashboardValue = this.parentNode.getAttribute('data-rf');
+						smsUpdateLogs(units['unitSimNumber'+unitDashboardValue]);
+						$(".breaks").hide();
 						for(var j = 1; j <= units['generalCounter']; j++){
 							if (j == unitDashboardValue) {
-								$("#timelineNav").show();
+								//skips to hide the equivalent id number
 							}
 							else{
 								$("#appended"+j).hide();
 							}
 						}
-						$('#manageModal').attr("style", "width: 900px;");
-						$("#myChart").show("slow");
+						$("#breakInChartUI").show("slow");
+						$("#loadingImage").show();
       					$(".backButton").show();
       					$(".dashboardBtn").hide();
 					});
@@ -127,6 +133,8 @@ $(document).ready(function () {
 	});
 
 	$("#manageUnit").on('hidden.bs.modal', function () {
+		$("#manageTitle").text("Manage");
+      	$(".dashboardNav").hide();
 		$(".appendedBodyMsg").remove();
 		$("#loadingImage").show();
 		$("#myChart").hide();
