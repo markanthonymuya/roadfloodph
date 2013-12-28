@@ -15,7 +15,6 @@ $(document).ready(function () {
   var getDay = {};
   var getMonth = {};
 
-
   $("#timelineNav").hide();
 
   //converts the currentDate and nextDate Timestamp into a human readable date
@@ -34,10 +33,8 @@ $(document).ready(function () {
   var getNextDay = function(){
     $.get("http://roadfloodph.cloudapp.net/roadfloodph/getDay.php", function (json) {
       getDay = json;
-      // console.log(getDay);
       currentDateTimestamp = getDay.today;
       nextDateTimestamp = getDay.tomorrow;
-      // console.log(currentDateTimestamp);
       getNextDate();
     });
   }
@@ -57,13 +54,44 @@ $(document).ready(function () {
     $.post("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: "9275628107"}, function (json) {
       smsLogsJson = json;
       console.log(smsLogsJson);
-      getNextDay();
+      if(timeFrame == "day"){
+        getNextDay();
+      }
+      else if(timeFrame == "month"){
+        getNextMonth();
+      }
     });
   };
 
+  $("#driveLeft").click(function(){
+    // console.log(currentDateTimestamp);
+    if(currentDateTimestamp>=smsLogsJson['timestamp1']){
+      if(timeFrame == "day"){
+        currentDateTimestamp = currentDateTimestamp - dayDifference;
+        nextDateTimestamp = nextDateTimestamp - dayDifference;
+        getNextDate();
+      }
+      else if(timeFrame == "month"){
+        currentMonth--;
+        if(currentMonth == -1){
+          currentMonth = 11;
+          currentYear--;
+        }
+        console.log("currentMonth: " + currentMonth);
+        getNextMonth();
+      }
+      else if(timeFrame == "semiannual"){
+
+      }
+      else if(timeFrame == "annual"){
+        
+      }
+    }
+  });
+
   $("#driveRight").click(function(){
     console.log(currentDateTimestamp);
-    if(currentDateTimestamp<getDay.today){
+    if(currentDateTimestamp <= smsLogsJson["timestamp"+smsLogsJson['generalCounter']]){
       if(timeFrame == "day"){
         currentDateTimestamp = currentDateTimestamp + dayDifference;
         nextDateTimestamp = nextDateTimestamp + dayDifference;
@@ -72,9 +100,10 @@ $(document).ready(function () {
       else if(timeFrame == "month"){
         currentMonth++;
         if(currentMonth == 12){
-          currentMonth = 1;
+          currentMonth = 0;
           currentYear++;
         }
+        console.log("currentMonth: " + currentMonth);
         getNextMonth();
       }
       else if(timeFrame == "semiannual"){
@@ -83,31 +112,6 @@ $(document).ready(function () {
       else if(timeFrame == "annual"){
         
       }
-    }
-  });
-
-  $("#driveLeft").click(function(){
-    console.log(currentDateTimestamp);
-    if(currentDateTimestamp>=smsLogsJson['timestamp1']){
-      if(timeFrame == "day"){
-        currentDateTimestamp = currentDateTimestamp - dayDifference;
-        nextDateTimestamp = nextDateTimestamp - dayDifference;
-      }
-      else if(timeFrame == "month"){
-        currentMonth--;
-        if(currentMonth == -1){
-          currentMonth = 11;
-          currentYear--;
-        }
-        getNextMonth();
-      }
-      else if(timeFrame == "semiannual"){
-
-      }
-      else if(timeFrame == "annual"){
-        
-      }
-      getNextDate();
     }
   });
 
@@ -115,6 +119,7 @@ $(document).ready(function () {
     var hourDataValues = new Array();
     var hourLabelValues = new Array();
     var dataLength = smsLogsJson["generalCounter"];
+    var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 
     var dataSetQueue = 1;
 
@@ -130,20 +135,40 @@ $(document).ready(function () {
             else{
               hourDataValues[0] = parseFloat(smsLogsJson["reportedFloodLevel"+(j-1)]);
             }
-            hourLabelValues[0] = currentDate;
+            if(timeFrame == "day"){
+              hourLabelValues[0] = currentDate;
+            }
+            else if(timeFrame == "month"){
+              hourLabelValues[0] = months[currentMonth];
+            }
           }
 
           hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
-          hourLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
+
+          if(timeFrame == "day"){
+            hourLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
+          }
+          else if(timeFrame == "month"){
+            hourLabelValues[dataSetQueue] = "DAY " + smsLogsJson["receivedDate"+(j)].slice(8,10) + "   " + smsLogsJson["receivedTime"+(j)];
+          }
           dataSetQueue++;
           
           // it is always replaced by a newer value if it still has a next value
           // else, if it is the last value, then it will be preserved as the last value to be displayed
           // with respect to the end of the chosen time.
-          if(currentDateTimestamp != getDay.today && currentDateTimestamp > getDay.today){
+          if(nextDateTimestamp != getDay.tomorrow && nextDateTimestamp < getDay.tomorrow){
             hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
           }
-          hourLabelValues[dataSetQueue] = nextDate;
+          if(timeFrame == "day"){
+            hourLabelValues[dataSetQueue] = nextDate;
+          }
+          else if(timeFrame == "month"){
+            var nextMonth = currentMonth + 1;
+            if(nextMonth == 12){
+              nextMonth = 0;
+            }
+            hourLabelValues[dataSetQueue] = months[nextMonth];
+          }
         }
         else if(dataSetQueue == 1 && hourDataValues[0] == null){
           hourDataValues[0] = 0;
@@ -167,15 +192,22 @@ $(document).ready(function () {
     timeFrame = this.getAttribute('data-rf');
     $(".timeFrameBtn").attr("class", "btn btn-default timeFrameBtn");
     $(this).attr("class", "btn btn-primary timeFrameBtn");
+    if(timeFrame == "day"){
+      getNextDay();
+    }
+    else if(timeFrame == "month"){
+      currentMonth = getCurrentDate.getMonth();
+      currentYear = getCurrentDate.getFullYear();
+      getNextMonth(); 
+    }
     smsUpdateLogs();
   });
 
 });
-
+//////////////////////////////////////////////////////////////////////////////////////////////
 
     //Get the context of the canvas element we want to select
     var ctx = document.getElementById("myChart").getContext("2d");
-
 
     var data = {
       labels : ["January","February","March","April","May","June","July"],
