@@ -1,4 +1,5 @@
 var smsUpdateLogs;
+var resetTimelineToCurrent;
 
 $(document).ready(function () {
 
@@ -12,21 +13,66 @@ $(document).ready(function () {
   var nextDateTimestamp;
   var currentDate;
   var nextDate;
+  var currentQuarter;
   var getDay = {};
   var getMonth = {};
+  var getQuarter = {};
+  var detailed = false;
 
   $("#timelineNav").hide();
   $(".dashboardNav").hide();
 
+  var executeUpdate = function(){
+    if(timeFrame == "day"){
+      getNextDay();
+    }
+    else if(timeFrame == "month"){
+      getNextMonth();
+    }
+    else if(timeFrame == "quarter"){
+      getNextQuarter();
+    }
+  };
+
+  var evaluateCurrentQuarterByMonth = function(){
+    if(currentMonth >= 0 && currentMonth <= 2){
+      currentQuarter = 0;
+    }
+    else if(currentMonth >= 3 && currentMonth <= 5){
+      currentQuarter = 1;
+    }
+    else if(currentMonth >= 6 && currentMonth <= 8){
+      currentQuarter = 2;
+    }
+    else if(currentMonth >= 9 && currentMonth <= 11){
+      currentQuarter = 3;
+    }
+  };
+
+  evaluateCurrentQuarterByMonth();  //first call to set currentQuarter
+
+  resetTimelineToCurrent = function(){
+    if(timeFrame == "day"){
+      currentDateTimestamp = getDay.today;
+      nextDateTimestamp = getDay.tomorrow;
+    }
+    else if(timeFrame == "month"){
+      currentMonth = getCurrentDate.getMonth();
+      currentYear = getCurrentDate.getFullYear();
+      currentDateTimestamp = getMonth.currentMonth;
+      nextDateTimestamp = getMonth.nextMonth;
+    }
+    else if(timeFrame == "quarter"){
+      currentMonth = getCurrentDate.getMonth();
+      evaluateCurrentQuarterByMonth();
+    }
+  };
 
   //converts the currentDate and nextDate Timestamp into a human readable date
   var getNextDate = function(){
     $.get("http://roadfloodph.cloudapp.net/roadfloodph/getDate.php",{currentDateTs: currentDateTimestamp, nextDateTs: nextDateTimestamp}, function (json) {
       currentDate = json.currentDate['year']+"/"+json.currentDate['mon']+"/"+json.currentDate['mday'];
       nextDate = json.nextDate['year']+"/"+json.nextDate['mon']+"/"+json.nextDate['mday'];
-      // console.log(smsLogsJson['timestamp1']);
-      console.log("currentDateTimestamp: " + currentDateTimestamp);
-      // console.log(smsLogsJson['timestamp'+smsLogsJson['generalCounter']]);
       chartTimeline();
     });
   }
@@ -50,8 +96,18 @@ $(document).ready(function () {
       getNextDate();
     });
   }
+  
+  //get timestamp of a quarter months, first loaded timestamp with respect to current month
+  var getNextQuarter = function(){
+    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getQuarter.php",{year: currentYear, quarter: currentQuarter}, function (json) {
+      getQuarter = json;
+      currentDateTimestamp = getQuarter.startPoint;
+      nextDateTimestamp = getQuarter.endPoint;
+      getNextDate();
+    });
+  }
 
-  //triggered upon change in database
+  //triggered upon change in database and change of selected dashboard 
   smsUpdateLogs = function(manageUnitSimNumber){
     currentUnitSimNumber = manageUnitSimNumber;
     $.get("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: currentUnitSimNumber}, function (json) {
@@ -61,17 +117,11 @@ $(document).ready(function () {
       $("#loadingImage").hide();
       $('#manageModal').attr("style", "width: 1100px;");
       $("#myChart").show("slow");
-      if(timeFrame == "day"){
-        getNextDay();
-      }
-      else if(timeFrame == "month"){
-        getNextMonth();
-      }
+      executeUpdate();
     });
   };
 
   $("#driveLeft").click(function(){
-    // console.log(currentDateTimestamp);
     if(currentDateTimestamp>=smsLogsJson['timestamp1']){
       if(timeFrame == "day"){
         currentDateTimestamp = currentDateTimestamp - dayDifference;
@@ -84,8 +134,15 @@ $(document).ready(function () {
           currentMonth = 11;
           currentYear--;
         }
-        console.log("currentMonth: " + currentMonth);
         getNextMonth();
+      }
+      else if(timeFrame == "quarter"){
+        currentQuarter--;
+        if(currentQuarter == -1){
+          currentQuarter = 3;
+          currentYear--;
+        }
+        getNextQuarter();
       }
       else if(timeFrame == "semiannual"){
 
@@ -111,6 +168,14 @@ $(document).ready(function () {
         }
         getNextMonth();
       }
+      else if(timeFrame == "quarter"){
+        currentQuarter++;
+        if(currentQuarter == 4){
+          currentQuarter = 0;
+          currentYear++;
+        }
+        getNextQuarter();
+      }
       else if(timeFrame == "semiannual"){
 
       }
@@ -121,13 +186,23 @@ $(document).ready(function () {
   });
 
   var chartTimeline = function(){
-    var hourDataValues = new Array();
-    var hourLabelValues = new Array();
+    var timeDataValues = new Array();
+    var timeLabelValues = new Array();
     var dataLength = smsLogsJson["generalCounter"];
-    var months = new Array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
+    var months = new Array("JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER");
+    var quarters = new Array("1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter");
+    var startMonthsQuarter = new Array("JANUARY", "APRIL", "JULY", "OCTOBER");
+    var middleMonthsQuarter = new Array("FEBRUARY", "MAY", "AUGUST", "NOVEMBER");
+    var endMonthsQuarter = new Array("MARCH", "JUNE", "SEPTEMBER", "DECEMBER");
 
     var dataSetQueue = 1;
+    var currentMonthQuarter;
+    var currentDayQuarter;
+    var middleQuarter = false;
+    var middleDisplayed = false;
+    var endDisplayed = false;
 
+    if(detailed){
       for (var j = 1; j <= dataLength; j++) {
 
         if(smsLogsJson["timestamp"+j] >= currentDateTimestamp && smsLogsJson["timestamp"+j] <= nextDateTimestamp){
@@ -135,62 +210,232 @@ $(document).ready(function () {
           if(dataSetQueue == 1){
             //get previous reading
             if(smsLogsJson["reportedFloodLevel"+(j-1)] == undefined){
-              hourDataValues[0] = 0;
+              timeDataValues[0] = 0;
             }
             else{
-              hourDataValues[0] = parseFloat(smsLogsJson["reportedFloodLevel"+(j-1)]);
+              timeDataValues[0] = parseFloat(smsLogsJson["reportedFloodLevel"+(j-1)]);
             }
+
             if(timeFrame == "day"){
-              hourLabelValues[0] = currentDate;
+              timeLabelValues[0] = currentDate;
             }
             else if(timeFrame == "month"){
-              hourLabelValues[0] = months[currentMonth];
+              timeLabelValues[0] = months[currentMonth];
+              currentDayQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10)) - 1;
+            }
+            else if(timeFrame == "quarter"){
+              timeLabelValues[0] = startMonthsQuarter[currentQuarter];
+              currentDayQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10)) - 1;
+              currentMonthQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(5,7));
             }
           }
 
-          hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
 
           if(timeFrame == "day"){
-            hourLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
+            timeLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
           }
           else if(timeFrame == "month"){
-            hourLabelValues[dataSetQueue] = "D-" + smsLogsJson["receivedDate"+(j)].slice(8,10) + "   " + smsLogsJson["receivedTime"+(j)];
+            var dayInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10));
+            if(dayInQuarter > currentDayQuarter){
+              currentDayQuarter = dayInQuarter;
+              timeLabelValues[dataSetQueue] = smsLogsJson["receivedDate"+(j)].slice(8,10) + "   " + smsLogsJson["receivedTime"+(j)];
+            }
+            else{
+              timeLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
+            }
           }
+          else if(timeFrame == "quarter"){
+            var monthInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(5,7));
+            var dayInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10));
+
+            if(monthInQuarter != currentMonthQuarter && endDisplayed == false){
+              if(middleDisplayed == false){
+                currentMonthQuarter = monthInQuarter;
+                timeLabelValues[dataSetQueue] = middleMonthsQuarter[currentQuarter];
+                timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+                middleDisplayed = true;
+                dataSetQueue++;
+              }
+              else{
+                currentMonthQuarter = monthInQuarter;
+                timeLabelValues[dataSetQueue] = endMonthsQuarter[currentQuarter];
+                timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+                middleDisplayed = false;
+                endDisplayed = true;
+                dataSetQueue++; 
+              }
+            }
+            
+            if(dayInQuarter != currentDayQuarter){
+              currentDayQuarter = dayInQuarter;
+              timeLabelValues[dataSetQueue] = smsLogsJson["receivedDate"+(j)].slice(8,10) + "   " + smsLogsJson["receivedTime"+(j)];
+            }
+            else{
+              timeLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
+            }
+          }
+
+          timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+
           dataSetQueue++;
           
           // it is always replaced by a newer value if it still has a next value
           // else, if it is the last value, then it will be preserved as the last value to be displayed
           // with respect to the end of the chosen time.
           if(nextDateTimestamp != getDay.tomorrow && nextDateTimestamp < getDay.tomorrow){
-            hourDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+            timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
           }
           if(timeFrame == "day"){
-            hourLabelValues[dataSetQueue] = nextDate;
+            timeLabelValues[dataSetQueue] = nextDate;
           }
           else if(timeFrame == "month"){
             var nextMonth = currentMonth + 1;
             if(nextMonth == 12){
               nextMonth = 0;
             }
-            hourLabelValues[dataSetQueue] = months[nextMonth];
+            timeLabelValues[dataSetQueue] = months[nextMonth];
+          }
+          else if(timeFrame == "quarter"){
+            /*var nextQuarter = currentQuarter + 1;
+            if(nextMonth == 4){
+              nextMonth = 0;
+            }
+            timeLabelValues[dataSetQueue] = middleMonthsQuarter[currentQuarter] +"-  " + smsLogsJson["receivedTime"+(j)];*/
           }
         }
-        else if(dataSetQueue == 1 && hourDataValues[0] == null){
-          hourDataValues[0] = 0;
-          hourLabelValues[0] = currentDate;
-          hourDataValues[1] = 0;
-          hourLabelValues[1] = "No Data To Display";
-          hourDataValues[2] = 0;
-          hourLabelValues[2] = nextDate;
+        else if(dataSetQueue == 1 && timeDataValues[0] == null){
+          timeDataValues[0] = 0;
+          timeLabelValues[0] = currentDate;
+          timeDataValues[1] = 0;
+          timeLabelValues[1] = "No Data To Display";
+          timeDataValues[2] = 0;
+          timeLabelValues[2] = nextDate;
         }
       }
-    
-    $("#manageTitle").text(hourLabelValues[0]);
+    }
+    else{
+      for (var j = 1; j <= dataLength; j++) {
 
-    data.datasets[0].data = hourDataValues;
-    data.labels = hourLabelValues;
-   /* console.log(hourDataValues);
-    console.log(hourLabelValues);*/
+        if(smsLogsJson["timestamp"+j] >= currentDateTimestamp && smsLogsJson["timestamp"+j] <= nextDateTimestamp){
+          
+          if(dataSetQueue == 1){
+            //get previous reading
+            if(smsLogsJson["reportedFloodLevel"+(j-1)] == undefined){
+              timeDataValues[0] = 0;
+            }
+            else{
+              timeDataValues[0] = parseFloat(smsLogsJson["reportedFloodLevel"+(j-1)]);
+            }
+
+            if(timeFrame == "day"){
+              timeLabelValues[0] = currentDate;
+            }
+            else if(timeFrame == "month"){
+              timeLabelValues[0] = months[currentMonth];
+              currentDayQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10)) - 1;
+            }
+            else if(timeFrame == "quarter"){
+              timeLabelValues[0] = startMonthsQuarter[currentQuarter];
+              currentDayQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10)) - 1;
+              currentMonthQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(5,7));
+            }
+          }
+
+
+          if(timeFrame == "day"){
+            timeLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
+          }
+          else if(timeFrame == "month"){
+            var dayInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10));
+            if(dayInQuarter > currentDayQuarter){
+              currentDayQuarter = dayInQuarter;
+              timeLabelValues[dataSetQueue] = smsLogsJson["receivedDate"+(j)].slice(8,10);
+            }
+            else{
+              timeLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
+            }
+          }
+          else if(timeFrame == "quarter"){
+            var monthInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(5,7));
+            var dayInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10));
+
+            if(monthInQuarter != currentMonthQuarter && endDisplayed == false){
+              if(middleDisplayed == false){
+                currentMonthQuarter = monthInQuarter;
+                timeLabelValues[dataSetQueue] = middleMonthsQuarter[currentQuarter];
+                timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+                middleDisplayed = true;
+                dataSetQueue++;
+              }
+              else{
+                currentMonthQuarter = monthInQuarter;
+                timeLabelValues[dataSetQueue] = endMonthsQuarter[currentQuarter];
+                timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+                middleDisplayed = false;
+                endDisplayed = true;
+                dataSetQueue++; 
+              }
+            }
+            
+            if(dayInQuarter != currentDayQuarter){
+              currentDayQuarter = dayInQuarter;
+              timeLabelValues[dataSetQueue] = smsLogsJson["receivedDate"+(j)].slice(8,10);
+            }
+            else{
+              timeLabelValues[dataSetQueue] = ".";
+            }
+          }
+
+          timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+
+          dataSetQueue++;
+          
+          // it is always replaced by a newer value if it still has a next value
+          // else, if it is the last value, then it will be preserved as the last value to be displayed
+          // with respect to the end of the chosen time.
+          if(nextDateTimestamp != getDay.tomorrow && nextDateTimestamp < getDay.tomorrow){
+            timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+          }
+          if(timeFrame == "day"){
+            timeLabelValues[dataSetQueue] = nextDate;
+          }
+          else if(timeFrame == "month"){
+            var nextMonth = currentMonth + 1;
+            if(nextMonth == 12){
+              nextMonth = 0;
+            }
+            timeLabelValues[dataSetQueue] = months[nextMonth];
+          }
+          else if(timeFrame == "quarter"){
+            /*var nextQuarter = currentQuarter + 1;
+            if(nextMonth == 4){
+              nextMonth = 0;
+            }
+            timeLabelValues[dataSetQueue] = middleMonthsQuarter[currentQuarter] +"-  " + smsLogsJson["receivedTime"+(j)];*/
+          }
+        }
+        else if(dataSetQueue == 1 && timeDataValues[0] == null){
+          timeDataValues[0] = 0;
+          timeLabelValues[0] = currentDate;
+          timeDataValues[1] = 0;
+          timeLabelValues[1] = "No Data To Display";
+          timeDataValues[2] = 0;
+          timeLabelValues[2] = nextDate;
+        }
+      }
+    }
+    //end of the if else of var detailed
+
+
+    if(timeFrame == "quarter"){
+      $("#manageTitle").text(quarters[currentQuarter]);
+    }
+    else{
+      $("#manageTitle").text(timeLabelValues[0]);      
+    }
+
+    data.datasets[0].data = timeDataValues;
+    data.labels = timeLabelValues;
 
     var myNewChart = new Chart(ctx).Line(data,options);
   };
@@ -199,15 +444,8 @@ $(document).ready(function () {
     timeFrame = this.getAttribute('data-rf');
     $(".timeFrameBtn").attr("class", "btn btn-default timeFrameBtn");
     $(this).attr("class", "btn btn-primary timeFrameBtn");
-    if(timeFrame == "day"){
-      getNextDay();
-    }
-    else if(timeFrame == "month"){
-      currentMonth = getCurrentDate.getMonth();
-      currentYear = getCurrentDate.getFullYear();
-      getNextMonth(); 
-    }
-    smsUpdateLogs(currentUnitSimNumber);
+    resetTimelineToCurrent();
+    executeUpdate();
   });
 
 });
@@ -284,7 +522,7 @@ $(document).ready(function () {
       pointDot : true,
       
       //Number - Radius of each point dot in pixels
-      pointDotRadius : 4,
+      pointDotRadius : 3,
       
       //Number - Pixel width of point dot stroke
       pointDotStrokeWidth : 1,

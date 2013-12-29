@@ -74,6 +74,7 @@ $(document).ready(function () {
 					}
 
 					$(".backButton").click(function(){
+						  resetTimelineToCurrent();
 					      $(".backButton").hide();
       					  $(".dashboardNav").hide();
       					  $("#manageTitle").text("Manage");
@@ -101,7 +102,11 @@ $(document).ready(function () {
 
 					$(".dashboardBtn").click(function(){
 						var unitDashboardValue = this.parentNode.getAttribute('data-rf');
+
+						//upon clicking dashboardBtn, update to smsLogsJson must be done to change
+						//datasets with respect to the unitSimNumber
 						smsUpdateLogs(units['unitSimNumber'+unitDashboardValue]);
+						
 						$(".breaks").hide();
 						for(var j = 1; j <= units['generalCounter']; j++){
 							if (j == unitDashboardValue) {
@@ -133,6 +138,7 @@ $(document).ready(function () {
 	});
 
 	$("#manageUnit").on('hidden.bs.modal', function () {
+		resetTimelineToCurrent();
 		$("#manageTitle").text("Manage");
       	$(".dashboardNav").hide();
 		$(".appendedBodyMsg").remove();
