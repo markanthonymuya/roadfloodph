@@ -265,17 +265,19 @@ $(document).ready(function () {
   });
 
   $("#myChart").click(function(){
-    if(detailed){
-      $(".noticeDetails").attr("style", "margin-right: 285px");
-      $(".noticeDetails").text("Click chart to see detailed view");
-      detailed = false;
+    if(data.datasets[0].data.length != 3 && data.labels.length != 3  && timeFrame != "day"){
+      if(detailed){
+        $(".noticeDetails").attr("style", "margin-right: 285px");
+        $(".noticeDetails").text("Click chart to see detailed view");
+        detailed = false;
+      }
+      else{
+        $(".noticeDetails").attr("style", "margin-right: 265px");
+        $(".noticeDetails").text("Click chart to return in minimal view");
+        detailed = true;
+      }
+      chartTimeline();
     }
-    else{
-      $(".noticeDetails").attr("style", "margin-right: 265px");
-      $(".noticeDetails").text("Click chart to return in minimal view");
-      detailed = true;
-    }
-    chartTimeline();
   });
 
 /////////////////////////////chart function//////////////////////////////
