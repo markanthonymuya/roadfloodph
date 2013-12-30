@@ -225,6 +225,7 @@ $(document).ready(function () {
 
 				$.post("http://roadfloodph.cloudapp.net/roadfloodph/updateUnit.php", data, function (response) {
 					if(response == "successful"){
+						getUpdatedData();
 						alert("You've successfully updated your unit profile.")
 						$("#updateUnit").modal('hide');
 						clearUpdateInput();

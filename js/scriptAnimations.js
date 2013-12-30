@@ -185,8 +185,6 @@ var currentImageIndex = 10;
                     var floodLevelInPixel = 51 * 6.8;
                     $("#gaugeWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
                 }
-
-                getUnitLocation();
             }
             else {
                 getUpdatedData();

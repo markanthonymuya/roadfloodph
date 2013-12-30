@@ -16,41 +16,27 @@ $(document).ready(function () {
     $("#updateAsOf").hide();
 
 
-    getUnitLocation = function() {
-        $.post("http://roadfloodph.cloudapp.net/roadfloodph/getUnitLocation.php", function (json) {
-            unitLocationDetails = json;
-           
-            if (unitLocationDetails["unitStatus" + currentLocationSelected] != undefined || unitLocationDetails["unitStatus" + currentLocationSelected] != null || unitLocationDetails["unitStatus" + currentLocationSelected] != "") {
-                $("#unitRegion").text(unitLocationDetails["unitRegion" + currentLocationSelected].toUpperCase());
-                checkVehiclePassability();
-            }
-            else {
-                getUnitLocation();
-            }
-        });
-    }
-
     getUpdatedData = function(){
 
         $.post("http://roadfloodph.cloudapp.net/roadfloodph/selectAllData.php", function (json) {
             currentData = json;
-            console.log(currentData);
 
-            $.post("http://roadfloodph.cloudapp.net/roadfloodph/getUnitNames.php", function (json) {
-                unitNames = json;
-                $(".unitOptions").remove();
-                for (var i = 1; i <= json['generalCounter']; i++) {
-                    $("#selectButton").append("<option class='unitOptions' value=" + i + ">" + json['unitName' + i] + "</option>");
-                }
-                $("#selectButton").val(currentLocationSelected);
-                $("#selectButton").show("slow");
-                $("#updateAsOf").show("slow");
-            });
-
+            $(".unitOptions").remove();
+            for (var i = 1; i <= json['generalCounter']; i++) {
+                $("#selectButton").append("<option class='unitOptions' value=" + i + ">" + json['unitName' + i] + "</option>");
+            }
+            
+            $("#unitRegion").text(json["unitRegion" + currentLocationSelected].toUpperCase());
             $("#updateAsOf").text("As of: " + json["asOf" + currentLocationSelected]);
+            
+            $("#selectButton").val(currentLocationSelected);
+            $("#selectButton").show("slow");
+            $("#updateAsOf").show("slow");
+
             currentWaterLevel = json['roadFloodLevel' + currentLocationSelected];
             bodyWaterLevel();
             gaugeWaterLevel();
+            checkVehiclePassability();
         });
     }
 

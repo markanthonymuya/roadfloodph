@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 30, 2013 at 08:45 PM
+-- Generation Time: Dec 30, 2013 at 10:51 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -122,12 +122,11 @@ CREATE TABLE IF NOT EXISTS `transactionlogs` (
 --
 
 CREATE TABLE IF NOT EXISTS `unitleveldetection` (
-  `unitLevelId` varchar(10) NOT NULL,
   `unitId` int(10) NOT NULL,
   `unitWaterLevel` varchar(10) NOT NULL,
   `unitDateAsOf` varchar(20) NOT NULL,
   `unitTimeAsOf` varchar(20) NOT NULL,
-  PRIMARY KEY (`unitLevelId`),
+  PRIMARY KEY (`unitId`),
   KEY `unitId` (`unitId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -135,8 +134,10 @@ CREATE TABLE IF NOT EXISTS `unitleveldetection` (
 -- Dumping data for table `unitleveldetection`
 --
 
-INSERT INTO `unitleveldetection` (`unitLevelId`, `unitId`, `unitWaterLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
-('1', 1, '42', '2013/12/17', '12:55:19');
+INSERT INTO `unitleveldetection` (`unitId`, `unitWaterLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
+(1, '10', '2013/12/29', '21:29:54'),
+(2, '15', '2013/11/10', '21:31:46'),
+(3, '45', '2013/12/18', '21:35:35');
 
 -- --------------------------------------------------------
 
@@ -158,9 +159,9 @@ CREATE TABLE IF NOT EXISTS `unitlist` (
 --
 
 INSERT INTO `unitlist` (`unitCode`, `dateAdded`, `timeAdded`, `ownerId`, `unitId`) VALUES
-('RF100C1218', '2013/12/24', '20:10:13', 1, 1),
-('RF521B1612', '', '', 0, 0),
-('RF911B0309', '2013/12/24', '20:26:39', 1, 2);
+('RF100C1218', '2013/01/25', '21:29:54', 1, 1),
+('RF521B1612', '2013/11/10', '21:35:35', 1, 3),
+('RF911B0309', '2013/10/30', '21:31:46', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -202,15 +203,16 @@ CREATE TABLE IF NOT EXISTS `unitregistration` (
   PRIMARY KEY (`unitId`),
   KEY `ownerId` (`ownerId`),
   KEY `unitSimNumber` (`unitSimNumber`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `unitregistration`
 --
 
 INSERT INTO `unitregistration` (`unitId`, `unitSimNumber`, `unitViewing`, `unitRegion`, `unitName`, `unitStatus`, `frequency`, `ownerId`, `dateAdded`, `timeAdded`, `accessToken`, `unitSmsCode`, `unitSmsNotif`) VALUES
-(1, '9275628107', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'not activated', '4.5', 1, '2013/12/24', '20:10:13', '12341', 'PUREZA', 'activated'),
-(2, '9396694144', 'public', 'ncr', 'Don Antonio, Brgy. Holy Spirit, QC', 'not activated', '0.5', 1, '2013/12/24', '20:26:39', 'asdfa', 'ANTONIO', 'activated');
+(1, '9275628107', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'not activated', '2.0', 1, '2013/01/25', '21:29:54', '', 'PUREZA', 'activated'),
+(2, '9396694144', 'public', 'ncr', 'Don Antonio, Brgy. Holy Spirit, QC', 'not activated', '2.0', 1, '2013/10/30', '21:31:46', '', 'ANTONIO', 'activated'),
+(3, '9266821823', 'public', 'ncr', 'Guadalupe, Makati', 'not activated', '2.0', 1, '2013/11/10', '21:35:35', '', 'GUADALUPE', 'activated');
 
 -- --------------------------------------------------------
 
@@ -241,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `unitsmsupdatelogs` (
   `receivedTime` varchar(20) NOT NULL,
   PRIMARY KEY (`updateLogId`),
   KEY `unitSimNumber` (`unitSimNumber`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=60 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=61 ;
 
 --
 -- Dumping data for table `unitsmsupdatelogs`
@@ -306,7 +308,8 @@ INSERT INTO `unitsmsupdatelogs` (`updateLogId`, `unitSimNumber`, `reportedFloodL
 (56, '9275628107', '32', '2013/12/29', '12:03:10'),
 (57, '9275628107', '40', '2013/12/29', '13:01:01'),
 (58, '9275628107', '20', '2013/12/29', '14:01:01'),
-(59, '9275628107', '10', '2013/12/29', '15:01:01');
+(59, '9275628107', '10', '2013/12/29', '15:01:01'),
+(60, '9396694144', '10', '2013/12/30', '21:11:10');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
