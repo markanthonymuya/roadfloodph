@@ -181,7 +181,8 @@ $(document).ready(function () {
 				$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerUnit.php", data, function (response) {
 					console.log(response);
 					if(response == "successful"){
-						alert("You've successfully registered your unit.")
+						getUpdatedData();
+						alert("You've successfully registered your unit.");
 						$("#registerUnit").modal('hide');
 						clearRegistrationInput();
 					}

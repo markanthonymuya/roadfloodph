@@ -1,6 +1,7 @@
 var currentWaterLevel = 0;
 var getUnitLocation;
 var currentUnitSimNumber = "";
+var getUpdatedData;
 
 
 $(document).ready(function () {
@@ -11,14 +12,15 @@ $(document).ready(function () {
     var unitLocationDetails = {};
     var currentLocationSelected = 1;
 
+    $("#selectButton").hide();
+    $("#updateAsOf").hide();
+
+
     getUnitLocation = function() {
         $.post("http://roadfloodph.cloudapp.net/roadfloodph/getUnitLocation.php", function (json) {
             unitLocationDetails = json;
-           /* console.log(unitLocationDetails);
-            console.log(currentLocationSelected);
-            console.log(unitLocationDetails["unitBarangay" + currentLocationSelected]);*/
+           
             if (unitLocationDetails["unitStatus" + currentLocationSelected] != undefined || unitLocationDetails["unitStatus" + currentLocationSelected] != null || unitLocationDetails["unitStatus" + currentLocationSelected] != "") {
-                $("#unitLocation").text(unitLocationDetails["unitName" + currentLocationSelected]);
                 $("#unitRegion").text(unitLocationDetails["unitRegion" + currentLocationSelected].toUpperCase());
                 checkVehiclePassability();
             }
@@ -28,26 +30,25 @@ $(document).ready(function () {
         });
     }
 
-    var getUpdatedData = function(){
+    getUpdatedData = function(){
 
         $.post("http://roadfloodph.cloudapp.net/roadfloodph/selectAllData.php", function (json) {
             currentData = json;
-            //console.log(currentData);
+            console.log(currentData);
 
             $.post("http://roadfloodph.cloudapp.net/roadfloodph/getUnitNames.php", function (json) {
                 unitNames = json;
-  //            $(".onProgress").hide();
-                /*$(".unitOptions").remove();
+                $(".unitOptions").remove();
                 for (var i = 1; i <= json['generalCounter']; i++) {
                     $("#selectButton").append("<option class='unitOptions' value=" + i + ">" + json['unitName' + i] + "</option>");
                 }
-                $("#selectButton").val(currentLocationSelected);*/
-                $("#unitName").text(unitNames["unitName" + currentLocationSelected]);
+                $("#selectButton").val(currentLocationSelected);
+                $("#selectButton").show("slow");
+                $("#updateAsOf").show("slow");
             });
 
-            currentWaterLevel = json['roadFloodLevel' + currentLocationSelected];
             $("#updateAsOf").text("As of: " + json["asOf" + currentLocationSelected]);
-
+            currentWaterLevel = json['roadFloodLevel' + currentLocationSelected];
             bodyWaterLevel();
             gaugeWaterLevel();
         });
@@ -75,9 +76,7 @@ $(document).ready(function () {
         else {
             becomesOffline = true;
             $("#connectToInternet").show();
-            $(".onProgress").show();
             $("#unitName").text("");
-            $("#unitLocation").text("");
             $("#unitRegion").text("");
             $("#unitStatus").text("");
             $("#updateAsOf").text("");
@@ -88,11 +87,11 @@ $(document).ready(function () {
 
     setInterval(function () { getLastTableRow() }, 2000);
     
-    currentLocationSelected = 1;
-   /* $("#selectButton").change(function () {
+    $("#selectButton").change(function () {
+        console.log(currentLocationSelected);
         currentLocationSelected = $("#selectButton").val();
-        $("#showInProgress").show();
+        $("#selectButton").show();
         getUpdatedData();
-    });*/
+    });
 
 });

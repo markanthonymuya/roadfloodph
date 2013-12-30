@@ -31,6 +31,8 @@ if($unit){
 	 	 $unitId = $registration['unitId'];
 
 		 mysqli_query($con, "UPDATE unitlist SET dateAdded='$dateAdded', timeAdded='$timeAdded', ownerId='$ownerId', unitId='$unitId' WHERE unitCode='$unitCode'");
+		 mysqli_query($con, "INSERT INTO unitleveldetection (unitId, unitWaterLevel, unitDateAsOf, unitTimeAsOf) VALUES ('$unitId', '0', '$dateAdded', '$timeAdded')");
+
 		 $resultMsg = "successful";
 	 }
 	 else{
