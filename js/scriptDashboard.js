@@ -1,5 +1,7 @@
 var smsUpdateLogs;
 var resetTimelineToCurrent;
+var detailed = false;
+
 
 $(document).ready(function () {
 
@@ -17,7 +19,6 @@ $(document).ready(function () {
   var getDay = {};
   var getMonth = {};
   var getQuarter = {};
-  var detailed = false;
 
   $("#timelineNav").hide();
   $(".dashboardNav").hide();
@@ -185,15 +186,39 @@ $(document).ready(function () {
     }
   });
 
+  $("#myChart").mouseover(function(){
+    if(data.datasets[0].data.length != 3 && data.labels.length != 3 && timeFrame != "day"){
+      $(".noticeDetails").show("slow");
+    }
+  });
+
+  $("#myChart").mouseout(function(){
+    if(data.datasets[0].data.length != 3 && data.labels.length != 3  && timeFrame != "day"){
+      $(".noticeDetails").hide("slow");
+    }
+  });
+
+  $("#myChart").click(function(){
+    if(detailed){
+      $(".noticeDetails").attr("style", "margin-right: 285px");
+      $(".noticeDetails").text("Click chart to see detailed view");
+      detailed = false;
+    }
+    else{
+      $(".noticeDetails").attr("style", "margin-right: 265px");
+      $(".noticeDetails").text("Click chart to return in minimal view");
+      detailed = true;
+    }
+    chartTimeline();
+  });
+
   var chartTimeline = function(){
     var timeDataValues = new Array();
     var timeLabelValues = new Array();
     var dataLength = smsLogsJson["generalCounter"];
     var months = new Array("JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER");
+    var unDetailedMonths = new Array("JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC");
     var quarters = new Array("1st Quarter", "2nd Quarter", "3rd Quarter", "4th Quarter");
-    var startMonthsQuarter = new Array("JANUARY", "APRIL", "JULY", "OCTOBER");
-    var middleMonthsQuarter = new Array("FEBRUARY", "MAY", "AUGUST", "NOVEMBER");
-    var endMonthsQuarter = new Array("MARCH", "JUNE", "SEPTEMBER", "DECEMBER");
 
     var dataSetQueue = 1;
     var currentMonthQuarter;
@@ -224,9 +249,9 @@ $(document).ready(function () {
               currentDayQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10)) - 1;
             }
             else if(timeFrame == "quarter"){
-              timeLabelValues[0] = startMonthsQuarter[currentQuarter];
               currentDayQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10)) - 1;
               currentMonthQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(5,7));
+              timeLabelValues[0] = months[currentMonthQuarter-1];
             }
           }
 
@@ -248,22 +273,11 @@ $(document).ready(function () {
             var monthInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(5,7));
             var dayInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10));
 
-            if(monthInQuarter != currentMonthQuarter && endDisplayed == false){
-              if(middleDisplayed == false){
+            if(monthInQuarter != currentMonthQuarter){
                 currentMonthQuarter = monthInQuarter;
-                timeLabelValues[dataSetQueue] = middleMonthsQuarter[currentQuarter];
+                timeLabelValues[dataSetQueue] = months[monthInQuarter-1];
                 timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
-                middleDisplayed = true;
                 dataSetQueue++;
-              }
-              else{
-                currentMonthQuarter = monthInQuarter;
-                timeLabelValues[dataSetQueue] = endMonthsQuarter[currentQuarter];
-                timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
-                middleDisplayed = false;
-                endDisplayed = true;
-                dataSetQueue++; 
-              }
             }
             
             if(dayInQuarter != currentDayQuarter){
@@ -331,13 +345,13 @@ $(document).ready(function () {
               timeLabelValues[0] = currentDate;
             }
             else if(timeFrame == "month"){
-              timeLabelValues[0] = months[currentMonth];
+              timeLabelValues[0] = unDetailedMonths[currentMonth];
               currentDayQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10)) - 1;
             }
             else if(timeFrame == "quarter"){
-              timeLabelValues[0] = startMonthsQuarter[currentQuarter];
               currentDayQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10)) - 1;
               currentMonthQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(5,7));
+              timeLabelValues[0] = unDetailedMonths[currentMonthQuarter-1];
             }
           }
 
@@ -352,29 +366,18 @@ $(document).ready(function () {
               timeLabelValues[dataSetQueue] = smsLogsJson["receivedDate"+(j)].slice(8,10);
             }
             else{
-              timeLabelValues[dataSetQueue] = smsLogsJson["receivedTime"+(j)];
+              timeLabelValues[dataSetQueue] = "...";
             }
           }
           else if(timeFrame == "quarter"){
             var monthInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(5,7));
             var dayInQuarter = parseInt(smsLogsJson["receivedDate"+(j)].slice(8,10));
 
-            if(monthInQuarter != currentMonthQuarter && endDisplayed == false){
-              if(middleDisplayed == false){
-                currentMonthQuarter = monthInQuarter;
-                timeLabelValues[dataSetQueue] = middleMonthsQuarter[currentQuarter];
-                timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
-                middleDisplayed = true;
-                dataSetQueue++;
-              }
-              else{
-                currentMonthQuarter = monthInQuarter;
-                timeLabelValues[dataSetQueue] = endMonthsQuarter[currentQuarter];
-                timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
-                middleDisplayed = false;
-                endDisplayed = true;
-                dataSetQueue++; 
-              }
+            if(monthInQuarter != currentMonthQuarter){
+              currentMonthQuarter = monthInQuarter;
+              timeLabelValues[dataSetQueue] = unDetailedMonths[monthInQuarter-1];
+              timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+              dataSetQueue++;
             }
             
             if(dayInQuarter != currentDayQuarter){
@@ -382,7 +385,7 @@ $(document).ready(function () {
               timeLabelValues[dataSetQueue] = smsLogsJson["receivedDate"+(j)].slice(8,10);
             }
             else{
-              timeLabelValues[dataSetQueue] = ".";
+              timeLabelValues[dataSetQueue] = "...";
             }
           }
 
@@ -404,7 +407,7 @@ $(document).ready(function () {
             if(nextMonth == 12){
               nextMonth = 0;
             }
-            timeLabelValues[dataSetQueue] = months[nextMonth];
+            timeLabelValues[dataSetQueue] = unDetailedMonths[nextMonth];
           }
           else if(timeFrame == "quarter"){
             /*var nextQuarter = currentQuarter + 1;
@@ -455,14 +458,14 @@ $(document).ready(function () {
     var ctx = document.getElementById("myChart").getContext("2d");
 
     var data = {
-      labels : ["January","February","March","April","May","June","July"],
+      labels : [],
       datasets : [
         {
           fillColor : "rgba(151,187,205,0.5)",
           strokeColor : "rgba(151,187,205,1)",
           pointColor : "rgba(151,187,205,1)",
           pointStrokeColor : "#fff",
-          data : [28,48,40,19,96,27,100]
+          data : []
         }
       ]
     };
