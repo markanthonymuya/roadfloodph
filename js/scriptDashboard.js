@@ -74,26 +74,31 @@ $(document).ready(function () {
   evaluateCurrentSemiAnnualByMonth(); //first call to set currentSemiAnnual
 
   resetTimelineToCurrent = function(){
+    currentMonth = getCurrentDate.getMonth();
+    currentYear = getCurrentDate.getFullYear();
+
     if(timeFrame == "day"){
       currentDateTimestamp = getDay.today;
       nextDateTimestamp = getDay.tomorrow;
     }
     else if(timeFrame == "month"){
-      currentMonth = getCurrentDate.getMonth();
-      currentYear = getCurrentDate.getFullYear();
       currentDateTimestamp = getMonth.currentMonth;
       nextDateTimestamp = getMonth.nextMonth;
     }
     else if(timeFrame == "quarter"){
-      currentMonth = getCurrentDate.getMonth();
+      
+      currentDateTimestamp = getQuarter.startPoint;
+      nextDateTimestamp = getQuarter.endPoint;
       evaluateCurrentQuarterByMonth();
     }
     else if(timeFrame == "semiannual"){
-      currentMonth = getCurrentDate.getMonth();
+      currentDateTimestamp = getSemiAnnual.startPoint;
+      nextDateTimestamp = getSemiAnnual.endPoint;
       evaluateCurrentSemiAnnualByMonth();
     }
     else if(timeFrame == "annual"){
-      currentYear = getCurrentDate.getFullYear();
+      currentDateTimestamp = getAnnual.startPoint;
+      nextDateTimestamp = getAnnual.endPoint;
     }
   };
 
