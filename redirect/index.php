@@ -2,8 +2,8 @@
 
 require ('../globelabsapi/GlobeApi.php');
 
-$appId = "6KLXKFjgxGEu67iaoxTxxzu8oLxoFp4z";
-$appSecret = "b079889f98602660c7f666ad8a593221ce376bad5287f7b2a94ef92952d2526e";
+$appId = "eMGzMHdByBqf4RiLjGTyzefLnGBrHLd8";
+$appSecret = "592c401afde0ae158d6a46c088c78119fa0130b0db54a6d76dd7d8c347317f77";
 
 $globe = new GlobeApi();
 $auth = $globe->auth($appId, $appSecret);

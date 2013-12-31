@@ -45,7 +45,7 @@ $(document).ready(function () {
         var online = navigator.onLine;
 
         if(true){
-            $.post("http://roadfloodph.cloudapp.net/roadfloodph/lastRow.php", function (json, status) {
+            $.get("http://roadfloodph.cloudapp.net/roadfloodph/lastRow.php", function (json, status) {
                 currentIndexLastRow = json;
               console.log(currentIndexLastRow);
                 if (currentIndexLastRow != lastIndexLastRow && status == "success" || becomesOffline) {
