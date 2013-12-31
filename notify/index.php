@@ -65,15 +65,23 @@ if($message) {
 			if($user && $inTemp) {
 				mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitNumber'");
 				mysqli_query($con, "INSERT INTO unitsmsupdatelogs VALUES ('','$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
+				$sms->sendMessage($user['1'], $user['2'], "updated database");
 			}
 			elseif($user){
 				mysqli_query($con, "INSERT INTO unitsmstemplogs VALUES ('','$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
 		    	$response = $sms->sendMessage("RESENDUP");
+				$sms->sendMessage($user['1'], $user['2'], "inserting temp data");
+
 			}
 			else{
 				//no response for unregistered unit numbers
 				//instead, those messages will remain in temp db log
+				$sms->sendMessage($user['1'], $user['2'], "does not satisfy any of the two");
+
 			}
+		}
+		else{
+			$sms->sendMessage($user['1'], $user['2'], "not flupdate");
 		}
 
 	}
