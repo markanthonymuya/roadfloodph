@@ -32,28 +32,24 @@ if($message) {
 
 			//extracting data from text message
 			$roadFloodLevel = str_replace('FLUPDATE ', '', $item['message']);
-
+			echo $roadFloodLevel." ";
 			//replace tel:+63 of outbound into ''
 			$senderNumber = str_replace('tel:+63', '', $item['senderAddress']);
-			$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
+			echo $senderNumber;
+			$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
 			$user = mysqli_fetch_array($resultUnitSearch);
 
 			$resultTemp = mysqli_query($con,"SELECT unitSimNumber, reportedFloodLevel FROM unitsmstemplogs WHERE unitSimNumber = '$senderNumber' ORDER BY tempLogId DESC LIMIT 1");
-			$inTemp = mysqli_fetch_array($result);
+			$inTemp = mysqli_fetch_array($resultTemp);
 
+			$inTempBoolean = false;
 			//check temporary storage for previous reported flood level
-			if($inTemp['reportedFloodLevel'] ==  $item['message']){
-				$inTemp = true;
+			if($inTemp['reportedFloodLevel'] ==  $roadFloodLevel){
+				$inTempBoolean = true;
 			}
 			else{
-				$inTemp = false;	
+				$inTempBoolean = false;	
 			}
-
-			// user
-			// user[0] => userId
-			// user[1] => access_token
-			// user[2] => phonenumber
-			// $item['message']
 
 			date_default_timezone_set("Asia/Manila");
 			$asOfDate = date("Y/m/d");
@@ -62,26 +58,15 @@ if($message) {
 		    $unitNumber = $user['unitId'];
 
 
-			if($user && $inTemp) {
+			if($user && $inTempBoolean) {
 				mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitNumber'");
-				mysqli_query($con, "INSERT INTO unitsmsupdatelogs VALUES ('','$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
-				$sms->sendMessage($user['1'], $user['2'], "updated database");
+				mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
+	    		$response = $sms->sendMessage($user["accessToken"], $user["unitSimNumber"], "UPDATED");
 			}
 			elseif($user){
-				mysqli_query($con, "INSERT INTO unitsmstemplogs VALUES ('','$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
-		    	$response = $sms->sendMessage("RESENDUP");
-				$sms->sendMessage($user['1'], $user['2'], "inserting temp data");
-
+				mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
+	    		$response = $sms->sendMessage($user["accessToken"], $user["unitSimNumber"], "RESEND");
 			}
-			else{
-				//no response for unregistered unit numbers
-				//instead, those messages will remain in temp db log
-				$sms->sendMessage($user['1'], $user['2'], "does not satisfy any of the two");
-
-			}
-		}
-		else{
-			$sms->sendMessage($user['1'], $user['2'], "not flupdate");
 		}
 
 	}

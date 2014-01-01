@@ -12,7 +12,7 @@ $message = json_decode($json, true);
 //if we received a message
 /*if($message) {*/
 	$globe = new GlobeApi('v1');
-	$sms = $globe->sms(6775);
+	$sms = $globe->sms(1668);
 
 	//check if valid json
 	/*if(!isset($message['inboundSMSMessageList']['inboundSMSMessage'])) {
