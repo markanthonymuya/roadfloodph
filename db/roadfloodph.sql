@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Dec 30, 2013 at 10:51 PM
+-- Generation Time: Jan 01, 2014 at 08:31 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `subscriber` (
 --
 
 INSERT INTO `subscriber` (`subscriberId`, `subscriberAT`, `subscriberContact`, `subscriberTotalSubscriptions`, `subscriberCredit`, `subscriberStatus`, `dateAdded`, `timeAdded`) VALUES
-(1, 'PPjDVj97zKSdke9sHXdrxzQu84Y1sqNyY9U8MeMWBZA', '9275628107', 1, '0.00', 'active', '2013-10-30', '9:34 AM');
+(1, 'm61UThl6s0PimODh7HcGHxzcjC3TF9H1uo0qA77sI_k', '9275628107', 1, '0.00', 'active', '2013-10-30', '9:34 AM');
 
 -- --------------------------------------------------------
 
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `unitleveldetection` (
 --
 
 INSERT INTO `unitleveldetection` (`unitId`, `unitWaterLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
-(1, '10', '2013/12/29', '21:29:54'),
+(1, '5', '2014/01/01', '13:06:46'),
 (2, '15', '2013/11/10', '21:31:46'),
 (3, '45', '2013/12/18', '21:35:35');
 
@@ -183,6 +183,20 @@ CREATE TABLE IF NOT EXISTS `unitowner` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `unitpowermonitoring`
+--
+
+CREATE TABLE IF NOT EXISTS `unitpowermonitoring` (
+  `unitId` int(10) NOT NULL AUTO_INCREMENT,
+  `unitPowerLevel` varchar(10) NOT NULL,
+  `unitDateAsOf` varchar(20) NOT NULL,
+  `unitTimeAsOf` varchar(20) NOT NULL,
+  PRIMARY KEY (`unitId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `unitregistration`
 --
 
@@ -210,9 +224,9 @@ CREATE TABLE IF NOT EXISTS `unitregistration` (
 --
 
 INSERT INTO `unitregistration` (`unitId`, `unitSimNumber`, `unitViewing`, `unitRegion`, `unitName`, `unitStatus`, `frequency`, `ownerId`, `dateAdded`, `timeAdded`, `accessToken`, `unitSmsCode`, `unitSmsNotif`) VALUES
-(1, '9275628107', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'not activated', '2.0', 1, '2013/01/25', '21:29:54', '', 'PUREZA', 'activated'),
-(2, '9396694144', 'public', 'ncr', 'Don Antonio, Brgy. Holy Spirit, QC', 'not activated', '2.0', 1, '2013/10/30', '21:31:46', '', 'ANTONIO', 'activated'),
-(3, '9266821823', 'public', 'ncr', 'Guadalupe, Makati', 'not activated', '2.0', 1, '2013/11/10', '21:35:35', '', 'GUADALUPE', 'activated');
+(1, '9275628107', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'activated', '2.0', 1, '2013/01/25', '21:29:54', 'm61UThl6s0PimODh7HcGHxzcjC3TF9H1uo0qA77sI_k', 'PUREZA', 'activated'),
+(2, '9396694144', 'private', 'ncr', 'Don Antonio, Brgy. Holy Spirit, QC', 'not activated', '2.0', 1, '2013/10/30', '21:31:46', '', 'ANTONIO', 'activated'),
+(3, '9166058053', 'public', 'ncr', 'Guadalupe, Makati', 'activated', '2.0', 1, '2013/11/10', '21:35:35', 'Qfkpcjf-WhQ54-M72IzcngTDLoz2xfKRDm1c8kerQuc', 'GUADALUPE', 'activated');
 
 -- --------------------------------------------------------
 
@@ -227,7 +241,17 @@ CREATE TABLE IF NOT EXISTS `unitsmstemplogs` (
   `receivedDate` varchar(20) NOT NULL,
   `receivedTime` varchar(20) NOT NULL,
   PRIMARY KEY (`tempLogId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `unitsmstemplogs`
+--
+
+INSERT INTO `unitsmstemplogs` (`tempLogId`, `unitSimNumber`, `reportedFloodLevel`, `receivedDate`, `receivedTime`) VALUES
+(1, '9275628107', '5', '2014/01/01', '12:31:00'),
+(2, '9275628107', '5', '2014/01/01', '12:31:21'),
+(3, '9275628107', '5', '2014/01/01', '13:05:53'),
+(4, '9275628107', '5', '2014/01/01', '13:06:04');
 
 -- --------------------------------------------------------
 
@@ -243,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `unitsmsupdatelogs` (
   `receivedTime` varchar(20) NOT NULL,
   PRIMARY KEY (`updateLogId`),
   KEY `unitSimNumber` (`unitSimNumber`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=61 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=62 ;
 
 --
 -- Dumping data for table `unitsmsupdatelogs`
@@ -309,7 +333,8 @@ INSERT INTO `unitsmsupdatelogs` (`updateLogId`, `unitSimNumber`, `reportedFloodL
 (57, '9275628107', '40', '2013/12/29', '13:01:01'),
 (58, '9275628107', '20', '2013/12/29', '14:01:01'),
 (59, '9275628107', '10', '2013/12/29', '15:01:01'),
-(60, '9396694144', '10', '2013/12/30', '21:11:10');
+(60, '9396694144', '10', '2013/12/30', '21:11:10'),
+(61, '9275628107', '5', '2014/01/01', '13:06:46');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

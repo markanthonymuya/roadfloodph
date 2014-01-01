@@ -18,6 +18,9 @@ if($message) {
 		return 'Not Set inboundSMSMessage';
 	}
 
+	date_default_timezone_set("Asia/Manila");
+	$asOfDate = date("Y/m/d");
+ 	$asOfTime = date("H:i:s");
 	
 	//parse all items in the received message
 	foreach($message['inboundSMSMessageList']['inboundSMSMessage'] as $item) {
@@ -39,33 +42,40 @@ if($message) {
 			$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
 			$user = mysqli_fetch_array($resultUnitSearch);
 
+		    $unitId = $user['unitId'];
+
+			$presentUpdates = mysqli_query($con,"SELECT unitWaterLevel FROM unitleveldetection WHERE unitId = '$unitId'");
+			$current = mysqli_fetch_array($presentUpdates);
+
 			$resultTemp = mysqli_query($con,"SELECT unitSimNumber, reportedFloodLevel FROM unitsmstemplogs WHERE unitSimNumber = '$senderNumber' ORDER BY tempLogId DESC LIMIT 1");
 			$inTemp = mysqli_fetch_array($resultTemp);
 
 			$inTempBoolean = false;
-			//check temporary storage for previous reported flood level
+			$updated = false;
+			
+			//checks for temporary log of reported flood level and to check if it is already in this present updated value
 			if($inTemp['reportedFloodLevel'] ==  $roadFloodLevel){
 				$inTempBoolean = true;
 			}
-			else{
-				$inTempBoolean = false;	
+			
+			if($inTemp['reportedFloodLevel'] == $current['unitWaterLevel']){
+				$updated = true;
 			}
-
-			date_default_timezone_set("Asia/Manila");
-			$asOfDate = date("Y/m/d");
- 			$asOfTime = date("H:i:s");
-
-		    $unitNumber = $user['unitId'];
-
-
-			if($user && $inTempBoolean) {
-				mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitNumber'");
-				mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
-	    		$response = $sms->sendMessage($user["accessToken"], $user["unitSimNumber"], "UPDATED");
-			}
-			elseif($user){
-				mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
-	    		$response = $sms->sendMessage($user["accessToken"], $user["unitSimNumber"], "RESEND");
+			
+			if($user){
+				if($updated) {
+					//server is already updated, data update will be disregarded
+		    		$response = $sms->sendMessage($user["accessToken"], $user["unitSimNumber"], "UPDATED");
+				}
+				elseif($inTempBoolean){
+					mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
+					mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
+		    		$response = $sms->sendMessage($user["accessToken"], $user["unitSimNumber"], "UPDATED");
+				}
+				elseif($inTempBoolean==false){
+					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
+		    		$response = $sms->sendMessage($user["accessToken"], $user["unitSimNumber"], "RESEND");
+				}
 			}
 		}
 
