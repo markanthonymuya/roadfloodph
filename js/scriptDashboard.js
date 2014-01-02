@@ -145,7 +145,6 @@ $(document).ready(function () {
   var getNextSemiAnnual = function(){
     $.get("http://roadfloodph.cloudapp.net/roadfloodph/getSemiannual.php",{year: currentYear, point: currentSemiAnnual}, function (json) {
       getSemiAnnual = json;
-      console.log(getSemiAnnual);
       currentDateTimestamp = getSemiAnnual.startPoint;
       nextDateTimestamp = getSemiAnnual.endPoint;
       getNextDate();
@@ -156,7 +155,6 @@ $(document).ready(function () {
   var getNextAnnual = function(){
     $.get("http://roadfloodph.cloudapp.net/roadfloodph/getAnnual.php",{year: currentYear}, function (json) {
       getAnnual = json;
-      console.log(getAnnual);
       currentDateTimestamp = getAnnual.startPoint;
       nextDateTimestamp = getAnnual.endPoint;
       getNextDate();

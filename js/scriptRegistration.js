@@ -57,13 +57,15 @@ $(document).ready(function () {
 		//get all units related to the owner
 		$.post("http://roadfloodph.cloudapp.net/roadfloodph/searchUnit.php", {ownerId: "1"}, function (result) {
 			units = result;
+			console.log(units);
 			if(service='manageUnit'){
 				$("#loadingImage").hide();
 				if(units['generalCounter']>0){
 					for(var i = 1; i <= units['generalCounter']; i++){
-						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 5px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button type="button" class="btn btn-default pull-right backButton" style="margin-left: 5px;"><span class="glyphicon glyphicon-backward"></span> Back<button id="activateBtn'+i+'" style="margin-left: 5px;" class="btn btn-warning pull-right activateBtn">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button><span class="noticeDetails pull-right" style="margin-right: 285px;">Click chart to see detailed view</span></p></span><br class="appendedBodyMsg breaks">');
+						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 5px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button type="button" class="btn btn-default pull-right backButton" style="margin-left: 5px;"><span class="glyphicon glyphicon-backward"></span> Back<button id="activateBtn'+i+'" style="margin-left: 5px;" class="btn btn-warning pull-right activateBtn">Activate</button><button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button><span id="batteryId'+i+'" class="btn btn-default batteryLabel pull-right" style="margin-right: 5px;"><img class="batteryLabel" src="../assets/ico/battery.png" style="display: inline;" /> '+units["unitPowerLevel"+i]+'%</span><span class="noticeDetails pull-right" style="margin-right: 285px;">Click chart to see detailed view</span></p></span><br class="appendedBodyMsg breaks">');
 						$(".backButton").hide();
 						$(".noticeDetails").hide();
+						$(".batteryLabel").hide();
 						var status = units['unitAT'+i];
 						if(status=='' || status == null){
 							$("#dashboardBtn"+i).hide();
@@ -107,7 +109,7 @@ $(document).ready(function () {
 						//upon clicking dashboardBtn, update to smsLogsJson must be done to change
 						//datasets with respect to the unitSimNumber
 						smsUpdateLogs(units['unitSimNumber'+unitDashboardValue]);
-						
+
 						$(".breaks").hide();
 						for(var j = 1; j <= units['generalCounter']; j++){
 							if (j == unitDashboardValue) {
@@ -120,6 +122,7 @@ $(document).ready(function () {
 						$("#breakInChartUI").show("slow");
 						$("#loadingImage").show();
       					$(".backButton").show();
+      					$(".batteryLabel").show();
       					$(".dashboardBtn").hide();
 					});
 				}

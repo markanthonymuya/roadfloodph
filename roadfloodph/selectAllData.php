@@ -3,6 +3,7 @@ require('../key/access.php');
 
 $resultUnitReg = mysqli_query($con, "SELECT unitId, unitViewing, unitName, unitRegion, unitStatus FROM unitregistration");
 $resultUnitLevel = mysqli_query($con, "SELECT unitId, unitWaterLevel, unitDateAsOf, unitTimeAsOf FROM unitleveldetection");
+$resultUnitPower = mysqli_query($con, "SELECT unitId, unitPowerLevel FROM unitpowermonitoring");
 
 $selection = array();
 $counter = 1;
