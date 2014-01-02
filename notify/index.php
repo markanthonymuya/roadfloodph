@@ -42,6 +42,12 @@ if($message) {
 		$resultTemp = mysqli_query($con,"SELECT smsRequest FROM unitsmstemplogs WHERE unitSimNumber = '$senderNumber' ORDER BY tempLogId DESC LIMIT 1");
 		$inTemp = mysqli_fetch_array($resultTemp);
 
+		$inTempBoolean = false;
+
+		//checks for temporary log of reported flood level
+		if($inTemp['smsRequest'] ==  $requestSms){
+			$inTempBoolean = true;
+		}
 
 		//search for 6 letter keyword for service request
 		if(substr_compare($item['message'], "FLUPDATE", 0, 6) == 0){
@@ -50,13 +56,6 @@ if($message) {
 
 			$presentValue = mysqli_query($con,"SELECT unitWaterLevel FROM unitleveldetection WHERE unitId = '$unitId'");
 			$current = mysqli_fetch_array($presentValue);
-
-			$inTempBoolean = false;
-			
-			//checks for temporary log of reported flood level
-			if($inTemp['smsRequest'] ==  $requestSms){
-				$inTempBoolean = true;
-			}
 			
 			if($unitSearch && $current['unitWaterLevel'] != $roadFloodLevel){	
 				if($inTempBoolean){
@@ -72,22 +71,15 @@ if($message) {
 		}
 		elseif(substr_compare($item['message'], "PWUPDATE", 0, 6) == 0){
 			//extracting data from text message
-			$roadFloodLevel = str_replace('PWUPDATE ', '', $item['message']);
+			$powerLevel = str_replace('PWUPDATE ', '', $item['message']);
 
-			$presentValue = mysqli_query($con,"SELECT unitWaterLevel FROM unitleveldetection WHERE unitId = '$unitId'");
+			$presentValue = mysqli_query($con,"SELECT unitPowerLevel FROM unitpowermonitoring WHERE unitId = '$unitId'");
 			$current = mysqli_fetch_array($presentValue);
-
-			$inTempBoolean = false;
 			
-			//checks for temporary log of reported flood level
-			if($inTemp['smsRequest'] ==  $requestSms){
-				$inTempBoolean = true;
-			}
-			
-			if($unitSearch && $current['unitWaterLevel'] != $roadFloodLevel){	
+			if($unitSearch && $current['unitPowerLevel'] != $powerLevel){	
 				if($inTempBoolean){
-					mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
-					mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
+					mysqli_query($con, "UPDATE unitpowermonitoring SET unitPowerLevel='$powerLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
+					mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$powerLevel', '$asOfDate', '$asOfTime')");
 		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
 				}
 				elseif($inTempBoolean==false){

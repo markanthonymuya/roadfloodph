@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 02, 2014 at 03:04 PM
+-- Generation Time: Jan 02, 2014 at 03:46 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -135,9 +135,8 @@ CREATE TABLE IF NOT EXISTS `unitleveldetection` (
 --
 
 INSERT INTO `unitleveldetection` (`unitId`, `unitWaterLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
-(1, '5', '2014/01/01', '13:06:46'),
-(2, '15', '2013/11/10', '21:31:46'),
-(3, '45', '2013/12/18', '21:35:35');
+(1, '0', '2014/01/02', '15:30:20'),
+(2, '15', '2014/01/02', '15:34:42');
 
 -- --------------------------------------------------------
 
@@ -159,9 +158,9 @@ CREATE TABLE IF NOT EXISTS `unitlist` (
 --
 
 INSERT INTO `unitlist` (`unitCode`, `dateAdded`, `timeAdded`, `ownerId`, `unitId`) VALUES
-('RF100C1218', '2013/01/25', '21:29:54', 1, 1),
-('RF521B1612', '2013/11/10', '21:35:35', 1, 3),
-('RF911B0309', '2013/10/30', '21:31:46', 1, 2);
+('RF100C1218', '2014/01/02', '15:30:20', 1, 1),
+('RF521B1612', '', '', 0, 0),
+('RF911B0309', '2014/01/02', '15:34:42', 1, 2);
 
 -- --------------------------------------------------------
 
@@ -192,7 +191,15 @@ CREATE TABLE IF NOT EXISTS `unitpowermonitoring` (
   `unitDateAsOf` varchar(20) NOT NULL,
   `unitTimeAsOf` varchar(20) NOT NULL,
   PRIMARY KEY (`unitId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `unitpowermonitoring`
+--
+
+INSERT INTO `unitpowermonitoring` (`unitId`, `unitPowerLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
+(1, '100', '2014/01/02', '03:23:01'),
+(2, '100', '2014/01/02', '15:34:42');
 
 -- --------------------------------------------------------
 
@@ -217,16 +224,15 @@ CREATE TABLE IF NOT EXISTS `unitregistration` (
   PRIMARY KEY (`unitId`),
   KEY `ownerId` (`ownerId`),
   KEY `unitSimNumber` (`unitSimNumber`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Dumping data for table `unitregistration`
 --
 
 INSERT INTO `unitregistration` (`unitId`, `unitSimNumber`, `unitViewing`, `unitRegion`, `unitName`, `unitStatus`, `frequency`, `ownerId`, `dateAdded`, `timeAdded`, `accessToken`, `unitSmsCode`, `unitSmsNotif`) VALUES
-(1, '9275628107', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'activated', '2.0', 1, '2013/01/25', '21:29:54', 'm61UThl6s0PimODh7HcGHxzcjC3TF9H1uo0qA77sI_k', 'PUREZA', 'activated'),
-(2, '9396694144', 'private', 'ncr', 'Don Antonio, Brgy. Holy Spirit, QC', 'not activated', '2.0', 1, '2013/10/30', '21:31:46', '', 'ANTONIO', 'activated'),
-(3, '9166058053', 'public', 'ncr', 'Guadalupe, Makati', 'activated', '2.0', 1, '2013/11/10', '21:35:35', 'Qfkpcjf-WhQ54-M72IzcngTDLoz2xfKRDm1c8kerQuc', 'GUADALUPE', 'activated');
+(1, '9275628107', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'activated', '2.0', 1, '2014/01/02', '15:30:20', 'm61UThl6s0PimODh7HcGHxzcjC3TF9H1uo0qA77sI_k', 'PUREZA', 'activated'),
+(2, '9166058053', 'public', 'ncr', 'Don Antonio, Holy Spirit, QC', 'not activated', '2.0', 1, '2014/01/02', '15:34:42', '', 'ANTONIO', 'activated');
 
 -- --------------------------------------------------------
 
