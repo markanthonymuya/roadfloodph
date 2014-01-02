@@ -30,36 +30,68 @@ if($message) {
 			continue;
 		}
 
+		$senderNumber = $item['senderAddress'];
+		$senderNumber = str_replace('tel:+63', '', $senderNumber);
+		$requestSms = $item['message'];
+
+		$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
+		$unitSearch = mysqli_fetch_array($resultUnitSearch);
+
+		$unitId = $unitSearch['unitId'];
+
+		$resultTemp = mysqli_query($con,"SELECT smsRequest FROM unitsmstemplogs WHERE unitSimNumber = '$senderNumber' ORDER BY tempLogId DESC LIMIT 1");
+		$inTemp = mysqli_fetch_array($resultTemp);
+
+
 		//search for 6 letter keyword for service request
 		if(substr_compare($item['message'], "FLUPDATE", 0, 6) == 0){
 			//extracting data from text message
 			$roadFloodLevel = str_replace('FLUPDATE ', '', $item['message']);
-			$senderNumber = $item['senderAddress'];
-			$senderNumber = str_replace('tel:+63', '', $senderNumber);
 
-			$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
-			$unitSearch = mysqli_fetch_array($resultUnitSearch);
-
-		    $unitId = $unitSearch['unitId'];
-
-			$resultTemp = mysqli_query($con,"SELECT reportedFloodLevel FROM unitsmstemplogs WHERE unitSimNumber = '$senderNumber' ORDER BY tempLogId DESC LIMIT 1");
-			$inTemp = mysqli_fetch_array($resultTemp);
+			$presentValue = mysqli_query($con,"SELECT unitWaterLevel FROM unitleveldetection WHERE unitId = '$unitId'");
+			$current = mysqli_fetch_array($presentValue);
 
 			$inTempBoolean = false;
 			
 			//checks for temporary log of reported flood level
-			if($inTemp['reportedFloodLevel'] ==  $roadFloodLevel){
+			if($inTemp['smsRequest'] ==  $requestSms){
 				$inTempBoolean = true;
 			}
 			
-			if($unitSearch){	
+			if($unitSearch && $current['unitWaterLevel'] != $roadFloodLevel){	
 				if($inTempBoolean){
 					mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
 					mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
 		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
 				}
 				elseif($inTempBoolean==false){
-					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
+					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$requestSms', '$asOfDate', '$asOfTime')");
+		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "RESEND");
+				}
+			}
+		}
+		elseif(substr_compare($item['message'], "PWUPDATE", 0, 6) == 0){
+			//extracting data from text message
+			$roadFloodLevel = str_replace('PWUPDATE ', '', $item['message']);
+
+			$presentValue = mysqli_query($con,"SELECT unitWaterLevel FROM unitleveldetection WHERE unitId = '$unitId'");
+			$current = mysqli_fetch_array($presentValue);
+
+			$inTempBoolean = false;
+			
+			//checks for temporary log of reported flood level
+			if($inTemp['smsRequest'] ==  $requestSms){
+				$inTempBoolean = true;
+			}
+			
+			if($unitSearch && $current['unitWaterLevel'] != $roadFloodLevel){	
+				if($inTempBoolean){
+					mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
+					mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
+		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
+				}
+				elseif($inTempBoolean==false){
+					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$requestSms', '$asOfDate', '$asOfTime')");
 		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "RESEND");
 				}
 			}

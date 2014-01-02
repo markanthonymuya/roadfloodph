@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 01, 2014 at 08:31 PM
+-- Generation Time: Jan 02, 2014 at 03:04 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -237,21 +237,11 @@ INSERT INTO `unitregistration` (`unitId`, `unitSimNumber`, `unitViewing`, `unitR
 CREATE TABLE IF NOT EXISTS `unitsmstemplogs` (
   `tempLogId` int(10) NOT NULL AUTO_INCREMENT,
   `unitSimNumber` varchar(20) NOT NULL,
-  `reportedFloodLevel` varchar(10) NOT NULL,
+  `smsRequest` varchar(11) NOT NULL,
   `receivedDate` varchar(20) NOT NULL,
   `receivedTime` varchar(20) NOT NULL,
   PRIMARY KEY (`tempLogId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
-
---
--- Dumping data for table `unitsmstemplogs`
---
-
-INSERT INTO `unitsmstemplogs` (`tempLogId`, `unitSimNumber`, `reportedFloodLevel`, `receivedDate`, `receivedTime`) VALUES
-(1, '9275628107', '5', '2014/01/01', '12:31:00'),
-(2, '9275628107', '5', '2014/01/01', '12:31:21'),
-(3, '9275628107', '5', '2014/01/01', '13:05:53'),
-(4, '9275628107', '5', '2014/01/01', '13:06:04');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
