@@ -1,6 +1,8 @@
 var carsCategory = new Array('medium', 'light', 'light', 'medium', 'heavy', 'heavy', 'heavy', 'heavy', 'heavy', 'medium', 'light', 'light', 'light', 'heavy', 'heavy', 'heavy', 'medium', 'light', 'medium');
 var currentImageIndex = 10;
 
+    //A function that checks the passability of a vehicle in certain road flood level.
+    //This is the function that sets/changes the displayed passability/impassability label on vehicles pane
     var checkVehiclePassability = function() {
         var passable = function() {
             $("#passability").attr("style", "background-color:#009e0f; width: 500px; height: 45px; position: relative; z-index: 2; font-family:'Comic Sans MS'; font-size: 20pt; text-align: center; margin: 0px;");
@@ -9,7 +11,7 @@ var currentImageIndex = 10;
 
         var impassable = function() {
         $("#passability").attr("style", "background-color:#cc0000; width: 500px; height: 45px; position: relative; z-index: 2; font-family:'Comic Sans MS'; font-size: 20pt; text-align: center; margin: 0px;");
-        $("#passability").text("IMPASSABLE");
+        $("#passability").text("NOT PASSABLE");
         } 
 
         if (carsCategory[currentImageIndex] == 'light' && currentWaterLevel >= 0 && currentWaterLevel <= 11) {
@@ -36,6 +38,7 @@ var currentImageIndex = 10;
         $("#showInProgress").hide();
     }
 
+    //this is the function that changes the height of the waves.gif in body pane according to the currentWaterLevel
     var bodyWaterLevel = function(){
         //for body pane
             if (currentWaterLevel != undefined || currentWaterLevel != null || currentWaterLevel != "") {
@@ -147,6 +150,7 @@ var currentImageIndex = 10;
             }
     };
 
+    //this is the function that changes the height of the waves.gif in mmda gauge pane according to the currentWaterLevel
     var gaugeWaterLevel = function(){
          //for gauge pane
             if (currentWaterLevel != undefined || currentWaterLevel != null || currentWaterLevel != "") {
