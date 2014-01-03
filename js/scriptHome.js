@@ -50,7 +50,6 @@ $(document).ready(function () {
 
         if(true){
             $.get("http://roadfloodph.cloudapp.net/roadfloodph/lastRow.php", function (json, status) {
-                console.log(json);
                 currentIndexLastRow = json.floodUpdate;
                 currentPowerLastRow = json.powerUpdate;
                 if (currentIndexLastRow != lastIndexLastRow && status == "success" || becomesOffline) {
