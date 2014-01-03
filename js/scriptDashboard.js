@@ -458,6 +458,25 @@ $(document).ready(function () {
     var myNewChart = new Chart(ctx).Line(data,options);
   };
 
+  var getUpdatedPowerData = function(){
+    if(currentPowerLastRow != lastPowerLastRow && currentUnitSimNumber != ""){
+      $.post("http://roadfloodph.cloudapp.net/roadfloodph/searchPowerBySimNumber.php", {unitSimNumber: currentUnitSimNumber}, function (batteryPower) {
+            $(".batteryLabelText").text(batteryPower);
+      });
+    }
+  };
+
+  var getPowerDataRefresh;
+
+  $("#manageUnit").on('shown.bs.modal', function () {
+    getPowerDataRefresh = setInterval(function () { getUpdatedPowerData() }, 5000);
+  });
+
+  //clearing setInterval event of gettingUpdatedPowerData function upon closing of manage modal
+  $("#manageUnit").on('hidden.bs.modal', function () {
+    clearInterval(getPowerDataRefresh);
+  });
+
   $(".timeFrameBtn").click(function(){
     timeFrame = this.getAttribute('data-rf');
     $(".timeFrameBtn").attr("class", "btn btn-default timeFrameBtn");

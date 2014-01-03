@@ -2,14 +2,19 @@
 
  require('../key/access.php');
 
- $result = mysqli_query($con, "SELECT updateLogId FROM unitsmsupdatelogs ORDER BY updateLogId DESC LIMIT 1");
-
- $selection = 0;
-$row = mysqli_fetch_array($result);
+ $resultFlood = mysqli_query($con, "SELECT updateLogId FROM unitsmsupdatelogs ORDER BY updateLogId DESC LIMIT 1");
+ $resultPower = mysqli_query($con, "SELECT updateLogId FROM unitsmspowerupdatelogs ORDER BY updateLogId DESC LIMIT 1");
 
 
- $selection = $row['updateLogId'];
+$selection = array();
+$rowFlood = mysqli_fetch_array($resultFlood);
+$rowPower = mysqli_fetch_array($resultPower);
 
-echo $selection;
 
- ?>
+$selection['floodUpdate'] = $rowFlood['updateLogId'];
+$selection['powerUpdate'] = $rowPower['updateLogId'];
+
+header("Content-type:application/json");
+echo json_encode($selection);
+
+?>
