@@ -1,5 +1,5 @@
-var carsCategory = new Array('medium', 'light', 'light', 'medium', 'heavy', 'heavy', 'heavy', 'heavy', 'heavy', 'medium', 'light', 'light', 'light', 'heavy', 'heavy', 'heavy', 'medium', 'light', 'medium');
-var currentImageIndex = 10;
+var carsCategory = new Array('light', 'light', 'medium', 'heavy', 'medium', 'light', 'medium', 'light', 'light', 'medium', 'heavy', 'heavy', 'heavy', 'heavy', 'heavy', 'heavy', 'heavy', 'light', 'medium');
+var currentImageIndex = 0;
 
     //A function that checks the passability of a vehicle in certain road flood level.
     //This is the function that sets/changes the displayed passability/impassability label on vehicles pane
@@ -198,14 +198,21 @@ var currentImageIndex = 10;
 
 $(document).ready(function () {
 
-    var imageNames = new Array('Ambulance', 'Bicycle', 'Car', 'Cargo Van', 'City Bus', 'Concrete Mixer', 'Delivery Truck', 'Dump Truck', 'Fire Truck', 'Jeepney', 'Motorbike', 'Pickup Car', 'Police Car', 'School Bus', 'Tipper Truck', 'Trailer Truck', 'Van', 'Wagon', 'Wrecker');
+    var imageNames = new Array('Motorbike', 'Car', 'Cargo Van', 'City Bus', 'Ambulance', 'Bicycle', 'Jeepney', 'Pickup Car', 'Police Car', 'Van', 'School Bus', 'Concrete Mixer', 'Delivery Truck', 'Dump Truck', 'Fire Truck', 'Tipper Truck', 'Trailer Truck', 'Wagon', 'Wrecker');
+    var imageNamesId = new Array('Motorbike', 'Car', 'CargoVan', 'CityBus', 'Ambulance', 'Bicycle', 'Jeepney', 'PickupCar', 'PoliceCar', 'Van', 'SchoolBus', 'ConcreteMixer', 'DeliveryTruck', 'DumpTruck', 'FireTruck', 'TipperTruck', 'TrailerTruck', 'Wagon', 'Wrecker');
     
     var imageNamesLength = imageNames.length;
     var mousedOver = false;
+    var previousImageIndex;
 
     $("#connectToInternet").hide();
     $(".vehicleNavigation").hide();
     $("#showInProgress").hide();
+
+    for(var i = 1; i < imageNamesLength; i++){
+        $("#vehicleImages").prepend('<img id="'+imageNamesId[i]+'" class="vehicleImageCss" src="assets/images/'+imageNames[i]+'.jpg" />');
+        $("#"+imageNamesId[i]).hide();
+    }
             
     $("#carsPane").mouseenter(function () {
         $(".vehicleNavigation").fadeIn("slow");
@@ -222,17 +229,28 @@ $(document).ready(function () {
         else if (currentImageIndex == -1) {
             currentImageIndex = imageNamesLength - 1;
         }
-        $("#vehicleImage").attr("src", "assets/images/" + imageNames[currentImageIndex] + ".png");
+
+        if (previousImageIndex == imageNamesLength) {
+            previousImageIndex = 0;
+        }
+        else if (previousImageIndex == -1) {
+            previousImageIndex = imageNamesLength - 1;
+        }
+
+        $("#"+imageNamesId[previousImageIndex]).hide();
+        $("#"+imageNamesId[currentImageIndex]).show();
         $("#vehicleName").text(imageNames[currentImageIndex]);
         checkVehiclePassability();
     }
   
     $("#moveLeft").click(function () {
+        previousImageIndex = currentImageIndex;
         currentImageIndex--;
         showVehicleImage();
     });
 
     $("#moveRight").click(function () {
+        previousImageIndex = currentImageIndex;
         currentImageIndex++;
         showVehicleImage();
     });

@@ -9,7 +9,7 @@
 	position: relative;
 }
 
-#vehicleImage{
+.vehicleImageCss{
 	position: relative;
 	margin-bottom: 5px;
 }

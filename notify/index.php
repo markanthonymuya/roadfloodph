@@ -50,7 +50,7 @@ if($message) {
 		}
 
 		//search for 6 letter keyword for service request
-		if(substr_compare($item['message'], "FLUPDATE", 0, 6) == 0){
+		if(substr_compare($item['message'], "FLUPDATE", 0, 7) == 0){
 			//extracting data from text message
 			$roadFloodLevel = str_replace('FLUPDATE ', '', $item['message']);
 
@@ -69,7 +69,7 @@ if($message) {
 				}
 			}
 		}
-		elseif(substr_compare($item['message'], "PWUPDATE", 0, 6) == 0){
+		elseif(substr_compare($item['message'], "PWUPDATE", 0, 7) == 0){
 			//extracting data from text message
 			$powerLevel = str_replace('PWUPDATE ', '', $item['message']);
 
@@ -86,6 +86,19 @@ if($message) {
 					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$requestSms', '$asOfDate', '$asOfTime')");
 		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "RESEND");
 				}
+			}
+		}
+		elseif(substr_compare($item['message'], "READY", 0, 4) == 0){
+			
+			if($unitSearch){
+				mysqli_query($con, "UPDATE unitregistration SET unitStatus='ACTIVATED' WHERE unitId='$unitId'");
+		    	$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "READY OK");
+			}
+		}
+		elseif(substr_compare($item['message'], "UNREADY", 0, 6) == 0){
+			
+			if($unitSearch){
+				mysqli_query($con, "UPDATE unitregistration SET unitStatus='MISALIGNED' WHERE unitId='$unitId'");
 			}
 		}
 	}

@@ -7,7 +7,7 @@
  $unitViewing = $_POST['unitViewing'];
  $unitRegion = $_POST['unitRegion'];
  $unitName = $_POST['unitName'];
- $unitStatus = "not activated";
+ $unitStatus = "UNKNOWN";
  $ownerId = $_POST['ownerId'];
  $unitSmsKeyword = $_POST['unitSmsKeyword'];
  $unitSmsNotif = "activated";
