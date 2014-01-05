@@ -47,15 +47,7 @@
             <li><a href="">References</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown" id="fat-menu"><a class="dropdown-toggle" id="drop" role="button" href="#" data-toggle="dropdown">Mark Anthony Muya<b class="caret"></b></a>
-              <ul class="dropdown-menu" role="menu" aria-labelledby="drop">
-              <li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="#registerUnit">Register New Unit</a></li>
-              <li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="#manageUnit">Manage</a></li>
-              <li role="presentation"><a tabindex="-1" role="menuitem" href="">Settings</a></li>
-              <li class="divider" role="presentation"></li>
-              <li role="presentation"><a tabindex="-1" role="menuitem" href="">Sign Out</a></li>
-              </ul>
-            </li>
+            <li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="#manageUnit">Dashboard</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -64,8 +56,7 @@
 
     <!-- CONTENT -->
     <div class="container">
-        <!-- Three columns of text below the carousel -->
-        <div class="row">
+      <div class="row">
           <div class="col-lg-4" style="margin-right: 20px; width: 500px; height: 350px; margin-bottom: 50px;">
             <p class="divTitles">Vehicles</p>
               <div id="vehicleDiv">
@@ -90,12 +81,12 @@
               <img src="assets/images/MMDAFloodGauge.png" width="250px" height="350px" />
               <img id="gaugeWaves" src="assets/gif/waves.gif" style="height: 0px; width: 250px; top: -20px; position: relative;" />
             </div>
-          </div><!-- /.col-lg-4 -->
-        </div><!-- /.row -->
+          </div>
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
     </div><!-- /.container -->
-    <!-- END OF CONTENT -->   
+     <!-- END OF CONTENT -->   
     
-    </div>
 
     <div id="footer" style="background-color:#222222;">
       <div class="container" style="padding-top: 15px; padding-bottom: 10px;">
@@ -110,204 +101,13 @@
     <script src="custom.js/scriptAnimations.js"></script>
     <script src="custom.js/scriptRegistration.js"></script>
 
-    <script>
-        function stringfy(result){
-          var result = eval ("({rfData:" + result + "})");
-          return result;
-        }
-        
-        $(document).ready(function(){
-          /*$.get("http://roadflood.heliohost.org/profile", function(result){
-            var rf = stringfy(result);
-            //$("#userFullName").text(rf.rfData[0].firstName);
-          });*/
-          $("#signUpForm").hide();
-
-          $("#signUpBtn").click(function(){
-            $("#modalLabel").text("Sign Up");
-            $("#signInForm").hide("slow");
-            $("#signUpForm").show("slow");
-            $("#signUpBtn").hide();
-          });
-
-          $('#myModal').on('hidden.bs.modal', function () {
-            $("#modalLabel").text("Sign In");
-            $("#signInForm").show();
-            $("#signUpForm").hide();
-            $("#signUpBtn").show();
-          })
-
-        });
-        
-    </script>
-
-    <!-- Modal for Unit Registration -->
-    <div id="registerUnit" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="registerHead">Unit Registration</h4>
-          </div>
-          <div class="modal-body">
-            <p>Unit Code
-              <input id="unitCode" class="form-control" type="text" autofocus="autofocus" />
-            </p>
-            <p>Unit SIM Number:
-              <input id="unitNumber" class="form-control" type="text" placeholder="+639123456789" />
-            </p>
-            <p>Unit Data Viewing:
-              <select id="unitViewing" class="form-control">
-                <option value="public">Public</option>
-                <option value="private">Private</option>
-              </select>
-            </p>
-            <p>Unit Region:
-              <select id="unitRegionForm" class="form-control">
-                <option value="ncr">NCR</option>
-                <option value="CAR">CAR</option>
-                <option value="ARMM">ARMM</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-              </select>
-            </p>
-            <p>Unit Name:
-              <input id="unitNameForm" class="form-control" type="text" placeholder="Pureza, Sta. Mesa, Manila" />
-            </p>
-            <p>Unit SMS Identification Code:
-              <input id="smsIdentification" class="form-control" maxlength="10" type="text" placeholder="maximum of 10-alpha, numeric or alphanumeric code (e.g. PUREZA)" />
-            </p>
-            <p id="registrationMsg" style="color: red;">Unit code has already been taken or used. Please try another code.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button id="registerNewUnit" type="button" class="btn btn-primary">Submit</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <!-- Modal for Unit InFo Update-->
-    <div id="updateUnit" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="registerHead">Unit Info Update</h4>
-          </div>
-          <div class="modal-body">
-            <p>Unit Code
-              <input id="unitCodeUpdate" class="form-control" type="text" disabled="disabled" />
-            </p>
-            <p>Unit SIM Number:
-              <input id="unitNumberUpdate" class="form-control" type="text" placeholder="+639123456789" />
-            </p>
-            <p>Unit Data Viewing:
-              <select id="unitViewingUpdate" class="form-control">
-                <option value="public">Public</option>
-                <option value="private">Private</option>
-              </select>
-            </p>
-            <p>Unit Region:
-              <select id="unitRegionFormUpdate" class="form-control">
-                <option value="ncr">NCR</option>
-                <option value="CAR">CAR</option>
-                <option value="ARMM">ARMM</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-              </select>
-            </p>
-            <p>Unit Name:
-              <input id="unitNameFormUpdate" class="form-control" type="text" placeholder="Pureza, Sta. Mesa, Manila" />
-            </p>
-            <br>
-            <p>Unit SMS Frequency Update (inches):
-              <div class="btn-group" data-toggle="buttons">
-                <label id="freqId1" class="btn btn-default frequencyBtn" data-rf="0.5">
-                  <input type="radio"> 0.5
-                </label>
-                <label id="freqId2" class="btn btn-default frequencyBtn" data-rf="1.0">
-                  <input type="radio"> 1.0
-                </label>
-                <label id="freqId3" class="btn btn-default frequencyBtn" data-rf="1.5">
-                  <input type="radio"> 1.5
-                </label>
-                <label id="freqId4" class="btn btn-default frequencyBtn" data-rf="2.0">
-                  <input type="radio"> 2.0
-                </label>
-                <label id="freqId5" class="btn btn-default frequencyBtn" data-rf="2.5">
-                  <input type="radio"> 2.5
-                </label>
-                <label id="freqId6" class="btn btn-default frequencyBtn" data-rf="3.0">
-                  <input type="radio"> 3.0
-                </label>
-                <label id="freqId7" class="btn btn-default frequencyBtn" data-rf="3.5">
-                  <input type="radio"> 3.5
-                </label>
-                <label id="freqId8" class="btn btn-default frequencyBtn" data-rf="4.0">
-                  <input type="radio"> 4.0
-                </label>
-                <label id="freqId9" class="btn btn-default frequencyBtn" data-rf="4.5">
-                  <input type="radio"> 4.5
-                </label>
-                <label id="freqId10" class="btn btn-default frequencyBtn" data-rf="5.0">
-                  <input type="radio"> 5.0
-                </label>
-              </div>
-            </p>
-            <p>SMS Notification Update:
-              <div class="btn-group" data-toggle="buttons">
-                <label id="smsNotifOFF" class="btn btn-default smsNotifBtn" data-rf="deactivated">
-                  <input type="radio"> Off
-                </label>
-                <label id="smsNotifON" class="btn btn-primary smsNotifBtn" data-rf="activated">
-                  <input type="radio"> On
-                </label>
-              </div>
-            </p>
-            <p>Unit SMS Identification Code:
-              <input id="smsIdentificationUpdate" disabled="disabled" class="form-control" maxlength="10" type="text" />
-            </p>
-            <p id="updateMsg" style="color: red;"></p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button id="updateUnitBtn" type="button" class="btn btn-primary">Submit</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-
     <!-- Modal for Unit Management-->
     <div id="manageUnit" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
       <div class="modal-dialog" id="manageModal">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title" id="myModalLabel"><a class="btn btn-default dashboardNav" style="margin-right: 5px;" id="driveLeft">&laquo;</a><span id="manageTitle">Manage</span><a class="btn btn-default dashboardNav" style="margin-left: 5px;" id="driveRight">&raquo;</a>
+            <h4 class="modal-title" id="myModalLabel"><a class="btn btn-default dashboardNav" style="margin-right: 5px;" id="driveLeft">&laquo;</a><span id="manageTitle">History of Public Units</span><a class="btn btn-default dashboardNav" style="margin-left: 5px;" id="driveRight">&raquo;</a>
               <div id="timelineNav" style="margin-right: 37px;" class="btn-group pull-right" data-toggle="buttons">
                 <label class="btn btn-primary timeFrameBtn active" data-rf="day">
                   <input id="timelineNavDay" type="radio"> Day
@@ -339,8 +139,6 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
-
 
   </body>
 </html>

@@ -88,4 +88,8 @@ $(document).ready(function () {
         getUpdatedData();
     });
 
+
+    $("#signOut").click(function(){
+        
+    });
 });

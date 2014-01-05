@@ -1,6 +1,11 @@
 var carsCategory = new Array('light', 'light', 'medium', 'heavy', 'medium', 'light', 'medium', 'light', 'light', 'medium', 'heavy', 'heavy', 'heavy', 'heavy', 'heavy', 'heavy', 'heavy', 'light', 'medium');
 var currentImageIndex = 0;
 
+var srcGifImage = "assets/gif/";
+if(location.href == "http://roadfloodph.cloudapp.net/admin/"){
+        srcGifImage = '../assets/gif/';
+}
+
     //A function that checks the passability of a vehicle in certain road flood level.
     //This is the function that sets/changes the displayed passability/impassability label on vehicles pane
     var checkVehiclePassability = function() {
@@ -44,7 +49,7 @@ var currentImageIndex = 0;
             if (currentWaterLevel != undefined || currentWaterLevel != null || currentWaterLevel != "") {
                 if (currentWaterLevel == 0) {
                     $("#bodyWaves").attr("style", "height: 0px; width: 250px; top: -20px; position: relative; left: 0px;");
-                    $("#happyBoy").attr("src", "assets/gif/happy.gif");
+                    $("#happyBoy").attr("src", srcGifImage + "happy.gif");
                 }
                 else if (currentWaterLevel > 0 && currentWaterLevel <= 2.5) {
                     //manual adjustment has been required to this water level graphical display
@@ -65,12 +70,12 @@ var currentImageIndex = 0;
                     else if(currentWaterLevel == 2.5){
                         $("#bodyWaves").attr("style", "height: " + (floodLevelInPixel-7) + "px; width: 250px; top: -26px; position: relative; left: 0px;");
                     }
-                    $("#happyBoy").attr("src", "assets/gif/happy.gif");
+                    $("#happyBoy").attr("src", srcGifImage + "happy.gif");
                 }
                 else if (currentWaterLevel==3) {
                     var floodLevelInPixel = currentWaterLevel * 11;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
-                    $("#happyBoy").attr("src", "assets/gif/happy.gif");
+                    $("#happyBoy").attr("src", srcGifImage + "happy.gif");
                 }
                 else if (currentWaterLevel > 3  && currentWaterLevel <= 10) {
                     if(currentWaterLevel == 8){
@@ -83,7 +88,7 @@ var currentImageIndex = 0;
                     }
                     var floodLevelInPixel = currentWaterLevel * 8;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
-                    $("#happyBoy").attr("src", "assets/gif/sad.gif");
+                    $("#happyBoy").attr("src", srcGifImage + "sad.gif");
                 }
                 else if (currentWaterLevel > 10 && currentWaterLevel <= 19) {
                     if(currentWaterLevel == 12){
@@ -105,7 +110,7 @@ var currentImageIndex = 0;
                     }
                     var floodLevelInPixel = currentWaterLevel * 6.11;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
-                    $("#happyBoy").attr("src", "assets/gif/sad.gif");
+                    $("#happyBoy").attr("src", srcGifImage + "sad.gif");
                 }
                 else if (currentWaterLevel > 19 && currentWaterLevel <= 37) {
                     if(currentWaterLevel == 36){
@@ -123,7 +128,7 @@ var currentImageIndex = 0;
                     }
                     var floodLevelInPixel = currentWaterLevel * 4.70;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
-                    $("#happyBoy").attr("src", "assets/gif/straight.gif");
+                    $("#happyBoy").attr("src", srcGifImage + "straight.gif");
                 }
                 else if (currentWaterLevel > 37 && currentWaterLevel <= 45) {
                     if(currentWaterLevel == 45){
@@ -132,17 +137,17 @@ var currentImageIndex = 0;
                     }
                     var floodLevelInPixel = currentWaterLevel * 5.16;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
-                    $("#happyBoy").attr("src", "assets/gif/nervous.gif");
+                    $("#happyBoy").attr("src", srcGifImage + "nervous.gif");
                 }
                 else if (currentWaterLevel > 45 && currentWaterLevel < 52) {
                     var floodLevelInPixel = currentWaterLevel * 5.92;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
-                    $("#happyBoy").attr("src", "assets/gif/nervous.gif");
+                    $("#happyBoy").attr("src", srcGifImage + "nervous.gif");
                 }
                 else if (currentWaterLevel > 51) {
                     var floodLevelInPixel = 51 * 6.8;
                     $("#bodyWaves").attr("style", "height: " + floodLevelInPixel + "px; width: 250px; top: -" + floodLevelInPixel + "px; position: relative; left: 0px;");
-                    $("#happyBoy").attr("src", "assets/gif/nervous.gif");
+                    $("#happyBoy").attr("src", srcGifImage + "nervous.gif");
                 }
             }
             else {
@@ -209,8 +214,13 @@ $(document).ready(function () {
     $(".vehicleNavigation").hide();
     $("#showInProgress").hide();
 
+    var srcImages = 'src="assets/images/';
+    if(location.href == "http://roadfloodph.cloudapp.net/admin/"){
+        srcImages = 'src="../assets/images/';
+    }
+
     for(var i = 1; i < imageNamesLength; i++){
-        $("#vehicleImages").prepend('<img id="'+imageNamesId[i]+'" class="vehicleImageCss" src="assets/images/'+imageNames[i]+'.jpg" />');
+        $("#vehicleImages").prepend('<img id="'+imageNamesId[i]+'" class="vehicleImageCss" '+srcImages+imageNames[i]+'.jpg" />');
         $("#"+imageNamesId[i]).hide();
     }
             
