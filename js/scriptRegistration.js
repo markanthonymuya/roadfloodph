@@ -140,6 +140,19 @@ $(document).ready(function () {
 		});
 	};
 
+	function getCookie(c_name)
+	{
+		var i,x,y,ARRcookies=document.cookie.split(";");
+		for (i=0;i<ARRcookies.length;i++){
+			x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+		  	y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+			x=x.replace(/^\s+|\s+$/g,"");
+		  	if (x==c_name){
+		    	return unescape(y);
+		    }
+		}
+	}
+
 
 	$("#manageUnit").on('show.bs.modal', function () {
 		getUnits('manageUnit');
@@ -183,7 +196,7 @@ $(document).ready(function () {
 
 			if(searchPosition == 0 && unitNumberForm.length == 13){
 				unitNumberForm = unitNumberForm.replace("+63", "");
-				var data = {unitCode: $("#unitCode").val(), unitNumber: unitNumberForm, unitViewing: $("#unitViewing").val(), unitRegion: $("#unitRegionForm").val(), unitName: $("#unitNameForm").val(), ownerId: "1", unitSmsKeyword: $("#smsIdentification").val()};
+				var data = {unitCode: $("#unitCode").val(), unitNumber: unitNumberForm, unitViewing: $("#unitViewing").val(), unitRegion: $("#unitRegionForm").val(), unitName: $("#unitNameForm").val(), ownerId: getCookie("username"), unitSmsKeyword: $("#smsIdentification").val()};
 
 				$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerUnit.php", data, function (response) {
 					console.log(response);
@@ -194,7 +207,7 @@ $(document).ready(function () {
 						clearRegistrationInput();
 					}
 					else if(response == "unit code unavailable"){
-						$("#registrationMsg").text("Unit code has already been taken or used. Please try another code.");
+						$("#registrationMsg").text("Unit code is not available. Please try another code.");
 						$("#registrationMsg").show();
 						$("#unitCode").focus();
 					}
@@ -202,6 +215,11 @@ $(document).ready(function () {
 						$("#registrationMsg").text("Your SMS Identification code is already in use. Please try another desired code.");
 						$("#registrationMsg").show();
 						$("#unitNumber").focus();
+					}
+					else if(response == "cannot find your owner id"){
+						$("#registrationMsg").text("Your current account is missing. Please contact us as soon as possible.");
+						$("#registrationMsg").show();
+						$("#unitCode").focus();
 					}
 					$("#registerNewUnit").attr("disabled", false);
 			    });

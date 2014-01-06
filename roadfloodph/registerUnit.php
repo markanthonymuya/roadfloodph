@@ -8,7 +8,7 @@
  $unitRegion = $_POST['unitRegion'];
  $unitName = $_POST['unitName'];
  $unitStatus = "UNKNOWN";
- $ownerId = $_POST['ownerId'];
+ $emailAddress = $_POST['ownerId'];
  $unitSmsKeyword = $_POST['unitSmsKeyword'];
  $unitSmsNotif = "activated";
  date_default_timezone_set("Asia/Manila");
@@ -22,24 +22,33 @@
  $smsKeywordSearch = mysqli_query($con,"SELECT unitSmsCode FROM unitregistration WHERE unitSmsCode='$unitSmsKeyword'");
  $keyword = mysqli_fetch_array($smsKeywordSearch);
 
+ $resultOwnerId = mysqli_query($con,"SELECT ownerId FROM unitowner WHERE ownerEmail='$emailAddress'");
+ $owners = mysqli_fetch_array($resultOwnerId);
+
 if($unit){
-	 if(!$keyword){
-		 mysqli_query($con, "INSERT INTO unitregistration (unitSimNumber, unitViewing, unitRegion, unitName, unitStatus, frequency, ownerId, dateAdded, timeAdded, accessToken, unitSmsCode, unitSmsNotif) VALUES ('$unitNumber', '$unitViewing', '$unitRegion', '$unitName', '$unitStatus', '2.0', $ownerId, '$dateAdded', '$timeAdded', '', '$unitSmsKeyword', '$unitSmsNotif')");
+	if($owners){
+		 if(!$keyword){
+		 	 $ownerId = $owners['ownerId'];
+			 mysqli_query($con, "INSERT INTO unitregistration (unitSimNumber, unitViewing, unitRegion, unitName, unitStatus, frequency, ownerId, dateAdded, timeAdded, accessToken, unitSmsCode, unitSmsNotif) VALUES ('$unitNumber', '$unitViewing', '$unitRegion', '$unitName', '$unitStatus', '2.0', $ownerId, '$dateAdded', '$timeAdded', '', '$unitSmsKeyword', '$unitSmsNotif')");
 
-		 $getUnitRegId = mysqli_query($con,"SELECT unitId FROM unitregistration WHERE unitSimNumber='$unitNumber' AND unitName='$unitName' AND dateAdded='$dateAdded' AND timeAdded='$timeAdded' AND unitSmsCode='$unitSmsKeyword' LIMIT 1");
-	 	 $registration = mysqli_fetch_array($getUnitRegId);
-	 	 $unitId = $registration['unitId'];
+			 $getUnitRegId = mysqli_query($con,"SELECT unitId FROM unitregistration WHERE unitSimNumber='$unitNumber' AND unitName='$unitName' AND dateAdded='$dateAdded' AND timeAdded='$timeAdded' AND unitSmsCode='$unitSmsKeyword' LIMIT 1");
+		 	 $registration = mysqli_fetch_array($getUnitRegId);
+		 	 $unitId = $registration['unitId'];
 
-		 mysqli_query($con, "UPDATE unitlist SET dateAdded='$dateAdded', timeAdded='$timeAdded', ownerId='$ownerId', unitId='$unitId' WHERE unitCode='$unitCode'");
-		 mysqli_query($con, "INSERT INTO unitleveldetection (unitId, unitWaterLevel, unitDateAsOf, unitTimeAsOf) VALUES ('$unitId', '0', '$dateAdded', '$timeAdded')");
-		 mysqli_query($con, "INSERT INTO unitpowermonitoring (unitId, unitPowerLevel, unitDateAsOf, unitTimeAsOf) VALUES ('$unitId', '100', '$dateAdded', '$timeAdded')");
+			 mysqli_query($con, "UPDATE unitlist SET dateAdded='$dateAdded', timeAdded='$timeAdded', ownerId='$ownerId', unitId='$unitId' WHERE unitCode='$unitCode'");
+			 mysqli_query($con, "INSERT INTO unitleveldetection (unitId, unitWaterLevel, unitDateAsOf, unitTimeAsOf) VALUES ('$unitId', '0', '$dateAdded', '$timeAdded')");
+			 mysqli_query($con, "INSERT INTO unitpowermonitoring (unitId, unitPowerLevel, unitDateAsOf, unitTimeAsOf) VALUES ('$unitId', '100', '$dateAdded', '$timeAdded')");
 
 
-		 $resultMsg = "successful";
-	 }
-	 else{
-		$resultMsg = "keyword unavailable";
-	 }
+			 $resultMsg = "successful";
+		 }
+		 else{
+			$resultMsg = "keyword unavailable";
+		 }
+	}
+	else{
+			$resultMsg = "cannot find your owner id";
+	}
 }
 else{
 	$resultMsg = "unit code unavailable";
