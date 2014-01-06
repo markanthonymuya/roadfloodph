@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 06, 2014 at 09:26 AM
+-- Generation Time: Jan 06, 2014 at 05:21 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
   `dateAdded` varchar(20) NOT NULL,
   `timeAdded` varchar(20) NOT NULL,
   PRIMARY KEY (`adminId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Dumping data for table `admin`
@@ -45,7 +45,8 @@ INSERT INTO `admin` (`adminId`, `adminName`, `adminEmail`, `adminContact`, `admi
 (1, 'Mark Anthony Muya', 'markmuya@outlook.com', '9275628107', '95e7f080d93915662d9a2f486417e2ae', '2014/01/05', '07:57:01'),
 (2, 'Johnver Bautista', 'johnverbautista00@hotmail.com', '9126959610', 'c67bda85a582c83d66bcc135e4920292', '2014/01/05', '12:51:42'),
 (3, 'Katrina Hazel Malagday', 'katyabu@gmail.com', '9276658721', 'd41d8cd98f00b204e9800998ecf8427e', '2014/01/05', '13:24:30'),
-(4, 'Kim Carla Lleno', 'kimlleno@yahoo.com', '9498829188', 'd41d8cd98f00b204e9800998ecf8427e', '2014/01/05', '13:29:12');
+(4, 'Kim Carla Lleno', 'kimlleno@yahoo.com', '9498829188', 'd41d8cd98f00b204e9800998ecf8427e', '2014/01/05', '13:29:12'),
+(5, 'Naila Renz Obnial', 'nailaobnial@yahoo.com', '9185738472', 'd41d8cd98f00b204e9800998ecf8427e', '2014/01/06', '16:21:40');
 
 -- --------------------------------------------------------
 
@@ -146,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `unitleveldetection` (
 
 INSERT INTO `unitleveldetection` (`unitId`, `unitWaterLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
 (1, '6', '2014/01/04', '07:43:25'),
-(2, '15', '2014/01/02', '15:34:42');
+(2, '45', '2014/01/02', '15:34:42');
 
 -- --------------------------------------------------------
 
@@ -183,11 +184,19 @@ CREATE TABLE IF NOT EXISTS `unitowner` (
   `ownerName` varchar(100) NOT NULL,
   `ownerEmail` varchar(100) NOT NULL,
   `ownerContact` varchar(20) NOT NULL,
-  `ownerPasswor` varchar(20) NOT NULL,
+  `ownerPassword` varchar(100) NOT NULL,
   `dateAdded` varchar(20) NOT NULL,
   `timeAdded` varchar(20) NOT NULL,
   PRIMARY KEY (`ownerId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `unitowner`
+--
+
+INSERT INTO `unitowner` (`ownerId`, `ownerName`, `ownerEmail`, `ownerContact`, `ownerPassword`, `dateAdded`, `timeAdded`) VALUES
+(1, 'Jethro De Guzman', 'jethdeguzman@outlook.com', '+639239983928', '9b1ca84af9bebb35967e52c205afc7c9', '2014/01/06', '16:24:01'),
+(2, 'Mark Joseph Penaranda', 'markjap@gmail.com', '9278849827', 'd41d8cd98f00b204e9800998ecf8427e', '2014/01/06', '16:27:00');
 
 -- --------------------------------------------------------
 
