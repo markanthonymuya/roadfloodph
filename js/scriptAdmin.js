@@ -58,6 +58,17 @@ $(document).ready(function(){
 						setCookie("email",adminUsername,3);
 						setCookie("adminFullname",json.username,3);
 						setCookie("adminLinks", json.adminLinks, 3);
+						$("#registerOwner").click(function(){
+							$("#registerTitle").text("Register New Unit Owner");
+							registrationType = "owner";
+							$("#addNewAdmin").modal('show');
+						});
+
+						$("#registerAdmin").click(function(){
+							$("#registerTitle").text("Register New Admin");
+							registrationType = "admin";
+							$("#addNewAdmin").modal('show');
+						});
 						login = true;
 					}
 					else{
@@ -78,12 +89,25 @@ $(document).ready(function(){
 		$("#adminDropDown").prepend(getCookie("adminLinks"));
 		$(".myUsername").text(getCookie("adminFullname"));
 		$(".myUsername").append('<b class="caret">');
+		
+		$("#registerOwner").click(function(){
+			$("#registerTitle").text("Register New Unit Owner");
+			registrationType = "owner";
+			$("#addNewAdmin").modal('show');
+		});
+
+		$("#registerAdmin").click(function(){
+			$("#registerTitle").text("Register New Admin");
+			registrationType = "admin";
+			$("#addNewAdmin").modal('show');
+		});
 	}
 
 	
 	/////////////////////////////////Submitting New Amdmin User////////////////////////
 	$("#registrationAdminMsg").hide();
 	$("#signInBtn").hide();
+	var registrationType;
 
 	$("#registerNewAdmin").click(function(){
 		var fullName = $("#newAdminFullName").val();
@@ -105,11 +129,12 @@ $(document).ready(function(){
 			}
 			else if(searchPosition == 0 && simNumber.length == 13){
 				simNumber = simNumber.replace("+63", "");
-				var data = {adminFullName: fullName, adminSimNumber: simNumber, adminEmail: desiredEmailAddress, desiredPassword: password, myAdminEmail: getCookie("email"), myAdminPassword: confirmAdminPassword};
+				var data = {adminFullName: fullName, adminSimNumber: simNumber, adminEmail: desiredEmailAddress, desiredPassword: password, myAdminEmail: getCookie("email"), myAdminPassword: confirmAdminPassword, regType: registrationType};
+				
 				$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerAdmin.php", data, function (response) {
 					if(response == "successful"){
 						getUpdatedData();
-						alert("You've successfully registered your unit.");
+						alert("You've successfully registered new privilege user.");
 						$("#addNewAdmin").modal('hide');
 						clearAdminInput();
 					}

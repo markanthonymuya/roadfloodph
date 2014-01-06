@@ -15,8 +15,8 @@
  	if($adminSearch){
  		$selection['username'] = $adminSearch['adminName'];
 
-	    $selection['adminLinks'] = '<li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="#registerOwner">Add New Unit Owner</a></li>
-	              <li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="#addNewAdmin">Add New Admin</a></li>';
+	    $selection['adminLinks'] = '<li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="" id="registerOwner">Add New Unit Owner</a></li>
+	              <li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="" id="registerAdmin">Add New Admin</a></li>';
 
 	    $selection['query'] = true;
 	}

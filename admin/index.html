@@ -364,51 +364,13 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
-    <!-- Modal for Unit Owner Registration -->
-      <div id="registerOwner" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Register New Unit Owner</h4>
-            </div>
-            <div class="modal-body">
-              <p>Full Name:
-                <input id="ownerFullName" class="form-control" type="text" autofocus="autofocus" />
-              </p>
-              <p>Unit SIM Number:
-                <input id="ownerSimNumber" class="form-control" type="text" placeholder="+639123456789" />
-              </p>
-              <p>E-mail Address:
-                <input id="ownerEmail" class="form-control" type="text" placeholder="me@domain.com" />
-              </p>
-              <p>Password:
-                <input id="ownerPassword" class="form-control" type="text" placeholder="+639123456789" />
-              </p>
-              <p>Re-type Password:
-                <input id="ownerPasswordRetype" class="form-control" type="text" placeholder="+639123456789" />
-              </p>
-              <br>
-              <p>Please enter your password to confirm new registration.
-                <input id="confirmAdminPasswordNewOwner" class="form-control" type="text" placeholder="+639123456789" />
-              </p>
-              <p id="registrationOwnerMsg" style="color: red;">Password do not match.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button id="registerNewOwner" type="button" class="btn btn-primary">Submit</button>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-
       <!-- Modal for Add New Admin -->
       <div id="addNewAdmin" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Register New Admin</h4>
+              <h4 class="modal-title" id="registerTitle">Register New Admin</h4>
             </div>
             <div class="modal-body">
               <p>Full Name:
