@@ -24,6 +24,7 @@ $(document).ready(function(){
 		setCookie("email", "",3);
 		setCookie("adminFullname", "",3);
 		setCookie("adminLinks", "", 3);
+		setCookie("username","",3);		
 	}
 
 	if(getCookie("email") == undefined || getCookie("adminLinks") == undefined || getCookie("adminFullname")== undefined || getCookie("email") == "" || getCookie("adminLinks") == "" || getCookie("adminFullname")== ""){
@@ -58,6 +59,7 @@ $(document).ready(function(){
 						setCookie("email",adminUsername,3);
 						setCookie("adminFullname",json.username,3);
 						setCookie("adminLinks", json.adminLinks, 3);
+						setCookie("username",adminUsername,3);
 						$("#registerOwner").click(function(){
 							$("#registerTitle").text("Register New Unit Owner");
 							registrationType = "owner";
@@ -69,7 +71,6 @@ $(document).ready(function(){
 							registrationType = "admin";
 							$("#addNewAdmin").modal('show');
 						});
-						console.log("applied");
 						login = true;
 					}
 					else{

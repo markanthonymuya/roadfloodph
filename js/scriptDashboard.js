@@ -371,6 +371,7 @@ $(document).ready(function () {
                   timeLabelValues[dataSetQueue] = unDetailedMonths[monthInQuarter-1];
                 }
                 timeDataValues[dataSetQueue] = parseFloat(smsLogsJson["reportedFloodLevel"+(j)]);
+                currentDayQuarter = 0;
                 dataSetQueue++;
             }
             
