@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 03, 2014 at 11:52 PM
+-- Generation Time: Jan 06, 2014 at 09:26 AM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -31,11 +31,21 @@ CREATE TABLE IF NOT EXISTS `admin` (
   `adminName` varchar(100) NOT NULL,
   `adminEmail` varchar(100) NOT NULL,
   `adminContact` varchar(20) NOT NULL,
-  `adminPassword` varchar(20) NOT NULL,
+  `adminPassword` varchar(100) NOT NULL,
   `dateAdded` varchar(20) NOT NULL,
   `timeAdded` varchar(20) NOT NULL,
   PRIMARY KEY (`adminId`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`adminId`, `adminName`, `adminEmail`, `adminContact`, `adminPassword`, `dateAdded`, `timeAdded`) VALUES
+(1, 'Mark Anthony Muya', 'markmuya@outlook.com', '9275628107', '95e7f080d93915662d9a2f486417e2ae', '2014/01/05', '07:57:01'),
+(2, 'Johnver Bautista', 'johnverbautista00@hotmail.com', '9126959610', 'c67bda85a582c83d66bcc135e4920292', '2014/01/05', '12:51:42'),
+(3, 'Katrina Hazel Malagday', 'katyabu@gmail.com', '9276658721', 'd41d8cd98f00b204e9800998ecf8427e', '2014/01/05', '13:24:30'),
+(4, 'Kim Carla Lleno', 'kimlleno@yahoo.com', '9498829188', 'd41d8cd98f00b204e9800998ecf8427e', '2014/01/05', '13:29:12');
 
 -- --------------------------------------------------------
 
@@ -231,8 +241,8 @@ CREATE TABLE IF NOT EXISTS `unitregistration` (
 --
 
 INSERT INTO `unitregistration` (`unitId`, `unitSimNumber`, `unitViewing`, `unitRegion`, `unitName`, `unitStatus`, `frequency`, `ownerId`, `dateAdded`, `timeAdded`, `accessToken`, `unitSmsCode`, `unitSmsNotif`) VALUES
-(1, '9154677374', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'activated', '2.0', 1, '2014/01/02', '15:30:20', 'bt6ctvXl1NF3-YLHa6TlBztIqHAYtDU_2Yv-UrWnXg4', 'PUREZA', 'activated'),
-(2, '9166058053', 'public', 'ncr', 'Don Antonio, Holy Spirit, QC', 'not activated', '2.0', 1, '2014/01/02', '15:34:42', '', 'ANTONIO', 'activated');
+(1, '9154677374', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'ACTIVATED', '2.0', 1, '2014/01/02', '15:30:20', 'bt6ctvXl1NF3-YLHa6TlBztIqHAYtDU_2Yv-UrWnXg4', 'PUREZA', 'activated'),
+(2, '9166058053', 'public', 'ncr', 'Don Antonio, Holy Spirit, QC', 'unknown', '2.0', 1, '2014/01/02', '15:34:42', '', 'ANTONIO', 'activated');
 
 -- --------------------------------------------------------
 
@@ -269,7 +279,7 @@ INSERT INTO `unitsmspowerupdatelogs` (`updateLogId`, `unitSimNumber`, `reportedP
 CREATE TABLE IF NOT EXISTS `unitsmstemplogs` (
   `tempLogId` int(10) NOT NULL AUTO_INCREMENT,
   `unitSimNumber` varchar(20) NOT NULL,
-  `smsRequest` varchar(12) NOT NULL,
+  `smsRequest` varchar(30) NOT NULL,
   `receivedDate` varchar(20) NOT NULL,
   `receivedTime` varchar(20) NOT NULL,
   PRIMARY KEY (`tempLogId`)

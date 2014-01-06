@@ -16,7 +16,7 @@
 
 #vehicleName{
 	position: absolute;
-	color: #16499A;
+	color: #404040;
 	font-size: 15pt;
 	font-weight: bold;
 	text-align: center;
@@ -46,7 +46,7 @@
 }
 
 #passability{
-	background-color:#009e0f;
+	background-color:#008803;
 	width: 500px;
 	height: 45px;
 	position: relative;

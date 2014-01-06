@@ -10,12 +10,12 @@ if(location.href == "http://roadfloodph.cloudapp.net/admin/"){
     //This is the function that sets/changes the displayed passability/impassability label on vehicles pane
     var checkVehiclePassability = function() {
         var passable = function() {
-            $("#passability").attr("style", "background-color:#009e0f; width: 500px; height: 45px; position: relative; z-index: 2; font-family:'Comic Sans MS'; font-size: 20pt; text-align: center; margin: 0px;");
+            $("#passability").attr("style", "background-color:#008803; width: 500px; height: 45px; position: relative; z-index: 2; font-family:'Comic Sans MS'; font-size: 20pt; text-align: center; margin: 0px;");
             $("#passability").text("PASSABLE");
         }
 
         var impassable = function() {
-        $("#passability").attr("style", "background-color:#cc0000; width: 500px; height: 45px; position: relative; z-index: 2; font-family:'Comic Sans MS'; font-size: 20pt; text-align: center; margin: 0px;");
+        $("#passability").attr("style", "background-color:#d40000; width: 500px; height: 45px; position: relative; z-index: 2; font-family:'Comic Sans MS'; font-size: 20pt; text-align: center; margin: 0px;");
         $("#passability").text("NOT PASSABLE");
         } 
 
