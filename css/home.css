@@ -79,3 +79,17 @@
  {
 	 transition: width 1s;
  } 
+
+ .hoverData
+ {
+ 	background-color: rgba(34, 34, 34, 0.8);
+	width: 250px;
+	height: 100px;
+	position: absolute;
+	z-index: 5;
+	font-family:'Comic Sans MS';
+	font-size: 20pt;
+	text-align: center;
+	margin: 0px;
+	top: 292px;
+ }
