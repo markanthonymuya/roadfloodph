@@ -61,12 +61,14 @@ $(document).ready(function () {
                     }
                     becomesOffline = false;
                 }
+                $("#connectToInternet").text("");
                 $("#connectToInternet").hide();
             });
         }
         else {
             becomesOffline = true;
             $("#selectButton").hide();
+            $("#connectToInternet").text("To receive road flood updates, please connect to the internet.");
             $("#connectToInternet").show();
             $("#unitName").text("");
             $("#unitRegion").text("");
