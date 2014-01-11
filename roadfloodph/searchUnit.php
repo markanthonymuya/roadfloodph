@@ -48,7 +48,7 @@
 }
 else{
     //check if the unit has the same number
-     $result = mysqli_query($con, "SELECT * from unitregistration WHERE unitViewing='public'");
+     $result = mysqli_query($con, "SELECT * from unitregistration WHERE unitViewing='public' AND unitStatus='ACTIVATED'");
 
      $selection = array();
      $generalCounter = 0;
