@@ -1,9 +1,8 @@
 <?php
 
 require ('../globelabsapi/GlobeApi.php');
+require ('../key/globeKey.php');
 
-$appId = "eMGzMHdByBqf4RiLjGTyzefLnGBrHLd8";
-$appSecret = "592c401afde0ae158d6a46c088c78119fa0130b0db54a6d76dd7d8c347317f77";
 
 $globe = new GlobeApi();
 $auth = $globe->auth($appId, $appSecret);
