@@ -1,7 +1,6 @@
 <?php
 
 require ('../globelabsapi/GlobeApi.php');
-
 $json = file_get_contents('php://input');
 $json = stripslashes($json);
 $message = json_decode($json, true);
@@ -20,6 +19,7 @@ if($message) {
 	$asOfDate = date("Y/m/d");
  	$asOfTime = date("H:i:s");
 
+	//creating connection to database with username and password
 	include('../key/access.php');
 	
 	//parse all items in the received message
@@ -31,8 +31,11 @@ if($message) {
 		}
 
 		$senderNumber = $item['senderAddress'];
+		//default value thrown by globe is in this format 'tel:+639271234567'
+		//that's why we need to replace 'tel:+63' with ''
+		//so that what will be left is the processable number 9271234567
 		$senderNumber = str_replace('tel:+63', '', $senderNumber);
-		$requestSms = $item['message'];
+		$senderMessage = $item['message'];
 
 		$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
 		$unitSearch = mysqli_fetch_array($resultUnitSearch);
@@ -44,8 +47,9 @@ if($message) {
 
 		$inTempBoolean = false;
 
+
 		//checks for temporary log of reported flood level
-		if($inTemp['smsRequest'] ==  $requestSms){
+		if($inTemp['smsRequest'] ==  $senderMessage){
 			$inTempBoolean = true;
 		}
 
@@ -64,7 +68,7 @@ if($message) {
 		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
 				}
 				elseif($inTempBoolean==false){
-					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$requestSms', '$asOfDate', '$asOfTime')");
+					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$senderMessage', '$asOfDate', '$asOfTime')");
 		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "RESEND");
 				}
 			}
@@ -83,7 +87,7 @@ if($message) {
 		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
 				}
 				elseif($inTempBoolean==false){
-					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$requestSms', '$asOfDate', '$asOfTime')");
+					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$senderMessage', '$asOfDate', '$asOfTime')");
 		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "RESEND");
 				}
 			}

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 07, 2014 at 03:53 AM
+-- Generation Time: Jan 08, 2014 at 05:07 PM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -147,7 +147,8 @@ CREATE TABLE IF NOT EXISTS `unitleveldetection` (
 
 INSERT INTO `unitleveldetection` (`unitId`, `unitWaterLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
 (1, '6', '2014/01/04', '07:43:25'),
-(2, '45', '2014/01/02', '15:34:42');
+(2, '45', '2014/01/02', '15:34:42'),
+(3, '0', '2014/01/07', '04:08:33');
 
 -- --------------------------------------------------------
 
@@ -170,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `unitlist` (
 
 INSERT INTO `unitlist` (`unitCode`, `dateAdded`, `timeAdded`, `ownerId`, `unitId`) VALUES
 ('RF100C1218', '2014/01/02', '15:30:20', 1, 1),
-('RF521B1612', '', '', 0, 0),
+('RF521B1612', '2014/01/07', '04:08:33', 1, 3),
 ('RF911B0309', '2014/01/02', '15:34:42', 1, 2);
 
 -- --------------------------------------------------------
@@ -210,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `unitpowermonitoring` (
   `unitDateAsOf` varchar(20) NOT NULL,
   `unitTimeAsOf` varchar(20) NOT NULL,
   PRIMARY KEY (`unitId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `unitpowermonitoring`
@@ -218,7 +219,8 @@ CREATE TABLE IF NOT EXISTS `unitpowermonitoring` (
 
 INSERT INTO `unitpowermonitoring` (`unitId`, `unitPowerLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
 (1, '100', '2014/01/02', '03:23:01'),
-(2, '100', '2014/01/02', '15:34:42');
+(2, '100', '2014/01/02', '15:34:42'),
+(3, '100', '2014/01/07', '04:08:33');
 
 -- --------------------------------------------------------
 
@@ -243,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `unitregistration` (
   PRIMARY KEY (`unitId`),
   KEY `ownerId` (`ownerId`),
   KEY `unitSimNumber` (`unitSimNumber`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
 
 --
 -- Dumping data for table `unitregistration`
@@ -251,7 +253,8 @@ CREATE TABLE IF NOT EXISTS `unitregistration` (
 
 INSERT INTO `unitregistration` (`unitId`, `unitSimNumber`, `unitViewing`, `unitRegion`, `unitName`, `unitStatus`, `frequency`, `ownerId`, `dateAdded`, `timeAdded`, `accessToken`, `unitSmsCode`, `unitSmsNotif`) VALUES
 (1, '9154677374', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'ACTIVATED', '2.0', 1, '2014/01/02', '15:30:20', 'bt6ctvXl1NF3-YLHa6TlBztIqHAYtDU_2Yv-UrWnXg4', 'PUREZA', 'activated'),
-(2, '9166058053', 'public', 'ncr', 'Don Antonio, Holy Spirit, QC', 'unknown', '2.0', 1, '2014/01/02', '15:34:42', '', 'ANTONIO', 'activated');
+(2, '9275628107', 'public', 'ncr', 'Don Antonio, Holy Spirit, QC', 'unknown', '2.0', 1, '2014/01/02', '15:34:42', 'm61UThl6s0PimODh7HcGHxzcjC3TF9H1uo0qA77sI_k', 'ANTONIO', 'activated'),
+(3, '9179829849', 'public', 'ncr', 'Green Heights, Nangka, Marikina', 'UNKNOWN', '2.0', 1, '2014/01/07', '04:08:33', '', 'NANGKA', 'activated');
 
 -- --------------------------------------------------------
 

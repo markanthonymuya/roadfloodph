@@ -23,7 +23,13 @@ if(!isset($_SESSION['access_token'])) {
 	$response = $auth->getAccessToken($_SESSION['code']);
 	$_SESSION['access_token'] = $response['access_token'];
 	$_SESSION['subscriber_number'] = $response['subscriber_number'];
-	echo $_SESSION['subscriber_number']." ".$_SESSION['access_token'];
+
+	$unitSimNumber = $_SESSION['subscriber_number'];
+	$access_token = $_SESSION['access_token'];
+
+	echo "SIM Number: ".$unitSimNumber."<br>";
+	echo "Access Token of the SIM Number: ".$access_token."<br>";
+
 }
 
 ?>
