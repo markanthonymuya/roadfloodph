@@ -43,4 +43,5 @@ $selection['generalCounter'] = $generalCounter;
 header("Content-type:application/json");
 echo json_encode($selection);
 
+mysqli_close($con);
 ?> 

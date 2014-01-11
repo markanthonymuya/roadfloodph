@@ -13,4 +13,6 @@
 
     echo $selection = $row['unitPowerLevel'];
 
+    mysqli_close($con);
+
 ?>

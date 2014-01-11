@@ -32,4 +32,5 @@ else{
 header("Content-type:application/json");
 echo json_encode($resultMsg);
 
+mysqli_close($con);
 ?>
