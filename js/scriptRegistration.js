@@ -1,4 +1,19 @@
+var getUnits;
+
 $(document).ready(function () {
+
+	function getCookie(c_name)
+	{
+		var i,x,y,ARRcookies=document.cookie.split(";");
+		for (i=0;i<ARRcookies.length;i++){
+			x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+		  	y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+			x=x.replace(/^\s+|\s+$/g,"");
+		  	if (x==c_name){
+		    	return unescape(y);
+		    }
+		}
+	}
 	
 	var units = {};
 	var parentId = 0;
@@ -53,9 +68,16 @@ $(document).ready(function () {
 		}
 	}
 
-	var getUnits = function(service){
+	getUnits = function(service){
+		var usersEmailAddress = getCookie("username");
 		//get all units related to the owner
-		$.post("http://roadfloodph.cloudapp.net/roadfloodph/searchUnit.php", {emailAddress: getCookie("username")}, function (result) {
+		if(usersEmailAddress == "" || usersEmailAddress == undefined || usersEmailAddress == null){
+			usersEmailAddress = "public";
+		}
+
+		console.log(usersEmailAddress);
+		
+		$.post("http://roadfloodph.cloudapp.net/roadfloodph/searchUnit.php", {emailAddress: usersEmailAddress}, function (result) {
 			units = result;
 			console.log(units);
 			var stringSettings = "";
@@ -140,19 +162,6 @@ $(document).ready(function () {
 			}
 		});
 	};
-
-	function getCookie(c_name)
-	{
-		var i,x,y,ARRcookies=document.cookie.split(";");
-		for (i=0;i<ARRcookies.length;i++){
-			x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-		  	y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-			x=x.replace(/^\s+|\s+$/g,"");
-		  	if (x==c_name){
-		    	return unescape(y);
-		    }
-		}
-	}
 
 
 	$("#manageUnit").on('show.bs.modal', function () {
