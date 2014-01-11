@@ -1,9 +1,8 @@
 <?php
  
  require('../key/access.php');
- $emailAddress = "jethdeguzman@outlook.com";
 
- // $emailAddress = $_POST['emailAddress'];
+ $emailAddress = $_POST['emailAddress'];
 
  if($emailAddress != "public"){
 
