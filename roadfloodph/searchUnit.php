@@ -2,8 +2,11 @@
  
  require('../key/access.php');
 
- $ownerId = $_POST['ownerId'];
- 
+ $emailAddress = $_POST['emailAddress'];
+ $resultOwnerId = mysqli_query($con,"SELECT ownerId FROM unitowner WHERE ownerEmail='$emailAddress'");
+ $owners = mysqli_fetch_array($resultOwnerId);
+
+ $ownerId = $owners['ownerId'];
 
  //check if the unit has the same number
  $result = mysqli_query($con, "SELECT * from unitregistration WHERE ownerId='$ownerId'");

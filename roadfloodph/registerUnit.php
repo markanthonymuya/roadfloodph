@@ -8,7 +8,7 @@
  $unitRegion = $_POST['unitRegion'];
  $unitName = $_POST['unitName'];
  $unitStatus = "UNKNOWN";
- $emailAddress = $_POST['ownerId'];
+ $emailAddress = $_POST['emailAddress'];
  $unitSmsKeyword = $_POST['unitSmsKeyword'];
  $unitSmsNotif = "activated";
  date_default_timezone_set("Asia/Manila");
