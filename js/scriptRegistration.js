@@ -1,5 +1,3 @@
-var getUnits;
-
 $(document).ready(function () {
 
 	function getCookie(c_name)
@@ -68,15 +66,13 @@ $(document).ready(function () {
 		}
 	}
 
-	getUnits = function(service){
+	var getUnits = function(service){
 		var usersEmailAddress = getCookie("username");
 		//get all units related to the owner
 		if(usersEmailAddress == "" || usersEmailAddress == undefined || usersEmailAddress == null){
 			usersEmailAddress = "public";
 		}
 
-		console.log(usersEmailAddress);
-		
 		$.post("http://roadfloodph.cloudapp.net/roadfloodph/searchUnit.php", {emailAddress: usersEmailAddress}, function (result) {
 			units = result;
 			console.log(units);
