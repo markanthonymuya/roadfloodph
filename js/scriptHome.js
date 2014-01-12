@@ -35,7 +35,7 @@ $(document).ready(function () {
             usersEmailAddress = "public";
         }
 
-        $.post("http://roadfloodph.cloudapp.net/roadfloodph/selectAllData.php", emailAddress: usersEmailAddress,function (json) {
+        $.post("/roadfloodph/selectAllData.php", {emailAddress: usersEmailAddress},function (json) {
             $(".unitOptions").remove();
             for (var i = 1; i <= json['generalCounter']; i++) {
                 $("#selectButton").append("<option class='unitOptions' value=" + i + ">" + json['unitName' + i] + "</option>");
@@ -67,7 +67,7 @@ $(document).ready(function () {
         var online = navigator.onLine;
 
         if(online){
-            $.get("http://roadfloodph.cloudapp.net/roadfloodph/lastRow.php", function (json, status) {
+            $.get("/roadfloodph/lastRow.php", function (json, status) {
                 currentIndexLastRow = json.floodUpdate;
                 currentPowerLastRow = json.powerUpdate;
                 if (currentIndexLastRow != lastIndexLastRow && status == "success" || becomesOffline) {

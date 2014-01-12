@@ -73,11 +73,11 @@ $(document).ready(function () {
 			usersEmailAddress = "public";
 		}
 
-		$.post("http://roadfloodph.cloudapp.net/roadfloodph/searchUnit.php", {emailAddress: usersEmailAddress}, function (result) {
+		$.post("/roadfloodph/searchUnit.php", {emailAddress: usersEmailAddress}, function (result) {
 			units = result;
 			console.log(units);
 			var stringSettings = "";
-			if(location.href == "http://roadfloodph.cloudapp.net/admin/"){
+			if(location.href == "/admin/"){
 				stringSettings = '<button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button>';
 			}			
 			if(service='manageUnit'){
@@ -122,7 +122,7 @@ $(document).ready(function () {
 					});
 
 					$(".activateBtn").click(function(){
-						window.location.assign("http://roadfloodph.cloudapp.net/redirect/");
+						window.location.assign("/redirect/");
 					});
 
 					$(".dashboardBtn").click(function(){
@@ -204,7 +204,7 @@ $(document).ready(function () {
 				unitNumberForm = unitNumberForm.replace("+63", "");
 				var data = {unitCode: $("#unitCode").val(), unitNumber: unitNumberForm, unitViewing: $("#unitViewing").val(), unitRegion: $("#unitRegionForm").val(), unitName: $("#unitNameForm").val(), emailAddress: getCookie("username"), unitSmsKeyword: $("#smsIdentification").val()};
 
-				$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerUnit.php", data, function (response) {
+				$.post("/roadfloodph/registerUnit.php", data, function (response) {
 					console.log(response);
 					if(response == "successful"){
 						getUpdatedData();
@@ -254,7 +254,7 @@ $(document).ready(function () {
 				unitNumberUpdate = unitNumberUpdate.replace("+63", "");
 				var data = {unitCode: $("#unitCodeUpdate").val(), unitNumber: unitNumberUpdate, unitViewing: $("#unitViewingUpdate").val(), unitRegion: $("#unitRegionFormUpdate").val(), unitName: $("#unitNameFormUpdate").val(), unitFrequency: frequency, unitSmsNotif: smsNotif};
 
-				$.post("http://roadfloodph.cloudapp.net/roadfloodph/updateUnit.php", data, function (response) {
+				$.post("/roadfloodph/updateUnit.php", data, function (response) {
 					if(response == "successful"){
 						getUpdatedData();
 						alert("You've successfully updated your unit profile.")

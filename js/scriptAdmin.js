@@ -38,7 +38,7 @@ $(document).ready(function(){
 
 		$('#adminLogin').on('hidden.bs.modal', function () {
 			if(login == false){
-				location.href="http://roadfloodph.cloudapp.net/";
+				location.href="/";
 			}
 			console.log(getCookie("username"));
 		});
@@ -50,7 +50,7 @@ $(document).ready(function(){
 
 
 			if(adminUsername != "" && adminPassword != ""){
-				$.post("http://roadfloodph.cloudapp.net/roadfloodph/admin.php", {username: adminUsername, password: adminPassword}, function(json){
+				$.post("/roadfloodph/admin.php", {username: adminUsername, password: adminPassword}, function(json){
 					if(json.query){
 						$("#adminDropDown").prepend(json.adminLinks);
 						$(".myUsername").text(json.username);
@@ -133,7 +133,7 @@ $(document).ready(function(){
 				simNumber = simNumber.replace("+63", "");
 				var data = {adminFullName: fullName, adminSimNumber: simNumber, adminEmail: desiredEmailAddress, desiredPassword: password, myAdminEmail: getCookie("email"), myAdminPassword: confirmAdminPassword, regType: registrationType};
 				
-				$.post("http://roadfloodph.cloudapp.net/roadfloodph/registerAdmin.php", data, function (response) {
+				$.post("/roadfloodph/registerAdmin.php", data, function (response) {
 					if(response == "successful"){
 						getUpdatedData();
 						alert("You've successfully registered new privilege user.");

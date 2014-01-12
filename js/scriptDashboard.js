@@ -104,7 +104,7 @@ $(document).ready(function () {
 
   //converts the currentDate and nextDate Timestamp into a human readable date
   var getNextDate = function(){
-    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getDate.php",{currentDateTs: currentDateTimestamp, nextDateTs: nextDateTimestamp}, function (json) {
+    $.get("/roadfloodph/getDate.php",{currentDateTs: currentDateTimestamp, nextDateTs: nextDateTimestamp}, function (json) {
       currentDate = json.currentDate['year']+"/"+json.currentDate['mon']+"/"+json.currentDate['mday'];
       nextDate = json.nextDate['year']+"/"+json.nextDate['mon']+"/"+json.nextDate['mday'];
       chartTimeline();
@@ -113,7 +113,7 @@ $(document).ready(function () {
 
   //gets timestamp of current view day and 1-day span of reference
   var getNextDay = function(){
-    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getDay.php", function (json) {
+    $.get("/roadfloodph/getDay.php", function (json) {
       getDay = json;
       currentDateTimestamp = getDay.today;
       nextDateTimestamp = getDay.tomorrow;
@@ -123,7 +123,7 @@ $(document).ready(function () {
 
   //get timestamp of current month and has a 1 month span of reference
   var getNextMonth = function(){
-    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getMonth.php",{year: currentYear, month: currentMonth}, function (json) {
+    $.get("/roadfloodph/getMonth.php",{year: currentYear, month: currentMonth}, function (json) {
       getMonth = json;
       currentDateTimestamp = getMonth.currentMonth;
       nextDateTimestamp = getMonth.nextMonth;
@@ -133,7 +133,7 @@ $(document).ready(function () {
   
   //get timestamp of a quarter months, first loaded timestamp with respect to current month
   var getNextQuarter = function(){
-    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getQuarter.php",{year: currentYear, quarter: currentQuarter}, function (json) {
+    $.get("/roadfloodph/getQuarter.php",{year: currentYear, quarter: currentQuarter}, function (json) {
       getQuarter = json;
       currentDateTimestamp = getQuarter.startPoint;
       nextDateTimestamp = getQuarter.endPoint;
@@ -143,7 +143,7 @@ $(document).ready(function () {
 
   //get timestamp of the first and second half of the year
   var getNextSemiAnnual = function(){
-    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getSemiannual.php",{year: currentYear, point: currentSemiAnnual}, function (json) {
+    $.get("/roadfloodph/getSemiannual.php",{year: currentYear, point: currentSemiAnnual}, function (json) {
       getSemiAnnual = json;
       currentDateTimestamp = getSemiAnnual.startPoint;
       nextDateTimestamp = getSemiAnnual.endPoint;
@@ -153,7 +153,7 @@ $(document).ready(function () {
 
   //get timestamp of the year
   var getNextAnnual = function(){
-    $.get("http://roadfloodph.cloudapp.net/roadfloodph/getAnnual.php",{year: currentYear}, function (json) {
+    $.get("/roadfloodph/getAnnual.php",{year: currentYear}, function (json) {
       getAnnual = json;
       currentDateTimestamp = getAnnual.startPoint;
       nextDateTimestamp = getAnnual.endPoint;
@@ -164,7 +164,7 @@ $(document).ready(function () {
   //triggered upon change in database and change of selected dashboard 
   smsUpdateLogs = function(manageUnitSimNumber){
     currentUnitSimNumber = manageUnitSimNumber;
-    $.get("http://roadfloodph.cloudapp.net/roadfloodph/smsLogs.php",{unitSimNumber: currentUnitSimNumber}, function (json) {
+    $.get("/roadfloodph/smsLogs.php",{unitSimNumber: currentUnitSimNumber}, function (json) {
       smsLogsJson = json;
       $(".dashboardNav").show();
       $("#timelineNav").show();
@@ -461,7 +461,7 @@ $(document).ready(function () {
 
   var getUpdatedPowerData = function(){
     if(currentPowerLastRow != lastPowerLastRow && currentUnitSimNumber != ""){
-      $.post("http://roadfloodph.cloudapp.net/roadfloodph/searchPowerBySimNumber.php", {unitSimNumber: currentUnitSimNumber}, function (batteryPower) {
+      $.post("/roadfloodph/searchPowerBySimNumber.php", {unitSimNumber: currentUnitSimNumber}, function (batteryPower) {
             $(".batteryLabelText").text(batteryPower);
       });
     }

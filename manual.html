@@ -26,7 +26,7 @@
                 $("#waterLevelHeight").text($("#powerRanger").val());
             });
 
-            $.post("http://roadfloodph.cloudapp.net/roadfloodph/getUnitNames.php", function (json) {
+            $.post("/roadfloodph/getUnitNames.php", function (json) {
                 unitNames = json;
                 console.log(json);
                 console.log(json['generalCounter']);
@@ -41,7 +41,7 @@
 
 
         function updateWaterLevel(newFloodLevel, unitNumberValue){
-            $.post("http://roadfloodph.cloudapp.net/roadfloodph/updateWaterLevel.php", {roadFloodLevel: newFloodLevel, unitNumber: unitNumberValue});
+            $.post("/roadfloodph/updateWaterLevel.php", {roadFloodLevel: newFloodLevel, unitNumber: unitNumberValue});
         }
 
 
