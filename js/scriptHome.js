@@ -7,6 +7,19 @@ var lastPowerLastRow = 0;
 
 
 $(document).ready(function () {
+    function getCookie(c_name)
+    {
+        var i,x,y,ARRcookies=document.cookie.split(";");
+        for (i=0;i<ARRcookies.length;i++){
+            x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+            y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+            x=x.replace(/^\s+|\s+$/g,"");
+            if (x==c_name){
+                return unescape(y);
+            }
+        }
+    }
+
     var lastIndexLastRow = 0;
     var becomesOffline = false;
     var currentLocationSelected = 1;
@@ -16,8 +29,13 @@ $(document).ready(function () {
 
     //global function that can request for new updated data from the server
     getUpdatedData = function(){
+        var usersEmailAddress = getCookie("username");
+        //get all units related to the owner
+        if(usersEmailAddress == "" || usersEmailAddress == undefined || usersEmailAddress == null){
+            usersEmailAddress = "public";
+        }
 
-        $.post("http://roadfloodph.cloudapp.net/roadfloodph/selectAllData.php", function (json) {
+        $.post("http://roadfloodph.cloudapp.net/roadfloodph/selectAllData.php", emailAddress: usersEmailAddress,function (json) {
             $(".unitOptions").remove();
             for (var i = 1; i <= json['generalCounter']; i++) {
                 $("#selectButton").append("<option class='unitOptions' value=" + i + ">" + json['unitName' + i] + "</option>");
@@ -48,7 +66,7 @@ $(document).ready(function () {
         
         var online = navigator.onLine;
 
-        if(true){
+        if(online){
             $.get("http://roadfloodph.cloudapp.net/roadfloodph/lastRow.php", function (json, status) {
                 currentIndexLastRow = json.floodUpdate;
                 currentPowerLastRow = json.powerUpdate;
