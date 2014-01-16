@@ -4,17 +4,27 @@ require('../key/access.php');
 $emailAddress = $_POST['emailAddress'];
 
 if($emailAddress != "public"){
-	// $resultUnitPower = mysqli_query($con, "SELECT unitId, unitPowerLevel FROM unitpowermonitoring"); not yet done that will show power in selection menu
+	$resultAdminSearch = mysqli_query($con, "SELECT adminId FROM admin WHERE adminEmail='$emailAddress'");
+	$rowAdminSearch = mysqli_fetch_array($resultAdminSearch);
+
 	$resultOwnerSearch = mysqli_query($con, "SELECT ownerId FROM unitowner WHERE ownerEmail='$emailAddress'");
 	$rowOwnerSearch = mysqli_fetch_array($resultOwnerSearch);
 
-	$ownerId = $rowOwnerSearch['ownerId'];
+	$resultUnitReg;
+
+	if($rowOwnerSearch){
+		$ownerId = $rowOwnerSearch['ownerId'];
+		$resultUnitReg = mysqli_query($con, "SELECT unitId, unitViewing, unitName, unitRegion, unitStatus FROM unitregistration WHERE unitViewing='public' AND unitStatus='ACTIVATED' OR ownerId='$ownerId'");
+	}
+	elseif($rowAdminSearch){
+		$resultUnitReg = mysqli_query($con, "SELECT unitId, unitViewing, unitName, unitRegion, unitStatus FROM unitregistration");
+	}
+
 
 	$selection = array();
 	$publicUnitsId = array();
 	$counter = 1;
 	$generalCounter = 0;
-	$resultUnitReg = mysqli_query($con, "SELECT unitId, unitViewing, unitName, unitRegion, unitStatus FROM unitregistration WHERE unitViewing='public' AND unitStatus='ACTIVATED' OR ownerId='$ownerId'");
 
 
 	while($row = mysqli_fetch_array($resultUnitReg)){

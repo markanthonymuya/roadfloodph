@@ -73,6 +73,7 @@ $(document).ready(function () {
 			usersEmailAddress = "public";
 		}
 
+		console.log(usersEmailAddress);
 		$.post("/roadfloodph/searchUnit.php", {emailAddress: usersEmailAddress}, function (result) {
 			units = result;
 			console.log(units);

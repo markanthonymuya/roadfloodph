@@ -8,13 +8,23 @@
 
  if($emailAddress != "public"){
 
+     $resultAdmin = mysqli_query($con,"SELECT * FROM admin WHERE adminEmail='$emailAddress'");
+     $admin = mysqli_fetch_array($resultAdmin);
+
      $resultOwnerId = mysqli_query($con,"SELECT ownerId FROM unitowner WHERE ownerEmail='$emailAddress'");
-     $owners = mysqli_fetch_array($resultOwnerId);
+     $owner = mysqli_fetch_array($resultOwnerId);
 
-     $ownerId = $owners['ownerId'];
+     $ownerId;
+     $resultUnit;
 
-     //check if the unit has the same number
-     $resultUnit = mysqli_query($con, "SELECT * from unitregistration WHERE ownerId='$ownerId'");
+     if($owner){
+         $ownerId = $owner['ownerId'];
+         //check if the unit has the same number
+         $resultUnit = mysqli_query($con, "SELECT * from unitregistration WHERE ownerId='$ownerId'");
+     }
+     elseif($admin){
+         $resultUnit = mysqli_query($con, "SELECT * from unitregistration");  
+     }
 
      $selection = array();
      $generalCounter = 0;
@@ -27,8 +37,16 @@
         $unitId = $rowUnits['unitId'];
         $unitIdList[$counter] = $unitId;
         $selection['unitId'.$counter] = $unitId;
-        $unitList = mysqli_query($con, "SELECT unitCode from unitlist WHERE ownerId='$ownerId' AND unitId='$unitId'");
-        $unitCodeDB = mysqli_fetch_array($unitList);
+        $unitList;
+        $unitCodeDB;
+        if($owner){
+            $unitList = mysqli_query($con, "SELECT unitCode from unitlist WHERE ownerId='$ownerId' AND unitId='$unitId'");
+            $unitCodeDB = mysqli_fetch_array($unitList);
+        }
+        elseif($admin){
+            $unitList = mysqli_query($con, "SELECT unitCode from unitlist WHERE unitId='$unitId'");
+            $unitCodeDB = mysqli_fetch_array($unitList);   
+        }
         $selection['unitCode'.$counter] = $unitCodeDB['unitCode'];
         $selection['unitSimNumber'.$counter] = $rowUnits['unitSimNumber'];
         $selection['unitViewing'.$counter] = $rowUnits['unitViewing'];
