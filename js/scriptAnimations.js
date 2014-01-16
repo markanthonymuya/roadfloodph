@@ -2,7 +2,7 @@ var carsCategory = new Array('light', 'light', 'medium', 'heavy', 'medium', 'lig
 var currentImageIndex = 0;
 
 var srcGifImage = "assets/gif/";
-if(location.href == "/admin/"){
+if(location.href == "http://roadfloodph.cloudapp.net/admin/"){
         srcGifImage = '../assets/gif/';
 }
 
@@ -215,7 +215,7 @@ $(document).ready(function () {
     $("#showInProgress").hide();
 
     var srcImages = 'src="assets/images/';
-    if(location.href == "/admin/"){
+    if(location.href == "http://roadfloodph.cloudapp.net/admin/"){
         srcImages = 'src="../assets/images/';
     }
 

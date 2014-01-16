@@ -7,6 +7,7 @@ var lastPowerLastRow = 0;
 
 
 $(document).ready(function () {
+
     function getCookie(c_name)
     {
         var i,x,y,ARRcookies=document.cookie.split(";");
@@ -63,10 +64,9 @@ $(document).ready(function () {
     //new updated data using the "getUpdatedData()" function to update and refresh
     //the currentdata displayed in the page.
     var getLastTableRow = function() {
-        
         var online = navigator.onLine;
 
-        if(online){
+        if(true){            
             $.get("/roadfloodph/lastRow.php", function (json, status) {
                 currentIndexLastRow = json.floodUpdate;
                 currentPowerLastRow = json.powerUpdate;

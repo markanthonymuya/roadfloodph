@@ -71,6 +71,7 @@ $(document).ready(function(){
 							registrationType = "admin";
 							$("#addNewAdmin").modal('show');
 						});
+						getUpdatedData();
 						login = true;
 					}
 					else{

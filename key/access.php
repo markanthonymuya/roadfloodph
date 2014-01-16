@@ -1,5 +1,5 @@
 <?php
-	$con=mysqli_connect("localhost","secret","secret","secret");
+	$con=mysqli_connect("localhost","root","root","roadfloodph");
 	
 	// Check connection
 	if (mysqli_connect_errno())

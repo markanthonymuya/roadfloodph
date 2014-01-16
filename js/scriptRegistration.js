@@ -77,7 +77,7 @@ $(document).ready(function () {
 			units = result;
 			console.log(units);
 			var stringSettings = "";
-			if(location.href == "/admin/"){
+			if(location.href == "http://roadfloodph.cloudapp.net/admin/"){
 				stringSettings = '<button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button>';
 			}			
 			if(service='manageUnit'){
