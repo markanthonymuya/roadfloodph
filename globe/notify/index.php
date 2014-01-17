@@ -20,7 +20,7 @@ if($message) {
  	$asOfTime = date("H:i:s");
 
 	//creating connection to database with username and password
-	include('../key/access.php');
+	include('../../key/access.php');
 	
 	//parse all items in the received message
 	foreach($message['inboundSMSMessageList']['inboundSMSMessage'] as $item) {
@@ -39,6 +39,9 @@ if($message) {
 
 		$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
 		$unitSearch = mysqli_fetch_array($resultUnitSearch);
+
+		$resultSubscriberSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
+		$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
 		$unitId = $unitSearch['unitId'];
 
@@ -65,7 +68,7 @@ if($message) {
 				if($inTempBoolean){
 					mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
 					mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
-		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
+		    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED jkshdkfjhas");
 				}
 				elseif($inTempBoolean==false){
 					mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$senderMessage', '$asOfDate', '$asOfTime')");
@@ -104,6 +107,26 @@ if($message) {
 			if($unitSearch){
 				mysqli_query($con, "UPDATE unitregistration SET unitStatus='MISALIGNED' WHERE unitId='$unitId'");
 			}
+		}
+		elseif(substr_compare($item['message'], "RF LIST", 0, 6) == 0){
+     		$resultPublicUnits = mysqli_query($con, "SELECT unitName, unitSmsCode from unitregistration WHERE unitViewing='public' AND unitStatus='ACTIVATED'");
+
+			if($resultPublicUnits){
+     			
+     			$listOfUnits = "";
+
+				while($row = mysqli_fetch_array($resultPublicUnits)){
+					$listOfUnits = $listOfUnits." ".$row['unitSmsCode']." "/*."-".$row['unitName']*/;
+					$counter++;
+				}
+
+				$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "Here are the SMSCODE of public units: ".$listOfUnits
+					.' To get current update of the unit: Text "RF<space><SMSCODE>". To automatically received updates of the unit: Text "RF<space><SMSCODE><space>AUTO". Send to 21583567');
+			}
+		}
+		elseif(substr_compare($item['message'], "TEST", 0, 3) == 0){
+		    $response = $sms->sendMessage("eP2OOz04U54NT93Pr74X-XSs2Bdv6KDnzNSHAYcd5w0", "9275628107", "Testing accepted.");
+		    $response = $sms->sendMessage("Zd1VoHtd-KMtyqlHUOfgNpUmM5238k04NDLy7vyZGh0", "9154677374", "Testing accepted 2.");
 		}
 	}
 }

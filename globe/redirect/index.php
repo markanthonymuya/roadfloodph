@@ -1,7 +1,7 @@
 <?php
 
 require ('../globelabsapi/GlobeApi.php');
-require ('../key/globeKey.php');
+require ('../../key/globeKey.php');
 
 
 $globe = new GlobeApi();

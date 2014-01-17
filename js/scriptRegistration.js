@@ -73,10 +73,8 @@ $(document).ready(function () {
 			usersEmailAddress = "public";
 		}
 
-		console.log(usersEmailAddress);
 		$.post("/roadfloodph/searchUnit.php", {emailAddress: usersEmailAddress}, function (result) {
 			units = result;
-			console.log(units);
 			var stringSettings = "";
 			if(location.href == "http://roadfloodph.cloudapp.net/admin/"){
 				stringSettings = '<button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button>';
