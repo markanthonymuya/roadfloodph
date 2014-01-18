@@ -116,12 +116,15 @@ if($message) {
      			$listOfUnits = "";
 
 				while($row = mysqli_fetch_array($resultPublicUnits)){
-					$listOfUnits = $listOfUnits." ".$row['unitSmsCode']." "/*."-".$row['unitName']*/;
-					$counter++;
+					$listOfUnits = $listOfUnits." ".$row['unitSmsCode']." for ".$row['unitName']." --- ";
 				}
 
-				$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "Here are the SMSCODE of public units: ".$listOfUnits
-					.' To get current update of the unit: Text "RF<space><SMSCODE>". To automatically received updates of the unit: Text "RF<space><SMSCODE><space>AUTO". Send to 21583567');
+				$smsMessage = "Available SMSCODE of public units: ".$listOfUnits.'. Text "RF<space><SMSCODE>" to get current update of the unit, or "RF<space><SMSCODE><space>AUTO" for automatic unit notification. Send to 21583567';
+				while(strlen($smsMessage) > 0){
+					$smsTrim158 = substr($smsMessage, 0, 160);
+					$sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], $smsTrim158);
+					$smsMessage = str_replace($smsTrim158, '', $smsMessage);
+				}
 			}
 		}
 		elseif(substr_compare($item['message'], "TEST", 0, 3) == 0){
