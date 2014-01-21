@@ -121,7 +121,7 @@ $(document).ready(function () {
 					});
 
 					$(".activateBtn").click(function(){
-						window.location.assign("/redirect/");
+						window.location.assign("/globe/redirect/");
 					});
 
 					$(".dashboardBtn").click(function(){

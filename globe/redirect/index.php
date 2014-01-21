@@ -2,6 +2,7 @@
 
 require ('../globelabsapi/GlobeApi.php');
 require ('../../key/globeKey.php');
+require ('../../key/access.php');
 
 
 $globe = new GlobeApi();
@@ -26,9 +27,16 @@ if(!isset($_SESSION['access_token'])) {
 	$unitSimNumber = $_SESSION['subscriber_number'];
 	$access_token = $_SESSION['access_token'];
 
-	echo "SIM Number: ".$unitSimNumber."<br>";
-	echo "Access Token of the SIM Number: ".$access_token."<br>";
-
+	$affectedRows = mysqli_query($con, "UPDATE unitregistration SET accessToken='$access_token' WHERE unitSimNumber='$unitSimNumber'");
+	echo $affectedRows;
+	if($affectedRows > 0){
+		header('Location: http://roadfloodph.cloudapp.net/admin/');
+		exit;
+	}
+	else{
+		echo '[RoadFloodPH website message]: We found no record of your number '.$unitSimNumber.' in our database. Please recheck your number registered for your unit.<br>';
+		echo '<a href="http://roadfloodph.cloudapp.net/admin/">Back to Admin Page</a>';
+	}
 }
 
 ?>
