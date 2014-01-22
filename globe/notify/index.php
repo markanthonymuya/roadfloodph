@@ -43,7 +43,7 @@ if($message) {
 		$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
 		$unitSearch = mysqli_fetch_array($resultUnitSearch);
 
-		$resultSubscriberSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
+		$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$senderNumber' LIMIT 1");
 		$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
 		if(!$resultUnitSearch){
@@ -121,6 +121,8 @@ if($message) {
 		elseif($resultSubscriberSearch){
 
 			if(substr_compare($item['message'], "RF LIST", 0, 6) == 0){
+				$response = $sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], "hellow world");
+
 	     		$resultPublicUnits = mysqli_query($con, "SELECT unitName, unitSmsCode from unitregistration WHERE unitViewing='public' AND unitStatus='ACTIVATED'");
 
 				if($resultPublicUnits){
@@ -134,7 +136,7 @@ if($message) {
 					$smsMessage = "Available SMSCODE of public units: ".$listOfUnits.'. Text "RF<space><SMSCODE>" to get current update of the unit, or "RF<space><SMSCODE><space>AUTO" for automatic unit notification. Send to 2158'.$shortCodeFromGlobe.".";
 					while(strlen($smsMessage) > 0){
 						$smsTrim158 = substr($smsMessage, 0, 160);
-						$sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], $smsTrim158);
+						$sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], $smsTrim158);
 						$smsMessage = str_replace($smsTrim158, '', $smsMessage);
 					}
 				}
@@ -227,13 +229,13 @@ if($message) {
 						  }						  
 
 						if(strcmp($fbSending, "successful") == 0){
-							$sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], $floodLevelMessage);
+							$sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], $floodLevelMessage);
 						}
 					}
 		     	}
 		     	else{
 		     		$errorMessage = "Sorry, ".$smsCodeRequest.' is not a valid public SMSCODE. Text "RF LIST" to 2158'.$shortCodeFromGlobe.' to see available SMSCODEs.';
-					$sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], $errorMessage);
+					$sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], $errorMessage);
 		     	}
 			}
 			elseif(substr_compare($item['message'], "TEST", 0, 3) == 0){
