@@ -46,7 +46,7 @@ if($message) {
 		$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$senderNumber' LIMIT 1");
 		$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
-		if(!$resultUnitSearch){
+		if($unitSearch){
 			
 			$unitId = $unitSearch['unitId'];
 
@@ -76,6 +76,84 @@ if($message) {
 						mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
 						mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
 			    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
+
+			    		//facebook poster upon recieving flood update of a publicly-declared unit
+						$regQuery = mysqli_query($con, "SELECT unitId, unitName from unitregistration WHERE unitSimNumber='$senderNumber' AND unitStatus='ACTIVATED' AND unitViewing='public'");
+						$regDetails = mysqli_fetch_array($regQuery);
+
+			     		if($regDetails){	     			
+				     		$regId = $regDetails['unitId'];
+				     		$regCode = $smsCodeRequest;
+				     		$regName = $regDetails['unitName'];
+
+			     			$floodLevelQuery = mysqli_query($con, "SELECT unitWaterLevel, unitTimeAsOf from unitleveldetection WHERE unitId='$regId'");
+
+			     			if($floodLevelQuery){
+						    	$floodDetails = mysqli_fetch_array($floodLevelQuery);
+						    	$floodLevel = floatval($floodDetails['unitWaterLevel']);
+						    	$floodTime = $floodDetails['unitTimeAsOf'];
+
+						    	$passabilityMsg = " NOT-PASSABLE to ";
+
+						    	if ($floodLevel <= 11) {
+						            $passabilityMsg = " Passable to ALL vehicles. ";
+						        }
+						        elseif ($floodLevel >= 36) {
+						            $passabilityMsg = $passabilityMsg."ALL TYPES of vehicles.";
+						        }
+						        elseif ($floodLevel >= 18) {
+						            $passabilityMsg = $passabilityMsg."LIGHT & MEDIUM vehicles.";
+						        }
+						        elseif ($floodLevel >= 12) {
+						            $passabilityMsg = $passabilityMsg."LIGHT vehicles.";
+						        }				        
+
+						        require_once('../../key/fbKey.php');
+
+						    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe.".";
+						    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."."[FB".time()."]";
+
+						    	
+						    	$config = array();
+								$config['appId'] = $appId;
+								$config['secret'] = $appSecret;
+								$config['fileUpload'] = false; // optional
+								$fb = new Facebook($config);
+								
+								// this is the access token for Fan Page
+								$params = array("access_token" => $accessToken, "message" => $fbPost);
+
+						    	$fbSending = "successful";				    	
+								
+								try {
+								    $ret = $fb->api($fbPage, 'POST', $params);
+								} 
+								catch(Exception $e) {
+								    $fbSending = "error";
+								}
+								  
+								$delay = 5;
+								
+								if(strcmp($fbSending, "error") == 0){
+								  	while(strcmp($fbSending, "error") == 0){
+									  	if($delay <= 20){
+										  	sleep($delay);
+											try {
+											    $ret = $fb->api($fbPage, 'POST', $params);
+												$fbSending = "successful";
+											}catch(Exception $e) {
+												$fbSending = "error";
+												$delay = $delay + 5;
+											}
+										}
+										else{
+											//report unsuccessful facebook post.
+											$fbSending = "failed to post in facebook page";
+										}
+									}
+								}						  
+							}
+				     	}
 					}
 					elseif($inTempBoolean==false){
 						mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$senderMessage', '$asOfDate', '$asOfTime')");
@@ -109,19 +187,15 @@ if($message) {
 				   	$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "READY OK");
 				}
 			}
-			elseif(substr_compare($item['message'], "UNREADY", 0, 6) == 0){
-					
-				if($unitSearch){
-					mysqli_query($con, "UPDATE unitregistration SET unitStatus='UNREADY' WHERE unitId='$unitId'");
-				}
-			}
 		}
 		//if not an update from road flood units
 		//it will be considered as an sms request from user subscribers
-		elseif($resultSubscriberSearch){
+		elseif($subscriberSearch){
+
+			//creator of subscribers incoming messages
+			mysqli_query($con, "INSERT INTO incomingmessages (incomingContact, incomingMessage, receivedDate, receivedTime) VALUES ('$senderNumber', '$senderMessage', '$asOfDate', '$asOfTime')");
 
 			if(substr_compare($item['message'], "RF LIST", 0, 6) == 0){
-				$response = $sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], "hellow world");
 
 	     		$resultPublicUnits = mysqli_query($con, "SELECT unitName, unitSmsCode from unitregistration WHERE unitViewing='public' AND unitStatus='ACTIVATED'");
 
@@ -142,20 +216,65 @@ if($message) {
 				}
 			}
 			elseif(substr_compare($item['message'], "RF AUTO", 0, 6) == 0){
-				
-				require_once('../../facebook/facebook.php');				
-				
 	     		$smsCodeRequest = str_replace('RF AUTO ', '', $item['message']);
 
+				$regQuery = mysqli_query($con, "SELECT unitId, unitName from unitregistration WHERE unitSmsCode='$smsCodeRequest' AND unitStatus='ACTIVATED' AND unitViewing='public'");
+				$regDetails = mysqli_fetch_array($regQuery);
 
-		     	//for now, sms request is good only for activated and publicly declared units.
-		     	//private-declared units will soon be available for unit owners to get flood level status via sms.
-		     	//as alternative way, use the web or mobile application.
+				$regId = $regDetails['unitId'];
+		     	$regCode = $smsCodeRequest;
+		     	$regName = $regDetails['unitName'];
 
-	     		$regQuery = mysqli_query($con, "SELECT unitId, unitName from unitregistration WHERE unitSmsCode='$smsCodeRequest' AND unitStatus='ACTIVATED' AND unitViewing='public'");
-	     		if($regQuery){	     			
+	     		if($regDetails){
 
-		     		$regDetails = mysqli_fetch_array($regQuery);
+	     			$subscriptionQuery = mysqli_query($con, "SELECT subscriptionId from subscription WHERE subscriberContact='$senderNumber' AND subscriptionStatus='ACTIVE' LIMIT 1");
+					$subscriptionDetails = mysqli_fetch_array($subscriptionQuery);
+	     			
+	     			if(!$subscriptionDetails){
+		     			//insert to subscription table
+						mysqli_query($con, "INSERT INTO subscription (subscriberContact, unitId, subscriptionStatus, subscriptionDate, subscriptionTime) VALUES ('$senderNumber', '$regId', 'ACTIVE', '$asOfDate', '$asOfTime')");
+			    		$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "You are now successfully subscribe to automatic notification");
+					}
+
+	     			$floodLevelQuery = mysqli_query($con, "SELECT unitWaterLevel, unitTimeAsOf from unitleveldetection WHERE unitId='$regId'");
+
+	     			if($floodLevelQuery){
+				    	$floodDetails = mysqli_fetch_array($floodLevelQuery);
+				    	$floodLevel = floatval($floodDetails['unitWaterLevel']);
+				    	$floodTime = $floodDetails['unitTimeAsOf'];
+
+				    	$passabilityMsg = " NOT-PASSABLE to ";
+
+				    	if ($floodLevel <= 11) {
+				            $passabilityMsg = " Passable to ALL vehicles. ";
+				        }
+				        elseif ($floodLevel >= 36) {
+				            $passabilityMsg = $passabilityMsg."ALL TYPES of vehicles.";
+				        }
+				        elseif ($floodLevel >= 18) {
+				            $passabilityMsg = $passabilityMsg."LIGHT & MEDIUM vehicles.";
+				        }
+				        elseif ($floodLevel >= 12) {
+				            $passabilityMsg = $passabilityMsg."LIGHT vehicles.";
+				        }				        
+
+				    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe.".";
+				    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."."[FB".time()."]";    		
+					}
+		     	}
+		     	else{
+		     		$errorMessage = "Sorry, ".$smsCodeRequest.' is not a valid public SMSCODE. Text "RF LIST" to 2158'.$shortCodeFromGlobe.' to see available SMSCODEs.';
+					$sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], $errorMessage);
+		     	}
+			}
+			elseif(substr_compare($item['message'], "RF", 0, 1) == 0){
+				$smsCodeRequest = str_replace('RF ', '', $item['message']);
+
+	     		//facebook poster upon recieving flood update
+				$regQuery = mysqli_query($con, "SELECT unitId, unitName from unitregistration WHERE unitSmsCode='$smsCodeRequest' AND unitStatus='ACTIVATED' AND unitViewing='public'");
+				$regDetails = mysqli_fetch_array($regQuery);
+
+	     		if($regDetails){	     			
 		     		$regId = $regDetails['unitId'];
 		     		$regCode = $smsCodeRequest;
 		     		$regName = $regDetails['unitName'];
@@ -182,55 +301,8 @@ if($message) {
 				            $passabilityMsg = $passabilityMsg."LIGHT vehicles.";
 				        }				        
 
-				        require_once('../../key/fbKey.php');
-
 				    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe.".";
-				    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."."[FB".time()."]";
-
-				    	
-				    	$config = array();
-						  $config['appId'] = $appId;
-						  $config['secret'] = $appSecret;
-						  $config['fileUpload'] = false; // optional
-						  $fb = new Facebook($config);
-						   
-						  $params = array(
-						    // this is the access token for Fan Page
-						    "access_token" => $accessToken,
-						    "message" => $fbPost
-						  );
-
-				    	$fbSending = "successful";				    	
-						
-						  try {
-						    $ret = $fb->api($fbPage, 'POST', $params);
-						  } catch(Exception $e) {
-						    $fbSending = "error";
-						  }
-						  
-						  $delay = 5;
-						  if(strcmp($fbSending, "error") == 0){
-						  	while(strcmp($fbSending, "error") == 0){
-							  	if($delay <= 20){
-								  	sleep($delay);
-									try {
-									    $ret = $fb->api($fbPage, 'POST', $params);
-										$fbSending = "successful";
-									}catch(Exception $e) {
-										$fbSending = "error";
-										$delay = $delay + 5;
-									}
-								}
-								else{
-									//report unsuccessful facebook post.
-									$fbSending = "failed to post in facebook page";
-								}
-							}
-						  }						  
-
-						if(strcmp($fbSending, "successful") == 0){
-							$sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], $floodLevelMessage);
-						}
+				    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."."[FB".time()."]";    		
 					}
 		     	}
 		     	else{
