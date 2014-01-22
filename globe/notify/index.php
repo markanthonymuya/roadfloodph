@@ -1,6 +1,6 @@
 <?php
 
-require ('../globelabsapi/GlobeApi.php');
+require('../globelabsapi/GlobeApi.php');
 
 $json = file_get_contents('php://input');
 $json = stripslashes($json);
@@ -8,10 +8,11 @@ $message = json_decode($json, true);
 
 //if we received a message
 if($message) {
-	$globe = new GlobeApi('v1');
+
+	$globe = new GlobeApi();
 	$shortCodeFromGlobe = 3567;
 	$sms = $globe->sms($shortCodeFromGlobe);
-	
+
 	//check if valid json
 	if(!isset($message['inboundSMSMessageList']['inboundSMSMessage'])) {
 		return 'Not Set inboundSMSMessage';
@@ -119,9 +120,6 @@ if($message) {
 		//it will be considered as an sms request from user subscribers
 		elseif($resultSubscriberSearch){
 
-			require_once('../../facebook/facebook.php');
-
-			
 			if(substr_compare($item['message'], "RF LIST", 0, 6) == 0){
 	     		$resultPublicUnits = mysqli_query($con, "SELECT unitName, unitSmsCode from unitregistration WHERE unitViewing='public' AND unitStatus='ACTIVATED'");
 
@@ -141,18 +139,24 @@ if($message) {
 					}
 				}
 			}
-			elseif(substr_compare($item['message'], "RF AUTO ", 0, 7) == 0){
-	     		$smsCodeRequest = trim(str_replace('RF AUTO ', '', $item['message']));
+			elseif(substr_compare($item['message'], "RF AUTO", 0, 6) == 0){
+				
+				require_once('../../facebook/facebook.php');				
+				
+	     		$smsCodeRequest = str_replace('RF AUTO ', '', $item['message']);
+
+
 		     	//for now, sms request is good only for activated and publicly declared units.
 		     	//private-declared units will soon be available for unit owners to get flood level status via sms.
 		     	//as alternative way, use the web or mobile application.
 
-	     		$regQuery = mysqli_query($con, "SELECT unitId from unitregistration WHERE unitSmsCode='$smsCodeRequest' AND unitStatus='ACTIVATED' AND unitViewing='public'");
-	     		if($regQuery){
+	     		$regQuery = mysqli_query($con, "SELECT unitId, unitName from unitregistration WHERE unitSmsCode='$smsCodeRequest' AND unitStatus='ACTIVATED' AND unitViewing='public'");
+	     		if($regQuery){	     			
 
 		     		$regDetails = mysqli_fetch_array($regQuery);
-		     		$regId = $regDetails['unitId'];	     		
+		     		$regId = $regDetails['unitId'];
 		     		$regCode = $smsCodeRequest;
+		     		$regName = $regDetails['unitName'];
 
 	     			$floodLevelQuery = mysqli_query($con, "SELECT unitWaterLevel, unitTimeAsOf from unitleveldetection WHERE unitId='$regId'");
 
@@ -174,39 +178,57 @@ if($message) {
 				        }
 				        elseif ($floodLevel >= 12) {
 				            $passabilityMsg = $passabilityMsg."LIGHT vehicles.";
-				        }
+				        }				        
+
+				        require_once('../../key/fbKey.php');
 
 				    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe.".";
-				    	$fbErrorSending = "SUcceess";
+				    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."."[FB".time()."]";
+
 				    	
 				    	$config = array();
-						  $config['appId'] = '527859597304472';
-						  $config['secret'] = 'secret';
+						  $config['appId'] = $appId;
+						  $config['secret'] = $appSecret;
 						  $config['fileUpload'] = false; // optional
 						  $fb = new Facebook($config);
 						   
 						  $params = array(
 						    // this is the access token for Fan Page
-						    "access_token" => "secret",
-						    "message" => time()." 111111Testing Here is a blog post about auto posting on Facebook using PHP #php #facebook"
+						    "access_token" => $accessToken,
+						    "message" => $fbPost
 						  );
-						   
+
+				    	$fbSending = "successful";				    	
+						
 						  try {
-						    $ret = $fb->api('/230852547094689/feed', 'POST', $params);
+						    $ret = $fb->api($fbPage, 'POST', $params);
 						  } catch(Exception $e) {
-						    $fbErrorSending = "error";
+						    $fbSending = "error";
 						  }
-						    
-						  if($fbErrorSending == "error"){
-						  	sleep(15);
-						  	try {
-						      $ret = $fb->api('/230852547094689/feed', 'POST', $params);
-						      $fbErrorSending = "SucceSS2";
-						    }catch(Exception $e) {
-							    $fbErrorSending = "error2";
+						  
+						  $delay = 5;
+						  if(strcmp($fbSending, "error") == 0){
+						  	while(strcmp($fbSending, "error") == 0){
+							  	if($delay <= 20){
+								  	sleep($delay);
+									try {
+									    $ret = $fb->api($fbPage, 'POST', $params);
+										$fbSending = "successful";
+									}catch(Exception $e) {
+										$fbSending = "error";
+										$delay = $delay + 5;
+									}
+								}
+								else{
+									//report unsuccessful facebook post.
+									$fbSending = "failed to post in facebook page";
+								}
 							}
-						  }
-						$sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], $fbErrorSending.$floodLevelMessage);
+						  }						  
+
+						if(strcmp($fbSending, "successful") == 0){
+							$sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], $floodLevelMessage);
+						}
 					}
 		     	}
 		     	else{
@@ -215,8 +237,7 @@ if($message) {
 		     	}
 			}
 			elseif(substr_compare($item['message'], "TEST", 0, 3) == 0){
-			    $response = $sms->sendMessage("eP2OOz04U54NT93Pr74X-XSs2Bdv6KDnzNSHAYcd5w0", "9275628107", "Testing accepted.");
-			    // $response = $sms->sendMessage("Zd1VoHtd-KMtyqlHUOfgNpUmM5238k04NDLy7vyZGh0", "9154677374", "Testing accepted 2.");
+			    $response = $sms->sendMessage("Zd1VoHtd-KMtyqlHUOfgNpUmM5238k04NDLy7vyZGh0", "9154677374", "Testing accepted 2.");
 			}
 		}
 	}
