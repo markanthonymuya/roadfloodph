@@ -19,7 +19,7 @@ if(isset($_GET['access_token']) && isset($_GET['subscriber_number'])){
 	$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$subscriber_number' LIMIT 1");
 	$unitSearch = mysqli_fetch_array($resultUnitSearch);
 
-	$resultSubscriberSearch = mysqli_query($con,"SELECT subsciberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$subscriber_number' LIMIT 1");
+	$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$subscriber_number' LIMIT 1");
 	$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
 	if($unitSearch){
@@ -72,7 +72,7 @@ if(!isset($_SESSION['access_token'])) {
 	$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$subscriber_number' LIMIT 1");
 	$unitSearch = mysqli_fetch_array($resultUnitSearch);
 
-	$resultSubscriberSearch = mysqli_query($con,"SELECT subsciberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$subscriber_number' LIMIT 1");
+	$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$subscriber_number' LIMIT 1");
 	$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
 	if($unitSearch){
