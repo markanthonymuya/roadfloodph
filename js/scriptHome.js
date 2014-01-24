@@ -66,7 +66,7 @@ $(document).ready(function () {
     var getLastTableRow = function() {
         var online = navigator.onLine;
 
-        if(true){            
+        if(online){            
             $.get("/roadfloodph/lastRow.php", function (json, status) {
                 currentIndexLastRow = json.floodUpdate;
                 currentPowerLastRow = json.powerUpdate;
@@ -75,7 +75,7 @@ $(document).ready(function () {
                     lastPowerLastRow = currentPowerLastRow;
                     getUpdatedData();
                     if(currentUnitSimNumber != null && currentUnitSimNumber != "" && currentUnitSimNumber != 0){
-                        smsUpdateLogs(currentUnitSimNumber);
+                        smsUpdateLogs();
                     }
                     becomesOffline = false;
                 }

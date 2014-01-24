@@ -83,7 +83,7 @@ $(document).ready(function () {
 				$("#loadingImage").hide();
 				if(units['generalCounter']>0){
 					for(var i = 1; i <= units['generalCounter']; i++){
-						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 5px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button type="button" class="btn btn-default pull-right backButton" style="margin-left: 5px;"><span class="glyphicon glyphicon-backward"></span> Back<button id="activateBtn'+i+'" style="margin-left: 5px;" class="btn btn-warning pull-right activateBtn">Activate</button>'+stringSettings+'<span id="batteryId'+i+'" class="btn btn-default batteryLabel pull-right" style="margin-right: 5px;"><img class="batteryLabel" src="../assets/ico/battery.png" style="display: inline;" /><span class="batteryLabelText"> '+units["unitPowerLevel"+i]+'</span>%</span><span class="noticeDetails pull-right" style="margin-right: 200px;">Click chart to see detailed view</span></p></span><br class="appendedBodyMsg breaks">');
+						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 5px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button type="button" class="btn btn-default pull-right backButton" style="margin-left: 5px;"><span class="glyphicon glyphicon-backward"></span> Back<button id="activateBtn'+i+'" style="margin-left: 5px;" class="btn btn-warning pull-right activateBtn">Activate</button>'+stringSettings+'<span id="batteryId'+i+'" class="btn btn-default batteryLabel pull-right" style="margin-right: 5px;"><img class="batteryLabel" src="../assets/ico/battery.png" style="display: inline;" /><span class="batteryLabelText">100</span>%</span><span class="noticeDetails pull-right" style="margin-right: 200px;">Click chart to see detailed view</span></p></span><br class="appendedBodyMsg breaks">');
 						$(".backButton").hide();
 						$(".noticeDetails").hide();
 						$(".batteryLabel").hide();
@@ -98,18 +98,19 @@ $(document).ready(function () {
 					}
 
 					$(".backButton").click(function(){
-						  resetTimelineToCurrent();
-					      $(".backButton").hide();
-      					  $(".dashboardNav").hide();
-      					  $("#manageTitle").text("Manage");
-					      $("#breakInChartUI").hide("slow");
-					      $(".appendedBodyMsg").remove();
-					      $("#loadingImage").show();
-					      $("#myChart").hide("slow");
-					      $('#manageModal').attr("style", "");
-					      $("#timelineNav").hide();
-					      getUnits('manageUnit');
-					  });
+						dashboardBtnIsClicked = false;
+						resetTimelineToCurrent();
+					   	$(".backButton").hide();
+      					$(".dashboardNav").hide();
+      					$("#manageTitle").text("Manage");
+					   	$("#breakInChartUI").hide("slow");
+					   	$(".appendedBodyMsg").remove();
+					   	$("#loadingImage").show();
+					   	$("#myChart").hide("slow");
+					   	$('#manageModal').attr("style", "");
+					   	$("#timelineNav").hide();
+					   	getUnits('manageUnit');
+					});
 
 					$(".editBtn").click(function(){
 						parentId = this.parentNode.getAttribute('data-rf');
@@ -125,11 +126,14 @@ $(document).ready(function () {
 					});
 
 					$(".dashboardBtn").click(function(){
+						dashboardBtnIsClicked = true;
+
 						var unitDashboardValue = this.parentNode.getAttribute('data-rf');
+    					currentUnitSimNumber = units['unitSimNumber'+unitDashboardValue];
 
 						//upon clicking dashboardBtn, update to smsLogsJson must be done to change
 						//datasets with respect to the unitSimNumber
-						smsUpdateLogs(units['unitSimNumber'+unitDashboardValue]);
+						smsUpdateLogs();
 
 						$(".breaks").hide();
 						for(var j = 1; j <= units['generalCounter']; j++){
@@ -143,7 +147,6 @@ $(document).ready(function () {
 						$("#breakInChartUI").show("slow");
 						$("#loadingImage").show();
       					$(".backButton").show();
-      					$(".batteryLabel").show();
       					$(".dashboardBtn").hide();
 					});
 				}

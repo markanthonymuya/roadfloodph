@@ -1,6 +1,7 @@
 var smsUpdateLogs;
 var resetTimelineToCurrent;
 var detailed = false;
+var dashboardBtnIsClicked = false;
 
 
 $(document).ready(function () {
@@ -162,10 +163,10 @@ $(document).ready(function () {
   }
 
   //triggered upon change in database and change of selected dashboard 
-  smsUpdateLogs = function(manageUnitSimNumber){
-    currentUnitSimNumber = manageUnitSimNumber;
-    $.get("/roadfloodph/smsLogs.php",{unitSimNumber: currentUnitSimNumber}, function (json) {
+  smsUpdateLogs = function(){
+    $.post("/roadfloodph/smsLogs.php",{unitSimNumber: currentUnitSimNumber}, function (json) {
       smsLogsJson = json;
+      getUpdatedPowerData();
       $(".dashboardNav").show();
       $("#timelineNav").show();
       $("#loadingImage").hide();
@@ -173,6 +174,16 @@ $(document).ready(function () {
       $("#myChart").show("slow");
       executeUpdate();
     });
+  };
+
+  var getUpdatedPowerData = function(){
+    console.log("hellow");
+    if(currentUnitSimNumber != "" && dashboardBtnIsClicked){
+      $.post("/roadfloodph/searchPowerBySimNumber.php", {unitSimNumber: currentUnitSimNumber}, function (batteryPower) {
+        $(".batteryLabelText").text(batteryPower);
+        $(".batteryLabel").show("slow");
+      });
+    }
   };
 
 /////////////////////////////drivers/////////////////////////////////////
@@ -459,14 +470,6 @@ $(document).ready(function () {
     var myNewChart = new Chart(ctx).Line(data,options);
   };
 
-  var getUpdatedPowerData = function(){
-    if(currentPowerLastRow != lastPowerLastRow && currentUnitSimNumber != ""){
-      $.post("/roadfloodph/searchPowerBySimNumber.php", {unitSimNumber: currentUnitSimNumber}, function (batteryPower) {
-            $(".batteryLabelText").text(batteryPower);
-      });
-    }
-  };
-
   var getPowerDataRefresh;
 
   $("#manageUnit").on('shown.bs.modal', function () {
@@ -475,6 +478,7 @@ $(document).ready(function () {
 
   //clearing setInterval event of gettingUpdatedPowerData function upon closing of manage modal
   $("#manageUnit").on('hidden.bs.modal', function () {
+    dashboardBtnIsClicked = false;
     clearInterval(getPowerDataRefresh);
   });
 
