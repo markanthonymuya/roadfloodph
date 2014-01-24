@@ -21,14 +21,14 @@ require('../key/access.php');
 
  $unitSimNumber = $unitReg['unitSimNumber'];
 
-if($unit){
+if(mysqli_num_rows($resultUnitSearch) == 1){
 	if($unitSimNumber  != $unitNumber){
 		mysqli_query($con, "UPDATE unitregistration SET accessToken='' WHERE unitSimNumber='$unitSimNumber '");
 	}
 
 	$affectedRow = mysqli_query($con, "UPDATE unitregistration SET unitSimNumber='$unitNumber', unitViewing='$unitViewing', unitRegion='$unitRegion', unitName='$unitName', frequency='$unitFrequency', unitSmsNotif='$unitSmsNotif' WHERE unitId='$unitId'");
 
-	if($affectedRow){
+	if($affectedRow > 0){
 		$resultMsg = "successful";
 	}
 	else{

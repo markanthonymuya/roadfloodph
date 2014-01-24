@@ -17,7 +17,7 @@
  $resultAdminSearch = mysqli_query($con,"SELECT adminId FROM admin WHERE adminEmail='$myAdminEmail' AND adminPassword = '$myAdminPassword'");
  $admin = mysqli_fetch_array($resultAdminSearch);
 
-if($admin){
+if(mysqli_num_rows($resultAdminSearch) == 1){
 	if($regType == "admin"){
 		$resultEmailSearch = mysqli_query($con,"SELECT adminEmail FROM admin WHERE adminEmail='$desiredEmail'");
  		$email = mysqli_fetch_array($resultEmailSearch);

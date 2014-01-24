@@ -12,11 +12,11 @@ if($emailAddress != "public"){
 
 	$resultUnitReg;
 
-	if($rowOwnerSearch){
+	if(mysqli_num_rows($resultOwnerSearch) == 1){
 		$ownerId = $rowOwnerSearch['ownerId'];
 		$resultUnitReg = mysqli_query($con, "SELECT unitId, unitViewing, unitName, unitRegion, unitStatus FROM unitregistration WHERE unitViewing='public' AND unitStatus='ACTIVATED' OR ownerId='$ownerId'");
 	}
-	elseif($rowAdminSearch){
+	elseif(mysqli_num_rows($resultAdminSearch) == 1){
 		$resultUnitReg = mysqli_query($con, "SELECT unitId, unitViewing, unitName, unitRegion, unitStatus FROM unitregistration");
 	}
 

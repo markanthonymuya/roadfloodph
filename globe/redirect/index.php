@@ -22,14 +22,14 @@ if(isset($_GET['access_token']) && isset($_GET['subscriber_number'])){
 	$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$subscriber_number' LIMIT 1");
 	$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
-	if($unitSearch){
+	if(mysqli_num_rows($unitSearch) == 1){
 		$affectedRows = mysqli_query($con, "UPDATE unitregistration SET accessToken='$access_token' WHERE unitSimNumber='$subscriber_number'");
 		if($affectedRows > 0){
 			header('Location: http://roadfloodph.cloudapp.net/admin/');
 			exit;
 		}
 	}
-	elseif($subscriberSearch){
+	elseif(mysqli_num_rows($subscriberSearch) == 1){
 		$affectedRows = mysqli_query($con, "UPDATE subscriber SET subscriberAT='$access_token' WHERE subscriberContact='$subscriber_number'");
 		if($affectedRows > 0){
 			header('Location: http://roadfloodph.cloudapp.net/');

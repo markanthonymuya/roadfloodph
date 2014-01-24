@@ -46,7 +46,7 @@ if($message) {
 		$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$senderNumber' LIMIT 1");
 		$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
-		if($unitSearch){
+		if(mysqli_num_rows($resultUnitSearch) == 1){
 			
 			$unitId = $unitSearch['unitId'];
 
@@ -190,7 +190,7 @@ if($message) {
 		}
 		//if not an update from road flood units
 		//it will be considered as an sms request from user subscribers
-		elseif($subscriberSearch){
+		elseif(mysqli_num_rows($resultSubscriberSearch) == 1){
 
 			//creator of subscribers incoming messages
 			mysqli_query($con, "INSERT INTO incomingmessages (incomingContact, incomingMessage, receivedDate, receivedTime) VALUES ('$senderNumber', '$senderMessage', '$asOfDate', '$asOfTime')");

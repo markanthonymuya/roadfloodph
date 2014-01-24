@@ -25,9 +25,9 @@
  $resultOwnerId = mysqli_query($con,"SELECT ownerId FROM unitowner WHERE ownerEmail='$emailAddress'");
  $owners = mysqli_fetch_array($resultOwnerId);
 
-if($unit){
-	if($owners){
-		 if(!$keyword){
+if(mysqli_num_rows($resultUnitSearch) == 1){
+	if(mysqli_num_rows($resultOwnerId) == 1){
+		 if(mysqli_num_rows($smsKeywordSearch) == 1){
 		 	 $ownerId = $owners['ownerId'];
 			 mysqli_query($con, "INSERT INTO unitregistration (unitSimNumber, unitViewing, unitRegion, unitName, unitStatus, frequency, ownerId, dateAdded, timeAdded, accessToken, unitSmsCode, unitSmsNotif) VALUES ('$unitNumber', '$unitViewing', '$unitRegion', '$unitName', '$unitStatus', '2.0', $ownerId, '$dateAdded', '$timeAdded', '', '$unitSmsKeyword', '$unitSmsNotif')");
 
