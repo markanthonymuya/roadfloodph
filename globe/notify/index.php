@@ -43,7 +43,7 @@ if($message) {
 		$resultUnitSearch = mysqli_query($con,"SELECT unitId, unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$senderNumber' LIMIT 1");
 		$unitSearch = mysqli_fetch_array($resultUnitSearch);
 
-		$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$senderNumber' LIMIT 1");
+		$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT, subscriberTotalSubscriptions FROM subscriber WHERE subscriberContact = '$senderNumber' LIMIT 1");
 		$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
 		if(mysqli_num_rows($resultUnitSearch) == 1){
@@ -71,24 +71,27 @@ if($message) {
 				$presentValue = mysqli_query($con,"SELECT unitWaterLevel FROM unitleveldetection WHERE unitId = '$unitId'");
 				$current = mysqli_fetch_array($presentValue);
 				
-				if($unitSearch && $current['unitWaterLevel'] != $roadFloodLevel){	
+				if($current['unitWaterLevel'] != $roadFloodLevel){	
+
 					if($inTempBoolean){
+
 						mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
 						mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
 			    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
 
 			    		//facebook poster upon recieving flood update of a publicly-declared unit
-						$regQuery = mysqli_query($con, "SELECT unitId, unitName from unitregistration WHERE unitSimNumber='$senderNumber' AND unitStatus='ACTIVATED' AND unitViewing='public'");
+						$regQuery = mysqli_query($con, "SELECT unitId, unitName, unitSmsCode from unitregistration WHERE unitSimNumber='$senderNumber' AND unitStatus='ACTIVATED' AND unitViewing='public'");
 						$regDetails = mysqli_fetch_array($regQuery);
 
-			     		if($regDetails){	     			
+			     		if(mysqli_num_rows($regQuery) == 1){	     			
 				     		$regId = $regDetails['unitId'];
-				     		$regCode = $smsCodeRequest;
+				     		$regCode = $regDetails['unitSmsCode'];
 				     		$regName = $regDetails['unitName'];
 
 			     			$floodLevelQuery = mysqli_query($con, "SELECT unitWaterLevel, unitTimeAsOf from unitleveldetection WHERE unitId='$regId'");
 
-			     			if($floodLevelQuery){
+			     			if(mysqli_num_rows($floodLevelQuery) == 1){
+
 						    	$floodDetails = mysqli_fetch_array($floodLevelQuery);
 						    	$floodLevel = floatval($floodDetails['unitWaterLevel']);
 						    	$floodTime = $floodDetails['unitTimeAsOf'];
@@ -108,12 +111,12 @@ if($message) {
 						            $passabilityMsg = $passabilityMsg."LIGHT vehicles.";
 						        }				        
 
-						        require_once('../../key/fbKey.php');
+						        require_once('../../facebook/facebook.php');
+						        require_once('../../key/fbKey.php');						        
 
 						    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe.".";
 						    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."."[FB".time()."]";
-
-						    	
+			    				
 						    	$config = array();
 								$config['appId'] = $appId;
 								$config['secret'] = $appSecret;
@@ -123,9 +126,11 @@ if($message) {
 								// this is the access token for Fan Page
 								$params = array("access_token" => $accessToken, "message" => $fbPost);
 
+
 						    	$fbSending = "successful";				    	
 								
 								try {
+			    					//$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "Trying to post");
 								    $ret = $fb->api($fbPage, 'POST', $params);
 								} 
 								catch(Exception $e) {
@@ -135,6 +140,7 @@ if($message) {
 								$delay = 5;
 								
 								if(strcmp($fbSending, "error") == 0){
+			    					//$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "ReTrying to post");
 								  	while(strcmp($fbSending, "error") == 0){
 									  	if($delay <= 20){
 										  	sleep($delay);
@@ -151,11 +157,12 @@ if($message) {
 											$fbSending = "failed to post in facebook page";
 										}
 									}
+			    					//$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], $fbSending." ".$delay);
 								}						  
 							}
 				     	}
 					}
-					elseif($inTempBoolean==false){
+					else{
 						mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$senderMessage', '$asOfDate', '$asOfTime')");
 			    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "RESEND");
 					}
@@ -168,7 +175,7 @@ if($message) {
 				$presentValue = mysqli_query($con,"SELECT unitPowerLevel FROM unitpowermonitoring WHERE unitId = '$unitId'");
 				$current = mysqli_fetch_array($presentValue);
 				
-				if($unitSearch && $current['unitPowerLevel'] != $powerLevel){	
+				if($current['unitPowerLevel'] != $powerLevel){	
 					if($inTempBoolean){
 						mysqli_query($con, "UPDATE unitpowermonitoring SET unitPowerLevel='$powerLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
 			    		mysqli_query($con, "INSERT INTO unitsmspowerupdatelogs (unitSimNumber, reportedPowerLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$powerLevel', '$asOfDate', '$asOfTime')");
@@ -180,12 +187,29 @@ if($message) {
 					}
 				}
 			}
-			elseif(substr_compare($item['message'], "READY", 0, 4) == 0){
+			/*elseif(substr_compare($item['message'], "READY", 0, 4) == 0){
 					
 				if($unitSearch){
 					mysqli_query($con, "UPDATE unitregistration SET unitStatus='ACTIVATED' WHERE unitId='$unitId'");
 				   	$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "READY OK");
 				}
+			}*/
+			elseif(substr_compare($item['message'], "TEST ", 0, 4) == 0){
+				
+				$sendTo = str_replace('TEST ', '', $item['message']);
+
+				$resultUnitSearch = mysqli_query($con,"SELECT unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$sendTo' LIMIT 1");
+				$unitSearch = mysqli_fetch_array($resultUnitSearch);
+
+				$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$sendTo' LIMIT 1");
+				$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
+
+				if(mysqli_num_rows($resultUnitSearch) == 1){
+			    	$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "TESTING FROM UNIT TO ANOTHER UNIT/SELF");
+			    }
+			    elseif(mysqli_num_rows($resultSubscriberSearch) == 1){
+			    	$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "TESTING FROM UNIT TO SUBSCRIBER");
+			    }
 			}
 		}
 		//if not an update from road flood units
@@ -195,11 +219,11 @@ if($message) {
 			//creator of subscribers incoming messages
 			mysqli_query($con, "INSERT INTO incomingmessages (incomingContact, incomingMessage, receivedDate, receivedTime) VALUES ('$senderNumber', '$senderMessage', '$asOfDate', '$asOfTime')");
 
-			if(substr_compare($item['message'], "RF LIST", 0, 6) == 0){
+			if(substr_compare($item['message'], "RF LIST", 0, 6) == 0){				
 
 	     		$resultPublicUnits = mysqli_query($con, "SELECT unitName, unitSmsCode from unitregistration WHERE unitViewing='public' AND unitStatus='ACTIVATED'");
 
-				if($resultPublicUnits){
+				if(mysqli_num_rows($resultPublicUnits) > 0){
 	     			
 	     			$listOfUnits = "";
 
@@ -210,13 +234,13 @@ if($message) {
 					$smsMessage = "Available SMSCODE of public units: ".$listOfUnits.'. Text "RF<space><SMSCODE>" to get current update of the unit, or "RF<space><SMSCODE><space>AUTO" for automatic unit notification. Send to 2158'.$shortCodeFromGlobe.".";
 					while(strlen($smsMessage) > 0){
 						$smsTrim158 = substr($smsMessage, 0, 160);
-						$sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], $smsTrim158);
+						$sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], $smsTrim158);
 						$smsMessage = str_replace($smsTrim158, '', $smsMessage);
 					}
 				}
 			}
 			elseif(substr_compare($item['message'], "RF AUTO", 0, 6) == 0){
-	     		$smsCodeRequest = str_replace('RF AUTO ', '', $item['message']);
+	     		$smsCodeRequest = str_replace('RF AUTO ', '', $item['message']);	     		
 
 				$regQuery = mysqli_query($con, "SELECT unitId, unitName from unitregistration WHERE unitSmsCode='$smsCodeRequest' AND unitStatus='ACTIVATED' AND unitViewing='public'");
 				$regDetails = mysqli_fetch_array($regQuery);
@@ -225,20 +249,31 @@ if($message) {
 		     	$regCode = $smsCodeRequest;
 		     	$regName = $regDetails['unitName'];
 
-	     		if($regDetails){
+		     	$subscriberTotalSubscriptions = intval($subscriberSearch['subscriberTotalSubscriptions']);
 
-	     			$subscriptionQuery = mysqli_query($con, "SELECT subscriptionId from subscription WHERE subscriberContact='$senderNumber' AND subscriptionStatus='ACTIVE' LIMIT 1");
+	     		if(mysqli_num_rows($regQuery) == 1){
+
+	     			$subscriptionQuery = mysqli_query($con, "SELECT subscriptionId from subscription WHERE subscriberContact='$senderNumber' AND subscriptionStatus='ACTIVE' AND unitId='$regId' LIMIT 1");
 					$subscriptionDetails = mysqli_fetch_array($subscriptionQuery);
 	     			
-	     			if(!$subscriptionDetails){
-		     			//insert to subscription table
-						mysqli_query($con, "INSERT INTO subscription (subscriberContact, unitId, subscriptionStatus, subscriptionDate, subscriptionTime) VALUES ('$senderNumber', '$regId', 'ACTIVE', '$asOfDate', '$asOfTime')");
-			    		$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "You are now successfully subscribe to automatic notification");
+	     			//limiting free subscriptions to 5
+	     			if(mysqli_num_rows($subscriptionQuery) == 1){
+			    		$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "You already registered with this automatic notification for ".$regCode.". You will receive notification upon the flood unit updates the website.");
+					}
+					else{
+						//insert to subscription table
+						$insertQuery = mysqli_query($con, "INSERT INTO subscription (subscriberContact, unitId, subscriptionStatus, subscriptionDate, subscriptionTime) VALUES ('$senderNumber', '$regId', 'ACTIVE', '$asOfDate', '$asOfTime')");
+						++$subscriberTotalSubscriptions;
+						$updateQuery = mysqli_query($con, "UPDATE subscriber SET subscriberTotalSubscriptions='$subscriberTotalSubscriptions' WHERE subscriberContact='$senderNumber'");
+
+						if($insertQuery && $updateQuery){
+			    			$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "You are now successfully subscribe to automatic notification for ".$regCode.". Notification will be available upon flood unit updates the website.");
+			    		}
 					}
 
 	     			$floodLevelQuery = mysqli_query($con, "SELECT unitWaterLevel, unitTimeAsOf from unitleveldetection WHERE unitId='$regId'");
 
-	     			if($floodLevelQuery){
+	     			if(mysqli_num_rows($floodLevelQuery) == 1){
 				    	$floodDetails = mysqli_fetch_array($floodLevelQuery);
 				    	$floodLevel = floatval($floodDetails['unitWaterLevel']);
 				    	$floodTime = $floodDetails['unitTimeAsOf'];
@@ -258,30 +293,33 @@ if($message) {
 				            $passabilityMsg = $passabilityMsg."LIGHT vehicles.";
 				        }				        
 
-				    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe.".";
-				    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."."[FB".time()."]";    		
+				    	$floodLevelMessage = "LATEST UPDATE: ".$regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg;
+						$sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], $floodLevelMessage);
 					}
 		     	}
 		     	else{
-		     		$errorMessage = "Sorry, ".$smsCodeRequest.' is not a valid public SMSCODE. Text "RF LIST" to 2158'.$shortCodeFromGlobe.' to see available SMSCODEs.';
-					$sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], $errorMessage);
+		     		$errorMessage = "Sorry, ".$smsCodeRequest.' is not a valid public SMSCODE. Text "RF<space>LIST" to 2158'.$shortCodeFromGlobe.' to see available SMSCODEs.';
+					$sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], $errorMessage);
 		     	}
+			}
+			elseif(substr_compare($item['message'], "RF HELP", 0, 6) == 0){
+				$helpMessage = 'Welcome to RoadFloodPH! Text "RF LIST" to 2158'.$shortCodeFromGlobe.' to see the list of available SMSCODEs.';
+				$sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], $helpMessage);
 			}
 			elseif(substr_compare($item['message'], "RF", 0, 1) == 0){
 				$smsCodeRequest = str_replace('RF ', '', $item['message']);
 
-	     		//facebook poster upon recieving flood update
 				$regQuery = mysqli_query($con, "SELECT unitId, unitName from unitregistration WHERE unitSmsCode='$smsCodeRequest' AND unitStatus='ACTIVATED' AND unitViewing='public'");
 				$regDetails = mysqli_fetch_array($regQuery);
 
-	     		if($regDetails){	     			
+	     		if(mysqli_num_rows($regQuery) == 1){	     			
 		     		$regId = $regDetails['unitId'];
 		     		$regCode = $smsCodeRequest;
 		     		$regName = $regDetails['unitName'];
 
 	     			$floodLevelQuery = mysqli_query($con, "SELECT unitWaterLevel, unitTimeAsOf from unitleveldetection WHERE unitId='$regId'");
 
-	     			if($floodLevelQuery){
+	     			if(mysqli_num_rows($floodLevelQuery) == 1){
 				    	$floodDetails = mysqli_fetch_array($floodLevelQuery);
 				    	$floodLevel = floatval($floodDetails['unitWaterLevel']);
 				    	$floodTime = $floodDetails['unitTimeAsOf'];
@@ -302,16 +340,27 @@ if($message) {
 				        }				        
 
 				    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe.".";
-				    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."."[FB".time()."]";    		
+						$sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], $floodLevelMessage);
 					}
 		     	}
 		     	else{
 		     		$errorMessage = "Sorry, ".$smsCodeRequest.' is not a valid public SMSCODE. Text "RF LIST" to 2158'.$shortCodeFromGlobe.' to see available SMSCODEs.';
-					$sms->sendMessage($subscriberSearch["accessToken"], $subscriberSearch["unitSimNumber"], $errorMessage);
+					$sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], $errorMessage);
 		     	}
 			}
-			elseif(substr_compare($item['message'], "TEST", 0, 3) == 0){
-			    $response = $sms->sendMessage("Zd1VoHtd-KMtyqlHUOfgNpUmM5238k04NDLy7vyZGh0", "9154677374", "Testing accepted 2.");
+			elseif(substr_compare($item['message'], "TEST ", 0, 4) == 0){
+				
+				$sendTo = str_replace('TEST ', '', $item['message']);
+
+				$resultUnitSearch = mysqli_query($con,"SELECT unitSimNumber, accessToken FROM unitregistration WHERE unitSimNumber = '$sendTo' LIMIT 1");
+				$unitSearch = mysqli_fetch_array($resultUnitSearch);
+
+				if(mysqli_num_rows($resultUnitSearch) == 1){
+			    	$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "TESTING FROM SUBSCRIBER TO UNIT");
+			    }
+			    elseif(mysqli_num_rows($resultSubscriberSearch) == 1){
+			    	$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "TESTING FROM SUBSCRIBER TO ANOTHER SUBSCRIBER/SELF");
+			    }
 			}
 		}
 	}

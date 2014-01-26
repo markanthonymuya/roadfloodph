@@ -40,7 +40,7 @@ if(isset($_GET['access_token']) && isset($_GET['subscriber_number'])){
 		date_default_timezone_set("Asia/Manila");
 		$asOfDate = date("Y/m/d");
 	 	$asOfTime = date("H:i:s");
-		$affectedRows = mysqli_query($con, "INSERT INTO subscriber (subscriberAT, subscriberContact, subscriberTotalSubscriptions, subscriberCredit, subscriberStatus, dateAdded, timeAdded) VALUES ('$access_token', '$subscriber_number', 1, 0.00, 'active', '$asOfDate', '$asOfTime')");
+		$affectedRows = mysqli_query($con, "INSERT INTO subscriber (subscriberAT, subscriberContact, subscriberTotalSubscriptions, subscriberCredit, subscriberStatus, dateAdded, timeAdded) VALUES ('$access_token', '$subscriber_number', 0, 0.00, 'ACTIVE', '$asOfDate', '$asOfTime')");
 		$sms->sendMessage($access_token, $subscriber_number, "Welcome to RoadFloodPH. You may visit our website at http://roadfloodph.cloudapp.net/. To start, text 'RF LIST' to 2158".$shortCodeFromGlobe.".");
 		if($affectedRows > 0){
 			header('Location: http://roadfloodph.cloudapp.net/');
