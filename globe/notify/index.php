@@ -115,7 +115,7 @@ if($message) {
 						        require_once('../../key/fbKey.php');						        
 
 						    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe.".";
-						    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."."[FB".time()."]";
+						    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."." [FBPOST ".time()."]";
 			    				
 						    	$config = array();
 								$config['appId'] = $appId;
@@ -301,6 +301,67 @@ if($message) {
 		     		$errorMessage = "Sorry, ".$smsCodeRequest.' is not a valid public SMSCODE. Text "RF<space>LIST" to 2158'.$shortCodeFromGlobe.' to see available SMSCODEs.';
 					$sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], $errorMessage);
 		     	}
+			}
+			elseif(substr_compare($item['message'], "RF CITIZEN", 0, 9) == 0){
+
+				$credential = $senderNumber;
+				for($i=2; $i<=6; $i++){
+					$credential[$i] = "*";
+				}
+				
+				$citizenMessage = "[CITIZEN REPORT] ".str_replace('RF CITIZEN ', '', $item['message'])." ---> FROM RoadFloodPH SMS Subscriber 0".$credential." [FBPOST ".time()."]";
+
+				require_once('../../facebook/facebook.php');
+				require_once('../../key/fbKey.php');						        
+			    				
+				$config = array();
+				$config['appId'] = $appId;
+				$config['secret'] = $appSecret;
+				$config['fileUpload'] = false; // optional
+				$fb = new Facebook($config);
+						
+				// this is the access token for Fan Page
+				$params = array("access_token" => $accessToken, "message" => $citizenMessage);
+
+
+				$fbSending = "successful";			    	
+								
+				try {
+				    $ret = $fb->api($fbPage, 'POST', $params);
+				} 
+				catch(Exception $e) {
+				    $fbSending = "error";
+				}
+								  
+				$delay = 5;
+								
+				if(strcmp($fbSending, "error") == 0){
+				  	while(strcmp($fbSending, "error") == 0){
+					  	if($delay <= 20){
+						  	sleep($delay);
+							try {
+							    $ret = $fb->api($fbPage, 'POST', $params);
+								$fbSending = "successful";
+							}catch(Exception $e) {
+								$fbSending = "error";
+								$delay = $delay + 5;
+							}
+						}
+						else{
+							//report unsuccessful facebook post.
+							$fbSending = "failed to post in facebook page";
+						}
+					}
+				}
+
+				if(strcmp($fbSending, "successful") == 0){
+					$gratitudeMessage = "Thank you for being concern to our fellowmen. Your message has been successfully posted on our Facebook Page.";
+				}
+				else{
+					$gratitudeMessage = "Thank you for being concern to our fellowmen. But ur message has not been successfully posted on Facebook Page after we did several tries. Pls try again later.";
+				}
+				$sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], $gratitudeMessage);	
+
 			}
 			elseif(substr_compare($item['message'], "RF HELP", 0, 6) == 0){
 				$helpMessage = 'Welcome to RoadFloodPH! Text "RF LIST" to 2158'.$shortCodeFromGlobe.' to see the list of available SMSCODEs.';
