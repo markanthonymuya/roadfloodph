@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 23, 2014 at 05:08 AM
+-- Generation Time: Jan 26, 2014 at 11:55 AM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `subscriber` (
 --
 
 INSERT INTO `subscriber` (`subscriberId`, `subscriberAT`, `subscriberContact`, `subscriberTotalSubscriptions`, `subscriberCredit`, `subscriberStatus`, `dateAdded`, `timeAdded`) VALUES
-(1, 'Cvfr6my-faXg4DavymvEz569deES9WCBUCOESgMqVgg', '9275628107', 1, '0.00', 'active', '2013-10-30', '9:34 AM');
+(1, 'Cvfr6my-faXg4DavymvEz569deES9WCBUCOESgMqVgg', '9275628107', 0, '0.00', 'active', '2013-10-30', '9:34 AM');
 
 -- --------------------------------------------------------
 
@@ -257,7 +257,7 @@ CREATE TABLE IF NOT EXISTS `unitregistration` (
 
 INSERT INTO `unitregistration` (`unitId`, `unitSimNumber`, `unitViewing`, `unitRegion`, `unitName`, `unitStatus`, `frequency`, `ownerId`, `dateAdded`, `timeAdded`, `accessToken`, `unitSmsCode`, `unitSmsNotif`) VALUES
 (1, '9154677374', 'public', 'ncr', 'Pureza, Sta. Mesa, Manila', 'ACTIVATED', '2.0', 1, '2014/01/02', '15:30:20', 'Zd1VoHtd-KMtyqlHUOfgNpUmM5238k04NDLy7vyZGh0', 'PUREZA', 'activated'),
-(2, '9275628107', 'public', 'ncr', 'Don Antonio, Holy Spirit, QC', 'ACTIVATED', '2.0', 1, '2014/01/02', '15:34:42', 'Cvfr6my-faXg4DavymvEz569deES9WCBUCOESgMqVgg', 'ANTONIO', 'activated'),
+(2, '9266209871', 'public', 'ncr', 'Don Antonio, Holy Spirit, QC', 'ACTIVATED', '2.0', 1, '2014/01/02', '15:34:42', 'Cvfr6my-faXg4DavymvEz569deES9WCBUCOESgMqVgg', 'ANTONIO', 'activated'),
 (3, '9179829849', 'private', 'ncr', 'Green Heights, Nangka, Marikina', 'UNKNOWN', '2.0', 1, '2014/01/07', '04:08:33', '', 'NANGKA', 'activated'),
 (4, '9275562718', 'public', 'ncr', 'EDSA-North Ave., QC', 'UNKNOWN', '2.0', 2, '2014/01/17', '05:25:01', '', 'NORTHAVE', 'activated');
 

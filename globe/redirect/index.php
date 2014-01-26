@@ -6,7 +6,6 @@ require ('../../key/access.php');
 
 $globe = new GlobeApi();
 $auth = $globe->auth($appId, $appSecret);
-$shortCodeFromGlobe = 3567;
 $sms = $globe->sms($shortCodeFromGlobe);
 
 $access_token = "";
@@ -22,17 +21,17 @@ if(isset($_GET['access_token']) && isset($_GET['subscriber_number'])){
 	$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$subscriber_number' LIMIT 1");
 	$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
-	if(mysqli_num_rows($unitSearch) == 1){
+	if(mysqli_num_rows($resultUnitSearch) == 1){
 		$affectedRows = mysqli_query($con, "UPDATE unitregistration SET accessToken='$access_token' WHERE unitSimNumber='$subscriber_number'");
 		if($affectedRows > 0){
-			header('Location: http://roadfloodph.cloudapp.net/admin/');
+			$response = $sms->sendMessage($access_token, $subscriber_number, "Your road flood unit SIM number registration has been renewed.");
 			exit;
 		}
 	}
-	elseif(mysqli_num_rows($subscriberSearch) == 1){
+	elseif(mysqli_num_rows($resultSubscriberSearch) == 1){
 		$affectedRows = mysqli_query($con, "UPDATE subscriber SET subscriberAT='$access_token' WHERE subscriberContact='$subscriber_number'");
 		if($affectedRows > 0){
-			header('Location: http://roadfloodph.cloudapp.net/');
+			$response = $sms->sendMessage($access_token, $subscriber_number, "Thank you for coming back. You may visit our website at http://roadfloodph.cloudapp.net/. To start, text 'RF HELP' to 2158".$shortCodeFromGlobe.".");
 			exit;
 		}
 	}
@@ -41,9 +40,8 @@ if(isset($_GET['access_token']) && isset($_GET['subscriber_number'])){
 		$asOfDate = date("Y/m/d");
 	 	$asOfTime = date("H:i:s");
 		$affectedRows = mysqli_query($con, "INSERT INTO subscriber (subscriberAT, subscriberContact, subscriberTotalSubscriptions, subscriberCredit, subscriberStatus, dateAdded, timeAdded) VALUES ('$access_token', '$subscriber_number', 0, 0.00, 'ACTIVE', '$asOfDate', '$asOfTime')");
-		$sms->sendMessage($access_token, $subscriber_number, "Welcome to RoadFloodPH. You may visit our website at http://roadfloodph.cloudapp.net/. To start, text 'RF LIST' to 2158".$shortCodeFromGlobe.".");
 		if($affectedRows > 0){
-			header('Location: http://roadfloodph.cloudapp.net/');
+			$response = $sms->sendMessage($access_token, $subscriber_number, "Welcome to RoadFloodPH. You may visit our website at http://roadfloodph.cloudapp.net/. To start, text 'RF HELP' to 2158".$shortCodeFromGlobe.".");
 			exit;
 		}
 	}
@@ -75,16 +73,18 @@ if(!isset($_SESSION['access_token'])) {
 	$resultSubscriberSearch = mysqli_query($con,"SELECT subscriberId, subscriberContact, subscriberAT FROM subscriber WHERE subscriberContact = '$subscriber_number' LIMIT 1");
 	$subscriberSearch = mysqli_fetch_array($resultSubscriberSearch);
 
-	if($unitSearch){
+	if(mysqli_num_rows($resultUnitSearch) == 1){
 		$affectedRows = mysqli_query($con, "UPDATE unitregistration SET accessToken='$access_token' WHERE unitSimNumber='$subscriber_number'");
 		if($affectedRows > 0){
+			$response = $sms->sendMessage($access_token, $subscriber_number, "Your road flood unit SIM number registration has been renewed.");
 			header('Location: http://roadfloodph.cloudapp.net/admin/');
 			exit;
 		}
 	}
-	elseif($subscriberSearch){
+	elseif(mysqli_num_rows($resultSubscriberSearch) == 1){
 		$affectedRows = mysqli_query($con, "UPDATE subscriber SET subscriberAT='$access_token' WHERE subscriberContact='$subscriber_number'");
 		if($affectedRows > 0){
+			$response = $sms->sendMessage($access_token, $subscriber_number, "Thank you for coming back. You may visit our website at http://roadfloodph.cloudapp.net/. To start, text 'RF HELP' to 2158".$shortCodeFromGlobe.".");
 			header('Location: http://roadfloodph.cloudapp.net/');
 			exit;
 		}
@@ -94,8 +94,8 @@ if(!isset($_SESSION['access_token'])) {
 		$asOfDate = date("Y/m/d");
 	 	$asOfTime = date("H:i:s");
 		$affectedRows = mysqli_query($con, "INSERT INTO subscriber (subscriberAT, subscriberContact, subscriberTotalSubscriptions, subscriberCredit, subscriberStatus, dateAdded, timeAdded) VALUES ('$access_token', '$subscriber_number', 1, 0.00, 'active', '$asOfDate', '$asOfTime')");
-		$sms->sendMessage($access_token, $subscriber_number, "Welcome to RoadFloodPH. You may visit our website at http://roadfloodph.cloudapp.net/. To start, text 'RF LIST' to 2158".$shortCodeFromGlobe.".");
 		if($affectedRows > 0){
+			$response = $sms->sendMessage($access_token, $subscriber_number, "Welcome to RoadFloodPH. You may visit our website at http://roadfloodph.cloudapp.net/. To start, text 'RF HELP' to 2158".$shortCodeFromGlobe.".");
 			header('Location: http://roadfloodph.cloudapp.net/');
 			exit;
 		}

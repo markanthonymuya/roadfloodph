@@ -1,6 +1,8 @@
 <?php
 
-require('../globelabsapi/GlobeApi.php');
+require ('../globelabsapi/GlobeApi.php');
+require ('../../key/globeKey.php');
+require ('../../key/access.php');
 
 $json = file_get_contents('php://input');
 $json = stripslashes($json);
@@ -10,7 +12,6 @@ $message = json_decode($json, true);
 if($message) {
 
 	$globe = new GlobeApi();
-	$shortCodeFromGlobe = 3567;
 	$sms = $globe->sms($shortCodeFromGlobe);
 
 	//check if valid json
@@ -21,9 +22,6 @@ if($message) {
 	date_default_timezone_set("Asia/Manila");
 	$asOfDate = date("Y/m/d");
  	$asOfTime = date("H:i:s");
-
-	//creating connection to database with username and password
-	include('../../key/access.php');
 	
 	//parse all items in the received message
 	foreach($message['inboundSMSMessageList']['inboundSMSMessage'] as $item) {
@@ -114,7 +112,6 @@ if($message) {
 						        require_once('../../facebook/facebook.php');
 						        require_once('../../key/fbKey.php');						        
 
-						    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe.".";
 						    	$fbPost = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg.' Want auto notification? Text "RF<space>AUTO<space>'.$regCode.'" to 2158'.$shortCodeFromGlobe."."." [FBPOST ".time()."]";
 			    				
 						    	$config = array();
@@ -158,7 +155,22 @@ if($message) {
 										}
 									}
 			    					//$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], $fbSending." ".$delay);
-								}						  
+								}
+						    	
+						    	$floodLevelMessage = $regCode." detects ".$floodLevel." inches as of ".$floodTime.'.'.$passabilityMsg;
+
+								//sender of update to subscribers of automatic subscription
+								$resultAutoSubscribers = mysqli_query($con,"SELECT subscriberContact FROM subscription WHERE unitId = '$regId'");
+
+			     				if(mysqli_num_rows($resultAutoSubscribers) > 0){
+			     					while($autoSubscribers = mysqli_fetch_array($resultAutoSubscribers)){
+			     						$subscriber_number =$autoSubscribers['subscriberContact'];
+				     					$resultSubscriberToken = mysqli_query($con,"SELECT subscriberAT FROM subscriber WHERE subscriberContact = '$subscriber_number'");
+										$subscriberToken = mysqli_fetch_array($resultSubscriberToken);
+										$subscriberToken = $subscriberToken['subscriberAT'];
+			    						$response = $sms->sendMessage($subscriberToken, $subscriber_number, $floodLevelMessage);
+									}
+			     				}
 							}
 				     	}
 					}
@@ -258,7 +270,7 @@ if($message) {
 	     			
 	     			//limiting free subscriptions to 5
 	     			if(mysqli_num_rows($subscriptionQuery) == 1){
-			    		$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "You already registered with this automatic notification for ".$regCode.". You will receive notification upon the flood unit updates the website.");
+			    		$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "You already registered with this automatic notification from ".$regCode.". You will receive notification when the flood unit updates the website.");
 					}
 					else{
 						//insert to subscription table
@@ -267,7 +279,7 @@ if($message) {
 						$updateQuery = mysqli_query($con, "UPDATE subscriber SET subscriberTotalSubscriptions='$subscriberTotalSubscriptions' WHERE subscriberContact='$senderNumber'");
 
 						if($insertQuery && $updateQuery){
-			    			$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "You are now successfully subscribe to automatic notification for ".$regCode.". Notification will be available upon flood unit updates the website.");
+			    			$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "You are now successfully subscribe to automatic notification from ".$regCode.". Notification will be available when flood unit updates the website.");
 			    		}
 					}
 
