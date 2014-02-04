@@ -1,0 +1,65 @@
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+  background-color: #00000F;
+  padding-bottom: 40px;
+  color: #5a5a5a;
+  margin-left:50px;
+}
+ table.group{
+	width: 700;
+	height: 400;
+	border-width: 2px;
+	border-color: gray;
+	text-align:center;
+ }
+.vehicle-image{
+	margin-top: 130px;
+	height: 500px;
+}
+.gauge-image{
+	height: 425px;
+}
+.indicator-image{
+	width:500px;
+	height: 500px;
+}
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+  
+  .sub-head{
+	font-size: 40px;
+	color: #999999;
+  }
+
+@media (min-width: 992px) {
+  .featurette-heading {
+    margin-top: 120px;
+	
+  }
+  .featurette-heading-gauge {
+	font-size: 50px;
+    margin-top: 120px;
+	margin-left: 100px;
+	
+  }
+}

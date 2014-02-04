@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../assets/ico/favicon.png">
+
+    <title>RoadFloodPH</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../custom.css/sticky-footer-navbar.css" rel="stylesheet">
+    <link href="../custom.css/starter-template.css" rel="stylesheet">
+    <link href="../custom.css/home.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+      <script src="../assets/js/respond.min.js"></script>
+    <![endif]-->
+    <link href="carousel.css" rel="stylesheet">
+  </head>
+
+  <body style="background-color:#707070; color: #FFFFFF;">
+
+     <!-- HEADER -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">RoadFloodPH</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="">Web App</a></li>
+            <li><a href="">Mobile App</a></li>
+            <li><a href="">Locations</a></li>
+            <li><a href="">References</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="#manageUnit">Dashboard</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <!-- END OF HEADER -->
+
+    <div id="wrap" style="margin-right: 5%; margin-left: 5%;">
+
+      <!-- CONTENT -->
+     <div class="row featurette">
+          <br /><br />
+          <div class="col-md-7">
+            <h2 class="featurette-heading">Vehicles. <span class="text-muted">Its classification by weight.</span></h2>
+            <p class="lead">
+              <table class="group" border="1px">
+                <tr>
+                  <th style="text-align:center; width:100px;">Category</th>
+                  <th style="text-align:center;">Gross Vehicle Weight Rating</th>
+                  <th style="text-align:center;">Representative Vehicles</th>
+                </tr>
+                <tr>
+                  <td>Light</td>
+                  <td>0-62 kN (0-14,000 lbs.)</td>
+                  <td>bicycle, motorcycle, car, wagon, pickup trucks, ambulances, parcel delivery</td>
+                </tr>
+                <tr>
+                  <td>Medium</td>
+                  <td>62-147 kN (14,001-33,000 lbs.)</td>
+                  <td>city cargo van, delivery truck, wrecker, school bus</td>
+                </tr>
+                <tr>
+                  <td>Heavy</td>
+                  <td>147 kN and over (33,000 lbs. and over)</td>
+                  <td>truck tractor, concrete mixer, dump truck, fire truck, city bus</td>
+                </tr>
+              </table>
+              <br>
+              <i>Source: http://www.google.com/patents/WO2007073375A1?cl=en</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://www.docstoc.com/docs/37102525/Austroads-Vehicle-Classification-System</i>
+            </p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-responsive" src="images/snip.png" data-src="500x500" alt="Vehicles">
+          </div>
+        </div>
+
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+          <div class="col-md-5">
+            <img class="featurette-image img-responsive" src="images/mmda-flood-gauge-02.jpg" data-src="500x500" alt="Body Reference">
+          </div>
+          <div class="col-md-7">
+            <h2 class="featurette-heading">Body measurement. <br /><span class="text-muted">See for yourself.</span></h2>
+            <p class="lead">This gauge will help you understand MMDA's flood updates. By using this, you can identify the flooded areas in Metro Manila and make informed decisions.</p>
+            <i>Source: http://jdbelmonte.wordpress.com/2013/08/20/mmda-flood-gauge </i>
+          </div>
+        </div>
+        
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading">Level Indicator.<br /><span class="sub-head">Be aware.</span></h2>
+            <p class="lead">This photo is taken from MMDA Traffic Engineering Office at Guadalupe, Makati City. MMDA flood indicator serve as a guide to motorists about the level of flood on roads.</p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-responsive" src="images/mmda.jpg" data-src="500x500" alt="MMDA Flood Gauge" />
+          </div>
+        </div>
+
+        <br /><br />
+       <!-- END OF CONTENT -->  
+    </div>
+    
+
+    <div id="footer" style="background-color:#222222;">
+    </div>
+
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../custom.js/scriptHome.js"></script>
+    <script src="../dist/js/bootstrap.min.js"></script>
+    <script src="../assets/js/Chart.min.js"></script>
+    <script src="../custom.js/scriptAnimations.js"></script>
+    <script src="../custom.js/scriptRegistration.js"></script>
+
+    <!-- Modal for Unit Management-->
+    <div id="manageUnit" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" id="manageModal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel"><a class="btn btn-default dashboardNav" style="margin-right: 5px;" id="driveLeft">&laquo;</a><span id="manageTitle">History of Public Units</span><a class="btn btn-default dashboardNav" style="margin-left: 5px;" id="driveRight">&raquo;</a>
+              <div id="timelineNav" style="margin-right: 37px;" class="btn-group pull-right" data-toggle="buttons">
+                <label class="btn btn-primary timeFrameBtn active" data-rf="day">
+                  <input id="timelineNavDay" type="radio"> Day
+                </label>
+                <label class="btn btn-default timeFrameBtn" data-rf="month">
+                  <input type="radio"> Month
+                </label>
+                <label class="btn btn-default timeFrameBtn" data-rf="quarter">
+                  <input type="radio"> Quarter
+                </label>
+                <label class="btn btn-default timeFrameBtn" data-rf="semiannual">
+                  <input type="radio"> Semi-Annual
+                </label>
+                <label class="btn btn-default timeFrameBtn" data-rf="annual">
+                  <input type="radio"> Annual
+                </label>
+              </div>
+            </h4>
+          </div>
+          <div id="manageBody" class="modal-body">
+            <center><img id="loadingImage" src="../images/loading.gif" /></center>
+            <center><canvas id="myChart" width="1000" height="400"></canvas></center>
+            <br id="breakInChartUI" />
+            <script src="../custom.js/scriptDashboard.js"></script>
+          </div>
+         <!--  <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div> -->
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../dist/js/bootstrap.min.js"></script>
+    <script src="../assets/js/holder.js"></script>
+
+  </body>
+</html>
