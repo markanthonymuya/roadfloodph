@@ -37,7 +37,6 @@ if(mysqli_num_rows($resultUnitSearch) == 1){
 
 			 mysqli_query($con, "UPDATE unitlist SET dateAdded='$dateAdded', timeAdded='$timeAdded', ownerId='$ownerId', unitId='$unitId' WHERE unitCode='$unitCode'");
 			 mysqli_query($con, "INSERT INTO unitleveldetection (unitId, unitWaterLevel, unitDateAsOf, unitTimeAsOf) VALUES ('$unitId', '0', '$dateAdded', '$timeAdded')");
-			 mysqli_query($con, "INSERT INTO unitpowermonitoring (unitId, unitPowerLevel, unitDateAsOf, unitTimeAsOf) VALUES ('$unitId', '100', '$dateAdded', '$timeAdded')");
 
 
 			 $resultMsg = "successful";

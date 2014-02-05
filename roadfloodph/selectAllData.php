@@ -50,7 +50,6 @@ if($emailAddress != "public"){
 	}
 }
 else{
-	// $resultUnitPower = mysqli_query($con, "SELECT unitId, unitPowerLevel FROM unitpowermonitoring"); not yet done that will show power in selection menu
 
 	$selection = array();
 	$publicUnitsId = array();

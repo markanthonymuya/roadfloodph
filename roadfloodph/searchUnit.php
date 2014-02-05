@@ -59,17 +59,6 @@
         $selection['unitSmsNotif'.$counter] = $rowUnits['unitSmsNotif'];
         $counter++;
     }
-     
-    $resultPower = mysqli_query($con, "SELECT unitId, unitPowerLevel from unitpowermonitoring");
-    $counter = 1;
-
-    while($rowPower = mysqli_fetch_array($resultPower))
-    {
-        if($rowPower['unitId'] == $unitIdList[$counter]){
-            $selection['unitPowerLevel'.$counter] = $rowPower['unitPowerLevel'];
-        }
-        $counter++;
-    }
 
     $selection['generalCounter'] = $generalCounter;
 }
@@ -97,17 +86,6 @@ else{
         $selection['unitFreq'.$counter] = $rowUnits['frequency'];
         $selection['unitSmsCode'.$counter] = $rowUnits['unitSmsCode'];
         $selection['unitSmsNotif'.$counter] = $rowUnits['unitSmsNotif'];
-        $counter++;
-    }
-     
-    $resultPower = mysqli_query($con, "SELECT unitId, unitPowerLevel from unitpowermonitoring");
-    $counter = 1;
-
-    while($rowPower = mysqli_fetch_array($resultPower))
-    {
-        if($rowPower['unitId'] == $unitIdList[$counter]){
-            $selection['unitPowerLevel'.$counter] = $rowPower['unitPowerLevel'];
-        }
         $counter++;
     }
 

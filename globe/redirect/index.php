@@ -43,7 +43,7 @@ if(isset($_GET['access_token']) && isset($_GET['subscriber_number'])){
 		if($affectedRows > 0){
 			$response = $sms->sendMessage($access_token, $subscriber_number, "Welcome to RoadFloodPH. You may visit our website at http://roadfloodph.cloudapp.net/. To start, text 'RF HELP' to 2158".$shortCodeFromGlobe.".");
 			exit;
-		}askdjhjksahkjdha
+		}
 	}
 }
 

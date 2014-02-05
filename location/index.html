@@ -5,29 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="assets/ico/favicon.png">
+    <link rel="shortcut icon" href="../assets/ico/favicon.png">
 
     <title>RoadFloodPH</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="dist/css/bootstrap.css" rel="stylesheet">
+    <link href="../dist/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="custom.css/sticky-footer-navbar.css" rel="stylesheet">
-    <link href="custom.css/starter-template.css" rel="stylesheet">
-    <link href="custom.css/home.css" rel="stylesheet">
+    <link href="../custom.css/sticky-footer-navbar.css" rel="stylesheet">
+    <link href="../custom.css/starter-template.css" rel="stylesheet">
+    <link href="../custom.css/home.css" rel="stylesheet">
 
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="assets/js/html5shiv.js"></script>
-      <script src="assets/js/respond.min.js"></script>
+      <script src="../assets/js/html5shiv.js"></script>
+      <script src="../assets/js/respond.min.js"></script>
     <![endif]-->
+    
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false">
+    </script>
+
+    <script>
+    var myCenter=new google.maps.LatLng(14.55685,121.02114);
+
+    function initialize()
+    {
+
+
+    var mapProp = {
+      center:myCenter,
+      zoom:20,
+      mapTypeId:google.maps.MapTypeId.ROADMAP
+      };
+    var map=new google.maps.Map(document.getElementById("googleMap")
+      ,mapProp);
+
+    var marker=new google.maps.Marker({
+      position:myCenter,
+      });
+
+    marker.setMap(map);
+
+
+    var infowindow = new google.maps.InfoWindow({
+      content:"Something"
+      });
+
+    infowindow.open(map,marker);
+
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
   </head>
 
   <body style="background-color:#707070; color: #FFFFFF;">
 
-  <div id="wrap">
      <!-- HEADER -->
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -53,40 +87,15 @@
     </div>
     <!-- END OF HEADER -->
 
-    <!-- CONTENT -->
-    <div class="container">
+    <div id="wrap" class="container" style="margin-top: 20px; margin-bottom:0px;">
       <div class="row">
-          <div class="col-lg-4" style="margin-right: 20px; width: 500px; height: 350px; margin-bottom: 50px;">
-            <p class="divTitles">Vehicles</p>
-              <div id="vehicleDiv">
-                <span id="vehicleImages"><img id="Motorbike" class="vehicleImageCss" src="assets/images/Motorbike.jpg" /><span>
-                <button id="moveLeft" class="vehicleNavigation" type="button">&lt;</button>
-                <button id="moveRight" class="vehicleNavigation" type="button">&gt;</button>
-                <div id="passability">PASSABLE</div>
-                <div id="carsPane"></div>
-                <span id="vehicleName">Motorbike</span>
-             </div>
-          </div><!-- /.col-lg-4 -->
-          <div class="col-lg-4" style="margin-right: 20px; width: 250px; height: 350px; margin-bottom: 50px;">
-            <p class="divTitles">Body</p>
-            <div style="width: 250px; height: 350px; background: white;">
-              <!-- <div id="hoverDataBody" class="hoverData">PASSABLE</div> -->
-              <img id="happyBoy" src="assets/gif/happy.gif" />
-              <img id="bodyWaves" src="assets/gif/waves.gif" style="height: 0px; width: 250px; top: -20px; position: relative;" />
-            </div>
-          </div><!-- /.col-lg-4 -->
-          <div class="col-lg-4" style="margin-right: 20px; width: 250px; height: 350px; margin-bottom: 50px;">
-            <p class="divTitles">MMDA Flood Gauge</p>
-            <div style="width: 250px; height: 350px; background: white;">
-              <!-- <div id="hoverDataGauge" class="hoverData">PASSABLE</div> -->
-              <img src="assets/images/MMDAFloodGauge.png" width="250px" height="350px" />
-              <img id="gaugeWaves" src="assets/gif/waves.gif" style="height: 0px; width: 250px; top: -20px; position: relative;" />
-            </div>
-          </div>
-        </div><!-- /.col-lg-4 -->
+        <div id="googleMap" class="pull-left" style="width:680px;height:480px;"></div>
+        <div id="Info" class="pull-left" style="margin-left:3%;">
+          <p style="font-size: 24pt;">Unit Info</p>
+        </div>
       </div><!-- /.row -->
-    </div><!-- /.container -->
-     <!-- END OF CONTENT -->   
+    </div>
+     
     
 
     <div id="footer" style="background-color:#222222;">
@@ -95,12 +104,12 @@
       </div>
     </div>
 
-    <script src="assets/js/jquery.js"></script>
-    <script src="custom.js/scriptHome.js"></script>
-    <script src="dist/js/bootstrap.min.js"></script>
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../custom.js/scriptHome.js"></script>
+    <script src="../dist/js/bootstrap.min.js"></script>
     <script src="../assets/js/Chart.min.js"></script>
-    <script src="custom.js/scriptAnimations.js"></script>
-    <script src="custom.js/scriptRegistration.js"></script>
+    <script src="../custom.js/scriptAnimations.js"></script>
+    <script src="../custom.js/scriptRegistration.js"></script>
 
     <!-- Modal for Unit Management-->
     <div id="manageUnit" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -129,10 +138,10 @@
             </h4>
           </div>
           <div id="manageBody" class="modal-body">
-            <center><img id="loadingImage" src="images/loading.gif" /></center>
+            <center><img id="loadingImage" src="../images/loading.gif" /></center>
             <center><canvas id="myChart" width="1000" height="400"></canvas></center>
             <br id="breakInChartUI" />
-            <script src="custom.js/scriptDashboard.js"></script>
+            <script src="../custom.js/scriptDashboard.js"></script>
           </div>
          <!--  <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -140,6 +149,10 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../dist/js/bootstrap.min.js"></script>
+    <script src="../assets/js/holder.js"></script>
 
   </body>
 </html>

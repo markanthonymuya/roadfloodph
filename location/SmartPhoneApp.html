@@ -13,10 +13,10 @@
     <link href="dist/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="custom.css/sticky-footer-navbar.css" rel="stylesheet">
-    <link href="custom.css/starter-template.css" rel="stylesheet">
-    <link href="custom.css/home.css" rel="stylesheet">
-
+    <link href="css/sticky-footer-navbar.css" rel="stylesheet">
+     <link href="css/starter-template.css" rel="stylesheet">
+    <link href="css/home.css" rel="stylesheet">
+    <link href="css/mobile.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -41,9 +41,10 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
+            <li><a href="">Web App</a></li>
             <li><a href="">Mobile App</a></li>
-            <li><a href="/location/">Locations</a></li>
-            <li><a href="/references/">References</a></li>
+            <li><a href="">Locations</a></li>
+            <li><a href="">References</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="#manageUnit">Dashboard</a></li>
@@ -56,34 +57,15 @@
     <!-- CONTENT -->
     <div class="container">
       <div class="row">
-          <div class="col-lg-4" style="margin-right: 20px; width: 500px; height: 350px; margin-bottom: 50px;">
-            <p class="divTitles">Vehicles</p>
-              <div id="vehicleDiv">
-                <span id="vehicleImages"><img id="Motorbike" class="vehicleImageCss" src="assets/images/Motorbike.jpg" /><span>
-                <button id="moveLeft" class="vehicleNavigation" type="button">&lt;</button>
-                <button id="moveRight" class="vehicleNavigation" type="button">&gt;</button>
-                <div id="passability">PASSABLE</div>
-                <div id="carsPane"></div>
-                <span id="vehicleName">Motorbike</span>
-             </div>
-          </div><!-- /.col-lg-4 -->
-          <div class="col-lg-4" style="margin-right: 20px; width: 250px; height: 350px; margin-bottom: 50px;">
-            <p class="divTitles">Body</p>
-            <div style="width: 250px; height: 350px; background: white;">
-              <!-- <div id="hoverDataBody" class="hoverData">PASSABLE</div> -->
-              <img id="happyBoy" src="assets/gif/happy.gif" />
-              <img id="bodyWaves" src="assets/gif/waves.gif" style="height: 0px; width: 250px; top: -20px; position: relative;" />
-            </div>
-          </div><!-- /.col-lg-4 -->
-          <div class="col-lg-4" style="margin-right: 20px; width: 250px; height: 350px; margin-bottom: 50px;">
-            <p class="divTitles">MMDA Flood Gauge</p>
-            <div style="width: 250px; height: 350px; background: white;">
-              <!-- <div id="hoverDataGauge" class="hoverData">PASSABLE</div> -->
-              <img src="assets/images/MMDAFloodGauge.png" width="250px" height="350px" />
-              <img id="gaugeWaves" src="assets/gif/waves.gif" style="height: 0px; width: 250px; top: -20px; position: relative;" />
-            </div>
+          <div>
+              <div>
+                <div id="mobiletitle"><h1>Mobile Phone App</h1></div>
+                <div id="mobilepic"><img src="images/happy.gif"></div>
+                <div id="link">
+                  
+                </div>
+               </div>
           </div>
-        </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
     </div><!-- /.container -->
      <!-- END OF CONTENT -->   
@@ -96,11 +78,11 @@
     </div>
 
     <script src="assets/js/jquery.js"></script>
-    <script src="custom.js/scriptHome.js"></script>
+    <script src="js/scriptHome.js"></script>
     <script src="dist/js/bootstrap.min.js"></script>
     <script src="../assets/js/Chart.min.js"></script>
-    <script src="custom.js/scriptAnimations.js"></script>
-    <script src="custom.js/scriptRegistration.js"></script>
+    <script src="js/scriptAnimations.js"></script>
+    <script src="js/scriptRegistration.js"></script>
 
     <!-- Modal for Unit Management-->
     <div id="manageUnit" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -132,7 +114,7 @@
             <center><img id="loadingImage" src="images/loading.gif" /></center>
             <center><canvas id="myChart" width="1000" height="400"></canvas></center>
             <br id="breakInChartUI" />
-            <script src="custom.js/scriptDashboard.js"></script>
+            <script src="js/scriptDashboard.js"></script>
           </div>
          <!--  <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -2,8 +2,6 @@ var currentWaterLevel = 0;
 var getUnitLocation;
 var currentUnitSimNumber = "";
 var getUpdatedData;
-var currentPowerLastRow = 0;
-var lastPowerLastRow = 0;
 
 
 $(document).ready(function () {
@@ -69,10 +67,8 @@ $(document).ready(function () {
         if(online){            
             $.get("/roadfloodph/lastRow.php", function (json, status) {
                 currentIndexLastRow = json.floodUpdate;
-                currentPowerLastRow = json.powerUpdate;
                 if (currentIndexLastRow != lastIndexLastRow && status == "success" || becomesOffline) {
                     lastIndexLastRow = currentIndexLastRow;
-                    lastPowerLastRow = currentPowerLastRow;
                     getUpdatedData();
                     if(currentUnitSimNumber != null && currentUnitSimNumber != "" && currentUnitSimNumber != 0){
                         smsUpdateLogs();

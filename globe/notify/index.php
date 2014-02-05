@@ -180,32 +180,6 @@ if($message) {
 					}
 				}
 			}
-			elseif(substr_compare($item['message'], "PWUPDATE", 0, 7) == 0){
-				//extracting data from text message
-				$powerLevel = str_replace('PWUPDATE ', '', $item['message']);
-
-				$presentValue = mysqli_query($con,"SELECT unitPowerLevel FROM unitpowermonitoring WHERE unitId = '$unitId'");
-				$current = mysqli_fetch_array($presentValue);
-				
-				if($current['unitPowerLevel'] != $powerLevel){	
-					if($inTempBoolean){
-						mysqli_query($con, "UPDATE unitpowermonitoring SET unitPowerLevel='$powerLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
-			    		mysqli_query($con, "INSERT INTO unitsmspowerupdatelogs (unitSimNumber, reportedPowerLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$powerLevel', '$asOfDate', '$asOfTime')");
-			    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
-					}
-					elseif($inTempBoolean==false){
-						mysqli_query($con, "INSERT INTO unitsmstemplogs (unitSimNumber, smsRequest, receivedDate, receivedTime) VALUES ('$senderNumber', '$senderMessage', '$asOfDate', '$asOfTime')");
-			    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "RESEND");
-					}
-				}
-			}
-			/*elseif(substr_compare($item['message'], "READY", 0, 4) == 0){
-					
-				if($unitSearch){
-					mysqli_query($con, "UPDATE unitregistration SET unitStatus='ACTIVATED' WHERE unitId='$unitId'");
-				   	$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "READY OK");
-				}
-			}*/
 			elseif(substr_compare($item['message'], "TEST ", 0, 4) == 0){
 				
 				$sendTo = str_replace('TEST ', '', $item['message']);
