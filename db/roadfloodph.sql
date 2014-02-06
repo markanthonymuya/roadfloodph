@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 26, 2014 at 11:55 AM
+-- Generation Time: Feb 06, 2014 at 08:00 AM
 -- Server version: 5.5.34
 -- PHP Version: 5.5.3
 
@@ -188,6 +188,7 @@ CREATE TABLE IF NOT EXISTS `unitowner` (
   `ownerName` varchar(100) NOT NULL,
   `ownerEmail` varchar(100) NOT NULL,
   `ownerContact` varchar(20) NOT NULL,
+  `ownerAT` varchar(100) NOT NULL,
   `ownerPassword` varchar(100) NOT NULL,
   `dateAdded` varchar(20) NOT NULL,
   `timeAdded` varchar(20) NOT NULL,
@@ -198,33 +199,9 @@ CREATE TABLE IF NOT EXISTS `unitowner` (
 -- Dumping data for table `unitowner`
 --
 
-INSERT INTO `unitowner` (`ownerId`, `ownerName`, `ownerEmail`, `ownerContact`, `ownerPassword`, `dateAdded`, `timeAdded`) VALUES
-(1, 'Jethro De Guzman', 'jethdeguzman@outlook.com', '9239983928', '9b1ca84af9bebb35967e52c205afc7c9', '2014/01/06', '16:24:01'),
-(2, 'Mark Joseph Penaranda', 'markjap@gmail.com', '9278849827', '95e7f080d93915662d9a2f486417e2ae', '2014/01/06', '16:27:00');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `unitpowermonitoring`
---
-
-CREATE TABLE IF NOT EXISTS `unitpowermonitoring` (
-  `unitId` int(10) NOT NULL AUTO_INCREMENT,
-  `unitPowerLevel` varchar(10) NOT NULL,
-  `unitDateAsOf` varchar(20) NOT NULL,
-  `unitTimeAsOf` varchar(20) NOT NULL,
-  PRIMARY KEY (`unitId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
-
---
--- Dumping data for table `unitpowermonitoring`
---
-
-INSERT INTO `unitpowermonitoring` (`unitId`, `unitPowerLevel`, `unitDateAsOf`, `unitTimeAsOf`) VALUES
-(1, '100', '2014/01/02', '03:23:01'),
-(2, '100', '2014/01/02', '15:34:42'),
-(3, '100', '2014/01/07', '04:08:33'),
-(4, '100', '2014/01/17', '05:25:01');
+INSERT INTO `unitowner` (`ownerId`, `ownerName`, `ownerEmail`, `ownerContact`, `ownerAT`, `ownerPassword`, `dateAdded`, `timeAdded`) VALUES
+(1, 'Jethro De Guzman', 'jethdeguzman@outlook.com', '9239983928', '', '9b1ca84af9bebb35967e52c205afc7c9', '2014/01/06', '16:24:01'),
+(2, 'Mark Joseph Penaranda', 'markjap@gmail.com', '9278849827', '', '95e7f080d93915662d9a2f486417e2ae', '2014/01/06', '16:27:00');
 
 -- --------------------------------------------------------
 
@@ -260,32 +237,6 @@ INSERT INTO `unitregistration` (`unitId`, `unitSimNumber`, `unitViewing`, `unitR
 (2, '9266209871', 'public', 'ncr', 'Don Antonio, Holy Spirit, QC', 'ACTIVATED', '2.0', 1, '2014/01/02', '15:34:42', 'Cvfr6my-faXg4DavymvEz569deES9WCBUCOESgMqVgg', 'ANTONIO', 'activated'),
 (3, '9179829849', 'private', 'ncr', 'Green Heights, Nangka, Marikina', 'UNKNOWN', '2.0', 1, '2014/01/07', '04:08:33', '', 'NANGKA', 'activated'),
 (4, '9275562718', 'public', 'ncr', 'EDSA-North Ave., QC', 'UNKNOWN', '2.0', 2, '2014/01/17', '05:25:01', '', 'NORTHAVE', 'activated');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `unitsmspowerupdatelogs`
---
-
-CREATE TABLE IF NOT EXISTS `unitsmspowerupdatelogs` (
-  `updateLogId` int(10) NOT NULL AUTO_INCREMENT,
-  `unitSimNumber` varchar(20) NOT NULL,
-  `reportedPowerLevel` varchar(10) NOT NULL,
-  `receivedDate` varchar(20) NOT NULL,
-  `receivedTime` varchar(20) NOT NULL,
-  PRIMARY KEY (`updateLogId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
-
---
--- Dumping data for table `unitsmspowerupdatelogs`
---
-
-INSERT INTO `unitsmspowerupdatelogs` (`updateLogId`, `unitSimNumber`, `reportedPowerLevel`, `receivedDate`, `receivedTime`) VALUES
-(1, '9154677374', '100', '2014/01/04', '06:37:11'),
-(2, '9154677374', '95', '2014/01/04', '06:44:30'),
-(3, '9154677374', '90', '2014/01/04', '06:48:30'),
-(4, '9154677374', '95', '2014/01/04', '06:44:30'),
-(5, '9154677374', '100', '2014/01/04', '06:55:10');
 
 -- --------------------------------------------------------
 
