@@ -15,7 +15,7 @@ $(document).ready(function () {
 	
 	var units = {};
 	var parentId = 0;
-	var frequency = 0.5;
+	var frequency = 1;
 	var smsNotif = "activated";
 
 	$("#myChart").hide();
@@ -83,7 +83,7 @@ $(document).ready(function () {
 				$("#loadingImage").hide();
 				if(units['generalCounter']>0){
 					for(var i = 1; i <= units['generalCounter']; i++){
-						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 5px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button type="button" class="btn btn-default pull-right backButton" style="margin-left: 5px;"><span class="glyphicon glyphicon-backward"></span> Back<button id="activateBtn'+i+'" style="margin-left: 5px;" class="btn btn-warning pull-right activateBtn">Activate</button>'+stringSettings+'<span id="batteryId'+i+'" class="btn btn-default batteryLabel pull-right" style="margin-right: 5px;"><img class="batteryLabel" src="../assets/ico/battery.png" style="display: inline;" /><span class="batteryLabelText">100</span>%</span><span class="noticeDetails pull-right" style="margin-right: 200px;">Click chart to see detailed view</span></p></span><br class="appendedBodyMsg breaks">');
+						$("#manageBody").append('<p class="appendedBodyMsg" id="appended'+i+'"><span data-rf="'+i+'" id="unitName'+i+'">'+units['unitName'+i]+'<button id="dashboardBtn'+i+'" style="margin-left: 5px;" class="btn btn-primary pull-right dashboardBtn">Dashboard</button><button type="button" class="btn btn-default pull-right backButton" style="margin-left: 5px;"><span class="glyphicon glyphicon-backward"></span> Back<button id="activateBtn'+i+'" style="margin-left: 5px;" class="btn btn-warning pull-right activateBtn">Activate</button>'+stringSettings+'<span class="noticeDetails pull-right" style="margin-right: 200px;">Click chart to see detailed view</span></p></span><br class="appendedBodyMsg breaks">');
 						$(".backButton").hide();
 						$(".noticeDetails").hide();
 						$(".batteryLabel").hide();

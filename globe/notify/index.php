@@ -75,7 +75,7 @@ if($message) {
 
 						mysqli_query($con, "UPDATE unitleveldetection SET unitWaterLevel='$roadFloodLevel', unitDateAsOf='$asOfDate', unitTimeAsOf='$asOfTime' WHERE unitId='$unitId'");
 						mysqli_query($con, "INSERT INTO unitsmsupdatelogs (unitSimNumber, reportedFloodLevel, receivedDate, receivedTime) VALUES ('$senderNumber', '$roadFloodLevel', '$asOfDate', '$asOfTime')");
-			    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPDATED");
+			    		$response = $sms->sendMessage($unitSearch["accessToken"], $unitSearch["unitSimNumber"], "UPOKAY");
 
 			    		//facebook poster upon recieving flood update of a publicly-declared unit
 						$regQuery = mysqli_query($con, "SELECT unitId, unitName, unitSmsCode from unitregistration WHERE unitSimNumber='$senderNumber' AND unitStatus='ACTIVATED' AND unitViewing='public'");
@@ -196,6 +196,12 @@ if($message) {
 			    elseif(mysqli_num_rows($resultSubscriberSearch) == 1){
 			    	$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "TESTING FROM UNIT TO SUBSCRIBER");
 			    }
+			}
+			elseif(substr_compare($item['message'], "STARTED", 0, 6) == 0){
+			    $response = $sms->sendMessage("GDfoaj_kurzkRv-aX4gznqNsQiaEf6xltDogm62hQ8A", "9275628107", "UNIT STARTED");
+			}
+			elseif(substr_compare($item['message'], "VWUPDATE", 0, 7) == 0){
+				$response = $sms->sendMessage("GDfoaj_kurzkRv-aX4gznqNsQiaEf6xltDogm62hQ8A", "9275628107", $item['message']);	
 			}
 		}
 		//if not an update from road flood units
@@ -408,6 +414,12 @@ if($message) {
 			    elseif(mysqli_num_rows($resultSubscriberSearch) == 1){
 			    	$response = $sms->sendMessage($subscriberSearch["subscriberAT"], $subscriberSearch["subscriberContact"], "TESTING FROM SUBSCRIBER TO ANOTHER SUBSCRIBER/SELF");
 			    }
+			}
+			elseif(substr_compare($item['message'], "START ", 0, 4) == 0){
+			    $response = $sms->sendMessage("FMwCvIe_DSoBvRHPdQ25sp8N7X7j8koavVixY280DWc", "9154677374", "USTART");
+			}
+			elseif(substr_compare($item['message'], "VWUPDATE", 0, 7) == 0){
+				$response = $sms->sendMessage("FMwCvIe_DSoBvRHPdQ25sp8N7X7j8koavVixY280DWc", "9154677374", "VUDATE");
 			}
 		}
 	}
