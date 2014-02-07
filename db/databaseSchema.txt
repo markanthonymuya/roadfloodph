@@ -1,0 +1,202 @@
+//////////////////////Database Schema//////////////////////////////
+
+
+Accounts
+	• Site Admin
+		○ Admin Id
+		○ Name
+		○ E-mail Address
+		○ Contact Number
+		○ Password
+		○ DateAdded
+		○ TimeAdded
+		
+	• Unit Owners
+		○ Owner Id
+		○ Name
+		○ E-mail Address
+		○ Contact Number
+		○ Owner Access Token
+		○ Password
+		○ DateAdded
+		○ TimeAdded
+		
+	• Subscribers
+		○ Subscription Id
+		○ Access Token
+		○ Contact Number
+		○ Number of Location Subscriptions
+		○ Subscriber's Current Charge - Charge Record Due to Inability to Deduct Load at time of charging for additional subscriptions
+		○ Status (Active or Deactivated)
+		○ DateAdded
+		○ TimeAdded
+
+Unit Records
+	• Unit Hardware
+		○ Unit Id Number
+		○ Unit SIM Number (editable due to SIM change)
+		○ Unit Privacy Setting (Public or Private Viewing)
+		○ Unit Region
+		○ Unit Name
+		○ Unit Status
+		○ Frequency of SMS Update By the Unit in Inches
+		○ Owner Id (FK - Foreign Key)
+		○ DateAdded
+		○ TimeAdded
+		○ Unit Access Token
+		○ Unit SMS Code
+		○ On/Off SMS Notification
+		
+	• Unit Level Detection (Complete List of Units with the latest update of flood height status)
+		○ Unit Id Number (PK and FK)
+		○ Flood Height Level (in Inches)
+		○ Detection Date
+		○ Detection Time
+
+	• Unit SMS Flood Update Logs
+		○ Log Id
+		○ Unit SIM Number
+		○ Flood Height Level (in Inches) / battery level (in percentage)
+		○ Date Received
+		○ Time Received
+
+
+	• List of all registered units with their codes
+		○ Unit Code (Secret Product Code)
+		○ Date Added
+		○ Time Added
+		○ Owner's Id (Claimer)
+		○ Unit Id Number
+	
+	• Temporary Storage for unconfirmed SMS request to server
+		○ Log Id
+		○ Unit SIM Number
+		○ Sms Text Message
+		○ Date Received
+		○ Time Received
+		
+		
+
+Subscription Records
+	• Transaction Logs (involves free and charged outgoing messages)
+		○ Log Id
+		○ Contact Number (FK at Subscriber's Account)
+		○ Message
+		○ Charge
+		○ Transaction Date
+		○ Transaction Time
+	• Subscribers Incoming Message
+		○ Log Id
+		○ Contact Number
+		○ Message
+		○ Date Received
+		○ Time Received
+		○ Given Action (Ignored, Read, Executed)
+	• Location Subscription
+	Note: Max. of 1 Location for Free Subscription, Charge of 1 peso per additional subscriptions
+		○ Subscription Id
+		○ Contact Number (FK)
+		○ Unit Id Number (FK)
+		○ Status (Active or Deactivated)
+		○ Subscription Date
+		○ Subscription Time
+
+
+//////////////////////Database Column, Attributes and Data Types//////////////////////////////
+Accounts
+	• admin
+		○ adminId - INT(10) A_I
+		○ adminName - VARCHAR(100)
+		○ adminEmail - VARCHAR(100)
+		○ adminContact - VARCHAR(20)
+		○ adminPassword - VARCHAR(100)
+		○ dateAdded - VARCHAR(20)
+		○ timeAdded - VARCHAR(20)
+		
+	• unitOwner
+		○ ownerId - INT(10)
+		○ ownerName - VARCHAR(100)
+		○ ownerEmail - VARCHAR(100)
+		○ ownerContact - VARCHAR(20)
+		○ ownerAT - VARCHAR(100)
+		○ ownerPassword - VARCHAR(100)
+		○ dateAdded - VARCHAR(20)
+		○ timeAdded - VARCHAR(20)
+		
+	• subscriber
+		○ subscriberId - INT(10)
+		○ subscriberAT - VARCHAR(100)
+		○ subscriberContact - VARCHAR(20)
+		○ subscriberTotalSubscriptions - INT(5)
+		○ subscriberCredit - DECIMAL(20, 2)
+		○ subscriberStatus - VARCHAR (20)
+		○ dateAdded - VARCHAR(20)
+		○ timeAdded - VARCHAR(20)
+
+Unit Records
+	• unitRegistration
+		○ unitId - INT(10)
+		○ unitSimNumber - VARCHAR(20)
+		○ unitViewing - VARCHAR(20)
+		○ unitRegion - VARCHAR(20)
+		○ unitName - VARCHAR(100)
+		○ unitStatus - VARCHAR(20)
+		○ frequency - VARCHAR(5)
+		○ ownerId - INT(10)
+		○ dateAdded - VARCHAR(20)
+		○ timeAdded - VARCHAR(20)
+		○ accessToken - VARCHAR(100)
+		○ unitSmsCode - VARCHAR(10)
+		○ unitSmsNotif - VARCHAR(11)
+		
+	• unitLevelDetection
+		○ unitId - INT(10)
+		○ unitWaterLevel - VARCHAR(10)
+		○ unitDateAsOf - VARCHAR(20)
+		○ unitTimeAsOf - VARCHAR(20)
+
+	• unitSmsUpdateLogs
+		○ updateLogId - INT(10)
+		○ unitSimNumber - VARCHAR(20)
+		○ reportedFloodLevel - VARCHAR(10)
+		○ receivedDate - VARCHAR(20)
+		○ receivedTime - VARCHAR(20)
+
+	• unitList
+		○ unitCode - VARCHAR(10)
+		○ dateAdded - VARCHAR(20)
+		○ timeAdded - VARCHAR(20)
+		○ ownerId - INT(10) FK
+		○ unitId - INT(10)
+		
+	• unitSmsTempLogs
+		○ tempLogId - INT(10)
+		○ unitSimNumber - VARCHAR(20)
+		○ smsRequest- VARCHAR(30)
+		○ receivedDate - VARCHAR(20)
+		○ receivedTime - VARCHAR(20)
+
+
+Subscription Records
+	• transactionLogs
+		○ transactionLogId - INT(10)
+		○ subscriberContact - VARCHAR(20)
+		○ subscriberMessage - VARCHAR(150)
+		○ chargeToSubscriber - INT(10)
+		○ transactionDate - VARCHAR(20)
+		○ transactionTime - VARCHAR(20)
+	• incomingMessages
+		○ incomingMessagesId - INT(10)
+		○ incomingContact - VARCHAR(20)
+		○ incomingMessage - VARCHAR(150)
+		○ receivedDate - VARCHAR(20)
+		○ receivedTime - VARCHAR(20)
+		○ serverResponse - VARCHAR(20)
+	• subscription
+		○ subscriptionId - INT(10)
+		○ subscriberContact - VARCHAR(20)
+		○ unitId - INT(10)
+		○ subscriptionStatus - VARCHAR(20)
+		○ subscriptionDate - VARCHAR(20)
+		○ subscriptionTime - VARCHAR(20)
+		
