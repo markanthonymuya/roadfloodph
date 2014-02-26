@@ -1,0 +1,132 @@
+#mobiletitle
+{
+	width: 60%;
+	position: center;
+	float: left;
+	padding: 10px;
+	margin: 10px;
+}
+#mobiletitle p
+{
+	font-size: 50px;
+	font-style: 'Arial Black'
+}
+#textme
+{
+	width: 35%;
+	position: relative;
+	float: right;
+	padding: 10px;
+	margin: 10px;
+}
+#textme h3
+{
+	font-family:'Arial Black';
+	float: right;
+	margin-left: 0px;
+	right: 20px;
+}
+#PicPreview
+{
+	width: 60%;
+	font-family:'Arial';
+	font-size: 10pt;
+	float: left;
+	margin: 0px;
+
+}
+
+.pic1
+{
+	width: 180px;
+	font-family:'Arial';
+	font-size: 10pt;
+	float: left;
+	margin: 0px;
+	left: 20px;
+}
+.pic2
+{
+	width: 180px;
+	font-family:'Arial';
+	font-size: 10pt;
+	position: absolute;
+	margin: 0px;
+	left: 300px;
+}
+.pic3
+{
+	width: 180px;
+	font-family:'Arial';
+	font-size: 10pt;
+	float: right;
+	margin: 0px;
+	right: 20px;
+}
+
+#PicPreview .pic1 img
+{
+	width: 180px;
+	height: 300px;
+
+}
+
+#PicPreview .pic2 img
+{
+	width: 180px;
+	height: 300px;
+
+}
+#PicPreview .pic3 img
+{
+	width: 180px;
+	height: 300px;
+
+}
+
+#link
+ {
+ 	background-color: rgba(34, 34, 34, 0.8);
+	width: 40%;
+	position: absolute;
+	font-family:'Arial';
+	font-size: 10pt;
+	float: right;
+	margin: 0px;
+	right: 100px;
+ }
+
+
+#Loc
+{
+	width: 40%;
+	float: right;
+	margin: 0px;
+
+}
+ .dlTitle
+ {
+ 	height: 120px;
+	width: 380px;
+	font-family:'Arial Black';
+	font-size: 20pt;
+	float: right;
+	margin: 0px;
+	right: 20px;
+	text-align: center;
+ }
+ .dlLink
+ {
+ 	height: 120px;
+	width: 380px;
+	font-family:'Arial Black';
+	font-size: 15pt;
+	float: right;
+	margin-left: 0px;
+	right: 20px;
+ }
+
+ .dlLink button
+ {
+ 	margin-left: 90px;
+ }

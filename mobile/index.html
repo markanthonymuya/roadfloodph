@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../assets/ico/favicon.png">
+
+    <title>RoadFloodPH</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="../css/sticky-footer-navbar.css" rel="stylesheet">
+     <link href="../css/starter-template.css" rel="stylesheet">
+    <link href="../css/home.css" rel="stylesheet">
+    <link href="../css/mobile.css" rel="stylesheet">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+      <script src="../assets/js/respond.min.js"></script>
+    <![endif]-->
+
+ 
+  </head>
+
+  <body style="background-color:#707070; color: #FFFFFF;">
+
+     <!-- HEADER -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">RoadFloodPH</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="">Mobile App</a></li>
+            <li><a href="/location/">Locations</a></li>
+            <li><a href="/references/">References</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li role="presentation"><a tabindex="-1" role="menuitem" href="" data-toggle="modal" data-target="#manageUnit">Dashboard</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <!-- END OF HEADER -->
+
+<!-- CONTENT -->
+    <div class="container">
+      <div class="row">
+          <div>
+              <div id="mobiletitle" style="margin-top: 10px;">
+                  <p style="font-size: 24pt;">Roadflood.ph Mobile App</p>
+              </div>
+              <div>
+                <div id="PicPreview">
+                  <div class="pic1 pull-left" style="margin: 10px; margin-left: 0px;">
+                    <img src="images/mobilePic (2).jpg" style="width: 300px;">
+                  </div>
+                  <div class="pic2 pull-left" style="margin: 10px; margin-left: 0px;">
+                    <img src="images/mobilePic (3).jpg" style="width: 300px;">
+                  </div>
+                  <div class="pic3 pull-left" style="margin: 10px; margin-left: 0px;">
+                    <img src="images/mobilePic (4).jpg" style="width: 300px;">
+                  </div>
+                </div>
+                <div id="Loc">
+                  <div class="dlTitle" style="font-size: 16pt;">
+                    Google PlayStore
+                  </div>
+                  <div class="dlLink">
+                    <button>GooglePlayStore</button>
+                  </div>
+                  <div class="dlTitle" style="font-size: 16pt;">
+                    Download APK Here!
+                  </div>
+                  <div class="dlLink">
+                    <button>Download Now!</button>
+                  </div>
+                  <div id="textme">
+                    <br><br><br><br><br>
+                    <h3>For more infromation,<br> text INFO to 21583567</h3>
+                  </div>
+                </div>
+                
+              </div>
+          </div>
+      </div><!-- /.row -->
+    </div><!-- /.container -->
+     <!-- END OF CONTENT -->   
+    
+
+    <div id="footer" style="background-color:#222222;">
+      <div class="container" style="padding-top: 15px; padding-bottom: 10px;">
+        <b><select type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="selectButton"></select></b><span id='unitRegion' style="margin-left: 20px;"></span><span id="updateAsOf" style="margin-left: 20px;" class="pull-right"></span><span id="connectToInternet" style="color: yellow"></span>
+      </div>
+    </div>
+
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../js/scriptHome.js"></script>
+    <script src="../dist/js/bootstrap.min.js"></script>
+    <script src="../assets/js/Chart.min.js"></script>
+    <script src="../js/scriptAnimations.js"></script>
+    <script src="../js/scriptRegistration.js"></script>
+
+    <!-- Modal for Unit Management-->
+    <div id="manageUnit" style="color:#222222;" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog" id="manageModal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" id="myModalLabel"><a class="btn btn-default dashboardNav" style="margin-right: 5px;" id="driveLeft">&laquo;</a><span id="manageTitle">History of Public Units</span><a class="btn btn-default dashboardNav" style="margin-left: 5px;" id="driveRight">&raquo;</a>
+              <div id="timelineNav" style="margin-right: 37px;" class="btn-group pull-right" data-toggle="buttons">
+                <label class="btn btn-primary timeFrameBtn active" data-rf="day">
+                  <input id="timelineNavDay" type="radio"> Day
+                </label>
+                <label class="btn btn-default timeFrameBtn" data-rf="month">
+                  <input type="radio"> Month
+                </label>
+                <label class="btn btn-default timeFrameBtn" data-rf="quarter">
+                  <input type="radio"> Quarter
+                </label>
+                <label class="btn btn-default timeFrameBtn" data-rf="semiannual">
+                  <input type="radio"> Semi-Annual
+                </label>
+                <label class="btn btn-default timeFrameBtn" data-rf="annual">
+                  <input type="radio"> Annual
+                </label>
+              </div>
+            </h4>
+          </div>
+          <div id="manageBody" class="modal-body">
+            <center><img id="loadingImage" src="  images/loading.gif" /></center>
+            <center><canvas id="myChart" width="1000" height="400"></canvas></center>
+            <br id="breakInChartUI" />
+            <script src="  js/scriptDashboard.js"></script>
+          </div>
+         <!--  <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div> -->
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <script src="../assets/js/jquery.js"></script>
+    <script src="../dist/js/bootstrap.min.js"></script>
+    <script src="../assets/js/holder.js"></script>
+
+  </body>
+</html>

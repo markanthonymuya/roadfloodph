@@ -1,0 +1,48 @@
+#googleMap 
+ {
+ 	width: 50%;
+ 	float: left;
+ 	margin: 0;
+ 	padding: 0;
+ }
+
+#Loc
+ {
+ 	background-color: rgba(34, 34, 34, 0.8);
+	width: 220px;
+	position: absolute;
+	font-family:'Arial';
+	font-size: 10pt;
+	float: left;
+	margin: 0px;
+	right: 100px;
+ }
+
+ #Info
+ {
+ 	
+	width: 33%;
+	position: absolute;
+	font-family:'Arial';
+	font-size: 12pt;
+	color: white;
+	float: left;
+	margin: 0px;
+	right: 100px;
+	top: 140px;
+ }
+
+ .UnitInfo
+ {
+ 	font-family: 'Comic Sans';
+ 	font-size: 10pt;
+ 	color: white;
+ 	padding: 5px;
+ }
+ .UnitInfo li 
+ {
+ 	font-size: 12px;
+ 	list-style: disc;
+ 	margin-bottom: 10px;
+ 	line-height: 30px;
+ }
