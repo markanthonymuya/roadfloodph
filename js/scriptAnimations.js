@@ -2,7 +2,7 @@ var carsCategory = new Array('light', 'light', 'medium', 'heavy', 'medium', 'lig
 var currentImageIndex = 0;
 
 var srcGifImage = "assets/gif/";
-if(location.href == "http://roadfloodph.cloudapp.net/admin/" || location.href == "http://roadfloodph.cloudapp.net/references/"){
+if(location.href == "http://www.roadflood.ph/admin/" || location.href == "http://www.roadflood.ph/references/"){
         srcGifImage = '../assets/gif/';
 }
 
@@ -215,7 +215,7 @@ $(document).ready(function () {
     $("#showInProgress").hide();
 
     var srcImages = 'src="assets/images/';
-    if(location.href == "http://roadfloodph.cloudapp.net/admin/" || location.href == "http://roadfloodph.cloudapp.net/references/"){
+    if(location.href == "http://www.roadflood.ph/admin/" || location.href == "http://www.roadflood.ph/references/"){
         srcImages = 'src="../assets/images/';
     }
 

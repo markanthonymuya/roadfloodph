@@ -76,7 +76,7 @@ $(document).ready(function () {
 		$.post("/roadfloodph/searchUnit.php", {emailAddress: usersEmailAddress}, function (result) {
 			units = result;
 			var stringSettings = "";
-			if(location.href == "http://roadfloodph.cloudapp.net/admin/"){
+			if(location.href == "http://www.roadflood.ph/admin/"){
 				stringSettings = '<button id="editBtn'+i+'" class="btn btn-default pull-right editBtn"><span class="glyphicon glyphicon-wrench"></span></button>';
 			}			
 			if(service='manageUnit'){
