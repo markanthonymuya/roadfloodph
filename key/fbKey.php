@@ -1,6 +1,6 @@
 <?php
-	$appId  = 'secret';
+	$appId = 'secret';
 	$appSecret = 'secret';
-	$accessToken = 'secret';
-	$fbPage =  'secret';
+	$accessToken = "secret";
+	$fbPage = 'secret';
 ?>
