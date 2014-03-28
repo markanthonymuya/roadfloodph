@@ -68,11 +68,12 @@
     </div> 
     <!-- end of logos div -->
 
-    <!-- CONTENT -->
+     <!-- CONTENT -->
     <div class="container">
+      <!-- /. second row -->
       <div class="row">
           <div class="col-lg-4" style="margin-right: 20px; width: 500px; height: 350px; margin-bottom: 50px;">
-            <p class="divTitles">Vehicles</p>
+              <p class="divTitles">Vehicles</p>
               <div id="vehicleDiv">
                 <span id="vehicleImages"><img id="Motorbike" class="vehicleImageCss" src="../assets/images/Motorbike.jpg" /><span>
                 <button id="moveLeft" class="vehicleNavigation" type="button">&lt;</button>
@@ -80,11 +81,12 @@
                 <div id="passability">PASSABLE</div>
                 <div id="carsPane"></div>
                 <span id="vehicleName">Motorbike</span>
-             </div>
+              </div>
           </div><!-- /.col-lg-4 -->
           <div class="col-lg-4" style="margin-right: 20px; width: 250px; height: 350px; margin-bottom: 50px;">
             <p class="divTitles">Body</p>
             <div style="width: 250px; height: 350px; background: white;">
+              <!-- <div id="hoverDataBody" class="hoverData">PASSABLE</div> -->
               <img id="happyBoy" src="../assets/gif/happy.gif" />
               <img id="bodyWaves" src="../assets/gif/waves.gif" style="height: 0px; width: 250px; top: -20px; position: relative;" />
             </div>
@@ -92,18 +94,30 @@
           <div class="col-lg-4" style="margin-right: 20px; width: 250px; height: 350px; margin-bottom: 50px;">
             <p class="divTitles">MMDA Flood Gauge</p>
             <div style="width: 250px; height: 350px; background: white;">
+              <!-- <div id="hoverDataGauge" class="hoverData">PASSABLE</div> -->
               <img src="../assets/images/MMDAFloodGauge.png" width="250px" height="350px" />
               <img id="gaugeWaves" src="../assets/gif/waves.gif" style="height: 0px; width: 250px; top: -20px; position: relative;" />
             </div>
           </div>
+        </div>
+        <!-- /. end of second row -->
+
+        <!-- /. first row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <span id="locationNameSelected" style="font-size: 30pt"></span>
+          </div><!-- /.col-lg-4 -->
         </div><!-- /.col-lg-4 -->
-      </div><!-- /.row -->
+        <!-- /. end of first row -->
     </div><!-- /.container -->
-     <!-- END OF CONTENT -->   
+     <!-- END OF CONTENT -->     
+
+  </div> <!-- END OF wrap -->     
 
     <div id="footer" style="background-color:#222222;">
-      <div class="container" style="padding-top: 15px; padding-bottom: 10px;">
-        <b><select type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="selectButton"></select></b><span id='unitRegion' style="margin-left: 20px;"></span><span id="updateAsOf" style="margin-left: 20px;" class="pull-right"></span><span id="connectToInternet" style="color: yellow"></span>
+      <div class="container">
+        <p class="text-muted credit"><select type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="selectButton"></select><span id='unitRegion' style="margin-left: 20px;"></span><span id="updateAsOf" style="margin-left: 20px;" class="pull-right"></span><span id="connectToInternet" style="color: yellow"></span>
+        </p>
       </div>
     </div>
 

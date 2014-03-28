@@ -33,6 +33,7 @@ $(document).ready(function () {
 
     $("#selectButton").hide();
     $("#updateAsOf").hide();
+    $("#locationNameSelected").hide();
 
     //global function that can request for new updated data from the server
     getUpdatedData = function(){
@@ -52,6 +53,8 @@ $(document).ready(function () {
             $("#updateAsOf").text("As of: " + json["asOf" + currentLocationSelected]);
             
             $("#selectButton").val(currentLocationSelected);
+            $("#locationNameSelected").text($("#selectButton option:selected").text());
+            $("#locationNameSelected").show("slow");
             $("#selectButton").show("slow");
             $("#updateAsOf").show("slow");
 
@@ -108,6 +111,8 @@ $(document).ready(function () {
     //data with respect to the selected value.
     $("#selectButton").change(function () {
         currentLocationSelected = $("#selectButton").val();
+        $("#locationNameSelected").text("");
+        $("#locationNameSelected").hide();
         $("#selectButton").show();
         getUpdatedData();
     });
