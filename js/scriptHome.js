@@ -2,7 +2,15 @@ var currentWaterLevel = 0;
 var getUnitLocation;
 var currentUnitSimNumber = "";
 var getUpdatedData;
+var currentURL = location.href;
 
+
+if(currentURL.indexOf("http://www.roadflood.ph/") == -1 && currentURL.indexOf("admin") == -1){
+    window.location.assign("http://www.roadflood.ph/");
+}
+else if(currentURL.indexOf("http://www.roadflood.ph/") == -1 && currentURL.indexOf("admin") > -1){
+    window.location.assign("http://www.roadflood.ph/admin");
+}
 
 $(document).ready(function () {
 
