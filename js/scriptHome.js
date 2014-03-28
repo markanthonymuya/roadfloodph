@@ -118,7 +118,8 @@ $(document).ready(function () {
     });
 
 
-    var logosAreShown = true;
+    var logosAreShown = false;
+
     $("#logosContainer").click(function(){
         if(logosAreShown){
             $("#logosContainer").attr("style", "width: 30px; padding-top: 10px; z-index: 3; position: fixed; height: 350px; top: 150px; right: 0px; background-color:#222222; border-top-left-radius:10px; border-bottom-left-radius:10px;");
@@ -128,7 +129,6 @@ $(document).ready(function () {
         else{
             $("#logosContainer").attr("style", "width: 150px; padding-top: 10px; z-index: 3; position: fixed; height: 350px; top: 150px; right: 0px; background-color:#222222; border-top-left-radius:10px; border-bottom-left-radius:10px;");
             $("#logosDiv").attr("style", "width: 110px; position: relative; right: 0px;");
-            logosAreShown = false;
             logosAreShown = true;
         }
     });
